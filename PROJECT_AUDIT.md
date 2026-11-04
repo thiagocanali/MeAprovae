@@ -310,3 +310,17 @@ Classificação: **parcialmente implementado (código preparado; migração 0005
 ## 23. Atualização — desempenho e revisão aprovados pelo CI
 
 GitHub Actions run #155, no commit `bda023fc61232e60133cf4ecfe57eca858835145`, concluiu com sucesso: instalação, typecheck, 28 testes unitários e build. O escopo inclui a migração 0005, APIs de desempenho/revisão e páginas de revisão de erros. A execução confirma compilação e testes unitários, não execução SQL nem isolamento RLS real.
+
+
+## Atualização de estado — 04/11/2026
+
+A auditoria inicial acima descreve o ponto de partida da fundação e não representa mais o estado do branch de trabalho. Na branch feat/study-question-engine foram adicionados, como código preparado:
+- Supabase SSR Auth, rotas de identidade e middleware;
+- schema/RLS de concursos, editais, questões, tentativas e favoritos;
+- objetivo de estudo, dashboard, desempenho por disciplina e fila de revisão;
+- CI com typecheck, 28 testes unitários e build verde até o commit validado no run #155;
+- migração 0006 de RBAC editorial e auditoria, helper server-side, endpoint de resumo e página /admin.
+
+Limitações atuais: as migrações 0001–0006 não foram aplicadas em um projeto Supabase provisionado; nenhuma conta administrativa foi atribuída; não há conteúdo editorial real; os formulários CRUD ainda não foram implementados; o CI do novo módulo administrativo ainda precisa ser confirmado; e a Vercel ainda não tem deployment atualizado e saudável confirmado após o hotfix de typecheck. Portanto, as telas administrativas e de estudo são código em branch, não funcionalidades operacionais publicadas.
+
+Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o registro atualizado das entregas e dependências.
