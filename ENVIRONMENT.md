@@ -53,3 +53,6 @@ O valor deve ser adicionado em Development, Preview e Production conforme cada a
 No Supabase, configure a URL de redirecionamento permitida para `https://meaprovae.vercel.app/auth/callback` e a URL equivalente de Preview/local. A confirmação de e-mail depende da configuração de Auth/SMTP do projeto.
 
 Antes de considerar o fluxo pronto: aplicar `supabase/migrations/0001_student_profiles.sql`, criar duas contas de teste e validar cadastro, confirmação, login, logout e bloqueio cruzado. A migração SQL ainda não foi aplicada nem testada contra banco real.
+
+## Situação da validação
+A integração de código Supabase está preparada, mas ainda não validada em runtime. O CI que passou anteriormente cobria apenas a base de testes e regra de questão; a autenticação foi adicionada depois. A Vercel reportou build-rate-limit no commit mais recente. Não considerar o fluxo autenticado disponível até uma execução CI e testes reais com duas contas.
