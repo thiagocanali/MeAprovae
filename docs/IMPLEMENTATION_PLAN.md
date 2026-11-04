@@ -11,11 +11,15 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 
 ## Fase 1 — infraestrutura e identidade (P0)
 - [ ] Decidir/provisionar PostgreSQL gerenciado e configurar `DATABASE_URL`.
-- [ ] Validar provedor de autenticação SSR, cookies e renovação de sessão.
-- [ ] Implementar Drizzle, schema inicial e migrações versionadas.
-- [ ] Validar variáveis no servidor e tratamento de falhas.
-- [ ] Implementar cadastro, login, logout, recuperação e perfil.
-- [ ] Proteger rotas e APIs; testar isolamento entre duas contas.
+- [x] Escolher Supabase Auth como integração inicial, condicionada a provisionamento e teste.
+- [x] Preparar cliente SSR com cookies e verificação server-side.
+- [x] Implementar endpoints e telas iniciais de cadastro/login/logout.
+- [x] Criar migração de perfil com RLS e trigger de criação.
+- [ ] Provisionar projeto Supabase e configurar variáveis nos ambientes.
+- [ ] Aplicar/testar migração em banco real.
+- [ ] Validar confirmação de e-mail, recuperação de senha e renovação de sessão.
+- [ ] Testar isolamento entre duas contas distintas.
+- [ ] Adicionar perfil editável e preferências.
 - [ ] Configurar Vitest e testes de integração; configurar CI.
 **Saída:** estudante autenticado com dados privados persistidos e isolados.
 
