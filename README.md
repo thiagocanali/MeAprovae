@@ -50,7 +50,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 
 ## Status atual
 
-**Fase:** núcleo de estudos e administração editorial em desenvolvimento na branch `feat/study-question-engine` (PR #5 ainda aberto). O código inclui cadastro/login/recuperação, catálogo, questões, tentativas, objetivos, dashboard, favoritos, revisão de erros e RBAC editorial com auditoria. O CI passou no núcleo de estudo até o run #155; a camada administrativa adicionada depois ainda aguarda CI. Supabase não foi provisionado nem as migrações 0001–0006 aplicadas; não há conteúdo editorial real, primeiro owner ou deployment atualizado confirmado. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
+**Fase:** núcleo de estudos e administração editorial em desenvolvimento na branch `feat/study-question-engine` (PR #5 integrado; PR #7 em draft). O código inclui cadastro/login/recuperação, catálogo, questões, tentativas, objetivos, dashboard, favoritos, revisão de erros e RBAC editorial com auditoria. O CI passou no núcleo de estudo até o run #155, na camada administrativa no run #168 e nas proteções de ciclo editorial no run #169. Supabase não foi provisionado nem as migrações 0001–0006 aplicadas; não há conteúdo editorial real, primeiro owner ou deployment atualizado confirmado. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
