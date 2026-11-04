@@ -305,3 +305,8 @@ A migração `0005_subject_performance_and_wrong_questions.sql` cria duas RPCs s
 Foram adicionadas a API da fila de revisão, a página `/app/erros`, suporte a abrir uma questão específica pela query `questionId` e desempenho por disciplina no dashboard. Os resultados são derivados de tentativas persistidas e protegidos por RLS.
 
 Classificação: **parcialmente implementado (código preparado; migração 0005 e validação de dados reais pendentes)**. A fila de erros considera a tentativa mais recente, então uma questão respondida corretamente deixa a fila após nova submissão. Nenhuma métrica de disciplina é inventada quando não há tentativas.
+
+
+## 23. Atualização — desempenho e revisão aprovados pelo CI
+
+GitHub Actions run #155, no commit `bda023fc61232e60133cf4ecfe57eca858835145`, concluiu com sucesso: instalação, typecheck, 28 testes unitários e build. O escopo inclui a migração 0005, APIs de desempenho/revisão e páginas de revisão de erros. A execução confirma compilação e testes unitários, não execução SQL nem isolamento RLS real.
