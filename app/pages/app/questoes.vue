@@ -22,7 +22,10 @@ interface AttemptResult {
 }
 
 const route = useRoute()
-const query = computed(() => route.query.contestId ? { contestId: String(route.query.contestId) } : {})
+const query = computed(() => ({
+  ...(route.query.contestId ? { contestId: String(route.query.contestId) } : {}),
+  ...(route.query.questionId ? { questionId: String(route.query.questionId) } : {}),
+}))
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[] }>('/api/study/questions', { query })
 const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
@@ -86,7 +89,7 @@ function nextQuestion() {
   <main class="study-page">
     <header class="study-header">
       <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
+      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/erros">Revisar erros</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
     </header>
     <section class="study-content">
       <p class="auth-eyebrow">PRÁTICA</p>
