@@ -56,3 +56,6 @@ Antes de considerar o fluxo pronto: aplicar `supabase/migrations/0001_student_pr
 
 ## Situação da validação
 A integração de código Supabase está preparada, mas ainda não validada em runtime. O CI que passou anteriormente cobria apenas a base de testes e regra de questão; a autenticação foi adicionada depois. A Vercel reportou build-rate-limit no commit mais recente. Não considerar o fluxo autenticado disponível até uma execução CI e testes reais com duas contas.
+
+
+Para recuperação de senha, o Supabase Auth precisa estar configurado com envio de e-mail funcional e URLs permitidas para `/auth/callback` no domínio de produção e nos domínios de Preview usados. O redirect de recuperação usa `/auth/callback?next=%2Fredefinir-senha`; a aplicação restringe o destino final a uma rota local conhecida. Sem SMTP/serviço de e-mail validado, o fluxo não estará operacional.
