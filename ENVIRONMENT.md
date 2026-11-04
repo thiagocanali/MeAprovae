@@ -97,3 +97,29 @@ A quinta migração é `supabase/migrations/0005_subject_performance_and_wrong_q
 
 ## CI da migração 0005
 GitHub Actions run #155 passou com instalação, typecheck, 28 testes e build. Isso não executa SQL contra o banco; aplicar a migração e testar RLS/RPCs em ambiente Supabase antes de produção.
+
+
+## Migração 0006 — administração editorial e auditoria
+
+Aplique supabase/migrations/0006_editorial_admin_and_audit.sql somente depois das migrações 0001–0005. Ela cria:
+- platform_admins com papéis owner e editor;
+- has_platform_role('editor') para autorização no banco;
+- políticas RLS de CRUD editorial nas tabelas de concursos, editais, cargos, disciplinas, assuntos, questões, alternativas e gabaritos;
+- editorial_audit_log e triggers para registrar alterações editoriais;
+- leitura administrativa do histórico e gestão de papéis restrita ao owner.
+
+### Atribuição inicial do owner
+
+Não existe bootstrap automático. Depois de criar e confirmar a conta no Supabase Auth, execute no SQL Editor, substituindo pelo e-mail exato da conta confiável:
+
+```sql
+insert into public.platform_admins (user_id, role, granted_by)
+select id, 'owner', id
+from auth.users
+where lower(email) = lower('EMAIL_DA_CONTA_CONFIRMADA')
+  and email_confirmed_at is not null;
+```
+
+Confirme que uma linha foi inserida e valide a conta em /api/admin/overview. Se nenhuma linha for inserida, confira o e-mail e a confirmação; não relaxe RLS nem crie uma rota pública de promoção. O gerenciamento de papéis pela interface não está implementado.
+
+O painel /admin e a API /api/admin/overview dependem da migração 0006 e de um usuário com papel owner ou editor. Sem isso, o comportamento esperado é negar acesso. O código usa a sessão Supabase SSR do usuário e políticas RLS; não requer a chave service_role.
