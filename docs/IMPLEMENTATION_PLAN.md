@@ -54,9 +54,11 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 
 ## Fase 5 — progresso e aprendizagem
 - [x] Criar RPC de dashboard com questões respondidas, acertos, taxa, objetivo ativo e últimas tentativas.
-- [ ] Indicadores por disciplina/assunto.
+- [x] Criar agregação de desempenho por disciplina baseada em tentativas reais.
+- [x] Criar fila de revisão com última tentativa incorreta por questão.
 - [ ] Mapa de domínio do edital.
 - [ ] Histórico e recomendações explicáveis.
+- [ ] Validar agregações/RPCs com dados reais no Supabase.
 - [ ] Validar consultas e RLS em banco Supabase real.
 **Saída:** evolução derivada de tentativas/sessões reais.
 
