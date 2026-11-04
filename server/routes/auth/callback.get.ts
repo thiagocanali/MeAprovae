@@ -16,5 +16,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Não foi possível confirmar sua autenticação. Solicite um novo link.' })
   }
 
-  return sendRedirect(event, '/app', 303)
+  const nextPath = query.next === '/redefinir-senha' ? '/redefinir-senha' : '/app'
+  return sendRedirect(event, nextPath, 303)
 })
