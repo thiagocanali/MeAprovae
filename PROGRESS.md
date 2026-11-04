@@ -161,4 +161,17 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Interface: /admin apresenta indicadores editoriais e histórico recente. Formulários CRUD/publicação ainda não foram entregues.
 - Bootstrap: primeiro owner deve ser atribuído manualmente no SQL Editor do Supabase após a conta Auth confirmada existir; não há autoelevação ou usuário presumido.
 - Validação: migração 0006 ainda não aplicada; RLS, triggers e permissões precisam ser testados no Supabase real. CI do novo HEAD ainda precisa ser consultado.
-- Branch: feat/study-question-engine; PR #5 permanece aberto e não mesclado.
+- Branch: feat/study-question-engine; PR #5 foi integrado à main no commit db37823eb855db865d0adc8419f7d4e942e25d5a. A migração 0007 e sua documentação seguem no PR #7, em draft.
+
+
+### 2026-11-04 — Integridade do ciclo editorial e concorrência de objetivos (código preparado)
+- Migração 0007: revalida vínculos de publicação ao alterar concurso/edital/questão; impede alterar alternativas, gabaritos ou disciplinas de edital enquanto publicados; exige arquivamento antes de excluir registros publicados.
+- Concorrência: RPC set_student_study_goal passa a bloquear a linha do usuário durante a substituição do objetivo, serializando mudanças concorrentes.
+- Dependência: aplicar 0007 após 0006. Nenhuma migração foi executada em Supabase real.
+- CI: run #168 passou em instalação, typecheck, 28 testes e build para o HEAD anterior (antes da migração 0007); o novo HEAD ainda precisa de CI.
+
+
+### 2026-11-04 — CI verde da proteção de ciclo editorial (PR #7)
+- GitHub Actions run #169 passou integralmente no HEAD f93026925213fe47015ecb2dcdea9963515f9b6e: instalação, typecheck, 28 testes unitários e build de produção.
+- PR #7 aberto em modo draft para integrar a migração 0007 e a documentação complementar; não mesclado.
+- O CI não executa migrações nem substitui os testes de integração/RLS no Supabase real.

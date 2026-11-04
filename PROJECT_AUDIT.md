@@ -324,3 +324,11 @@ A auditoria inicial acima descreve o ponto de partida da fundação e não repre
 Limitações atuais: as migrações 0001–0006 não foram aplicadas em um projeto Supabase provisionado; nenhuma conta administrativa foi atribuída; não há conteúdo editorial real; os formulários CRUD ainda não foram implementados; o CI do novo módulo administrativo ainda precisa ser confirmado; e a Vercel ainda não tem deployment atualizado e saudável confirmado após o hotfix de typecheck. Portanto, as telas administrativas e de estudo são código em branch, não funcionalidades operacionais publicadas.
 
 Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o registro atualizado das entregas e dependências.
+
+
+## Administração editorial — atualização após integração
+
+- PR #5 foi integrado à main no commit db37823eb855db865d0adc8419f7d4e942e25d5a; inclui migração 0006, RBAC, auditoria, painel administrativo e CRUD inicial de concursos.
+- PR #7 está em draft e contém migração 0007 para reforçar integridade de publicação e serializar alterações concorrentes de objetivos.
+- GitHub Actions run #169 passou (instalação, typecheck, 28 testes e build) no commit de código f93026925213fe47015ecb2dcdea9963515f9b6e. A validação posterior das atualizações documentais está em execução no run #170.
+- O banco Supabase continua sem provisionamento confirmado; migrações e políticas ainda não foram executadas em ambiente real.
