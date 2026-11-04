@@ -89,3 +89,7 @@
 .study-form .study-primary-button { margin-top: 12px; }
 
 .study-favorite-button { margin: -10px 0 22px; }
+
+.study-performance-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.study-performance-row p { margin: 5px 0 0; }
+.study-performance-row > strong { color: #8ee6ba; font-size: 1.25rem; }
