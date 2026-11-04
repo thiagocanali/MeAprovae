@@ -32,16 +32,22 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 **Saída:** painel sem números artificiais.
 
 ## Fase 3 — concursos e editais
-- [ ] CRUD editorial de órgãos, concursos, cargos e editais.
+- [x] Criar schema de concursos, editais, disciplinas e tópicos com RLS.
+- [x] Criar APIs de catálogo/detalhe e acompanhar/deixar de acompanhar.
+- [ ] Criar CRUD editorial seguro de órgãos, concursos, cargos e editais.
 - [ ] Disciplinas, assuntos e subassuntos associados à versão de edital/cargo.
-- [ ] Pesquisa, filtros, favoritos e concursos acompanhados.
+- [ ] Pesquisa, filtros e favoritos.
+- [ ] Aplicar migração e validar isolamento de concursos acompanhados.
 **Saída:** objetivo de estudo selecionável e edital navegável.
 
 ## Fase 4 — banco de questões
-- [ ] Questões, alternativas, gabaritos versionados, explicações e fontes/licenças.
-- [ ] Filtros e busca.
-- [ ] Resolução no servidor, tentativas persistidas e idempotentes.
-- [ ] Histórico, favoritas, cadernos e questões erradas.
+- [x] Criar schema de questões, alternativas, gabarito privado, explicação e fonte.
+- [x] Criar listagem autenticada de questões e interface de resolução.
+- [x] Criar RPC server-side transacional para tentativa idempotente.
+- [x] Criar histórico privado e painel inicial de acertos.
+- [ ] Aplicar migração e validar RPC/RLS com duas contas.
+- [ ] Criar CRUD editorial, importação e curadoria/licenças do conteúdo.
+- [ ] Adicionar filtros, busca, favoritas, cadernos e questões erradas.
 **Saída:** ciclo de questão completo e auditável.
 
 ## Fase 5 — progresso e aprendizagem
