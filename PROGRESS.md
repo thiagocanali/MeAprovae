@@ -184,3 +184,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Segurança:** todas as rotas exigem papel editorial no servidor; RLS e triggers do banco continuam como fronteira final.
 - **PR:** #8 em draft; CI run #173 iniciado, aguardando conclusão.
 - **Persistência:** não testada contra Supabase real; não há banco provisionado confirmado nem dados editoriais reais inseridos.
+
+
+### 2026-11-04 — Disciplinas e vínculo com edital
+- APIs administrativas protegidas por `requirePlatformEditor` para listar e cadastrar disciplinas.
+- API para consultar disciplinas vinculadas a um edital e sincronizar a seleção em uma única RPC transacional.
+- Migração `0008_notice_subject_assignment.sql`: bloqueio de alteração quando o edital está publicado, validação de papel editorial, lock da linha do edital e substituição atômica dos vínculos.
+- Painel `/admin` com cadastro de disciplinas e associação múltipla a editais.
+- Código preparado na branch do PR #8; CI e validação SQL em Supabase real ainda pendentes.
