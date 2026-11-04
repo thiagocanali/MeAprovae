@@ -12,7 +12,14 @@ interface DashboardData {
   activeGoal: { contestTitle: string; noticeTitle: string | null; positionTitle: string | null } | null
   recentAttempts: Array<{ id: string; questionId: string; isCorrect: boolean; submittedAt: string }>
 }
-const { data: dashboardData, error: dashboardError, refresh: refreshDashboard } = await useFetch<{ dashboard: DashboardData }>('/api/study/dashboard')
+interface SubjectPerformance {
+  subjectId: string
+  subjectName: string
+  attempts: number
+  correctAnswers: number
+  accuracy: number
+}
+const { data: dashboardData, error: dashboardError, refresh: refreshDashboard } = await useFetch<{ dashboard: DashboardData; performanceBySubject: SubjectPerformance[] }>('/api/study/dashboard')
 const pending = ref(false)
 const errorMessage = ref('')
 
@@ -60,6 +67,13 @@ async function logout() {
         <p>Escolha um concurso como objetivo para acompanhar seu edital e orientar sua preparação. Nenhum indicador fictício será exibido aqui.</p>
         <NuxtLink class="study-link" to="/app/onboarding">Definir meu objetivo →</NuxtLink>
       </div>
+      <section v-if="dashboardData?.performanceBySubject.length" class="study-section">
+        <h2>Desempenho por disciplina</h2>
+        <article v-for="subject in dashboardData.performanceBySubject" :key="subject.subjectId" class="study-card study-performance-row">
+          <div><strong>{{ subject.subjectName }}</strong><p class="study-muted">{{ subject.correctAnswers }} acertos em {{ subject.attempts }} questões</p></div>
+          <strong>{{ subject.accuracy }}%</strong>
+        </article>
+      </section>
       <section v-if="dashboardData?.dashboard.recentAttempts.length" class="study-section">
         <h2>Atividades recentes</h2>
         <ol class="study-history">
