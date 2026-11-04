@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const supabase = createSupabaseServerClient(event)
   const { data, error } = await supabase
     .from('question_attempts')
-    .select('id, question_id, selected_option_id, is_correct, submitted_at')
+    .select('id, question_id, selected_option_id, is_correct, submitted_at, study_questions(statement)')
     .eq('user_id', user.id)
     .order('submitted_at', { ascending: false })
     .limit(100)
