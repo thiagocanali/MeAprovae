@@ -68,6 +68,11 @@ async function toggleFollow() {
         </div>
         <p v-if="actionError" class="auth-error" role="alert">{{ actionError }}</p>
         <section class="study-section">
+          <h2>Cargos publicados</h2>
+          <article v-if="data.contest.study_positions.length" class="study-card">
+            <ul><li v-for="position in data.contest.study_positions" :key="position.id">{{ position.title }}<span v-if="position.education_level" class="study-muted"> · {{ position.education_level }}</span></li></ul>
+          </article>
+          <p v-else class="study-muted">Nenhum cargo publicado para este concurso.</p>
           <h2>Editais publicados</h2>
           <article v-for="notice in data.contest.study_notices" :key="notice.id" class="study-card">
             <h3>{{ notice.title }}</h3>
