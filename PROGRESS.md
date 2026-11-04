@@ -2,7 +2,7 @@
 
 ## Estado geral
 
-**Status:** fundação publicada; produto ainda não possui fluxos de estudante operacionais.
+**Status em 04/11/2026:** núcleo de estudo e painel do estudante preparados em branch; execução real continua bloqueada pelo provisionamento/aplicação do Supabase e pela validação de deploy. Não considerar os fluxos operacionais antes desses testes.
 
 ### Entregas verificadas
 - [x] Repositório GitHub público e branch principal `main` identificados.
@@ -151,3 +151,14 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **GitHub Actions run #155:** instalação, typecheck, 28 testes e build passaram no commit `bda023fc61232e60133cf4ecfe57eca858835145`.
 - **Escopo:** migração 0005, agregação por disciplina, fila da tentativa mais recente incorreta, dashboard e página de revisão.
 - **Banco:** migração 0005 não aplicada; integração Supabase real e testes RLS continuam pendentes.
+
+
+### 2026-11-04 — Fundação de administração editorial e RBAC (código preparado)
+- Migração: supabase/migrations/0006_editorial_admin_and_audit.sql cria papéis owner/editor, função has_platform_role, políticas RLS para operações editoriais e tabela de auditoria.
+- Segurança: autorização administrativa é verificada no banco; a interface não é a barreira de autorização. Gabaritos permanecem privados para estudantes e acessíveis apenas a editores via RLS.
+- Auditoria: alterações em concursos, editais, cargos, disciplinas, assuntos, vínculos, questões, alternativas e gabaritos geram registros com ator, operação, tabela, ID e dados anterior/novo.
+- Servidor: requirePlatformEditor valida sessão e papel por RPC; GET /api/admin/overview devolve contagens e últimas alterações apenas para editores.
+- Interface: /admin apresenta indicadores editoriais e histórico recente. Formulários CRUD/publicação ainda não foram entregues.
+- Bootstrap: primeiro owner deve ser atribuído manualmente no SQL Editor do Supabase após a conta Auth confirmada existir; não há autoelevação ou usuário presumido.
+- Validação: migração 0006 ainda não aplicada; RLS, triggers e permissões precisam ser testados no Supabase real. CI do novo HEAD ainda precisa ser consultado.
+- Branch: feat/study-question-engine; PR #5 permanece aberto e não mesclado.
