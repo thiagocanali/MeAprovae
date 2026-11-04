@@ -36,7 +36,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 ## Fase 3 — concursos e editais
 - [x] Criar schema de concursos, editais, disciplinas e tópicos com RLS.
 - [x] Criar APIs de catálogo/detalhe e acompanhar/deixar de acompanhar.
-- [ ] Criar CRUD editorial seguro de órgãos, concursos, cargos e editais.
+- [x] CRUD inicial de concursos (PR #5 integrado) e editais (PR #8 em draft; validação de banco pendente).
 - [ ] Disciplinas, assuntos e subassuntos associados à versão de edital/cargo.
 - [ ] Pesquisa, filtros e favoritos.
 - [ ] Aplicar migração e validar isolamento de concursos acompanhados.
@@ -87,7 +87,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Verificação server-side de papel e painel administrativo (/admin, /api/admin/overview).
 - [x] CRUD inicial de concursos: criar em rascunho, listar, publicar, arquivar e reabrir.
 - [ ] CRUD de editais, cargos, disciplinas, assuntos, questões, alternativas e gabaritos com validação e publicação controlada.
-- [ ] CRUD editorial completo com formulários, validação, fluxo de rascunho/publicação e gestão de fontes/licenças.
+- [ ] CRUD editorial completo com formulários, validação, fluxo de rascunho/publicação e gestão de fontes/licenças (questões, cargos e vínculos de disciplinas ainda pendentes).
 - [ ] Bootstrap manual e seguro do primeiro owner após provisionar Supabase.
 - [ ] Validar todas as políticas, triggers e operações com contas estudante/editor/owner no Supabase real.
 
