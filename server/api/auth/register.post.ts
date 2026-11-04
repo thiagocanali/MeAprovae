@@ -1,25 +1,26 @@
 import { createError, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
+import { isValidPassword, normalizeDisplayName, normalizeEmail } from '../../../shared/domain/auth/validation'
 
 interface RegisterBody {
-  email?: string
-  password?: string
-  displayName?: string
+  email?: unknown
+  password?: unknown
+  displayName?: unknown
 }
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<RegisterBody>(event)
-  const email = body.email?.trim().toLowerCase()
+  const email = normalizeEmail(body.email)
   const password = body.password
-  const displayName = body.displayName?.trim()
+  const displayName = normalizeDisplayName(body.displayName)
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!email) {
     throw createError({ statusCode: 400, statusMessage: 'Informe um e-mail válido.' })
   }
-  if (!password || password.length < 8 || password.length > 72) {
+  if (!isValidPassword(password)) {
     throw createError({ statusCode: 400, statusMessage: 'A senha deve ter entre 8 e 72 caracteres.' })
   }
-  if (!displayName || displayName.length < 2 || displayName.length > 60) {
+  if (!displayName) {
     throw createError({ statusCode: 400, statusMessage: 'Informe um nome entre 2 e 60 caracteres.' })
   }
 
@@ -34,7 +35,6 @@ export default defineEventHandler(async (event) => {
   })
 
   if (error) {
-    // Do not expose provider internals or reveal whether an address is registered.
     throw createError({ statusCode: 400, statusMessage: 'Não foi possível criar a conta. Confira os dados e tente novamente.' })
   }
 
