@@ -7,7 +7,7 @@ interface RecoverBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<RecoverBody>(event)
+  const body = (await readBody<RecoverBody>(event)
   const email = normalizeEmail(body.email)
 
   if (!email) {
