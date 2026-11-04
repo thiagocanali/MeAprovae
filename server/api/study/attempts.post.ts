@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const user = await getAuthenticatedUser(event)
   if (!user) throw createError({ statusCode: 401, statusMessage: 'Entre para registrar sua resposta.' })
 
-  const body = await readBody<SubmitAttemptBody>(event)
+  const body = (await readBody<SubmitAttemptBody>(event)) ?? {}
   if (!isUuid(body.questionId) || !isUuid(body.optionId) || !isUuid(body.idempotencyKey)) {
     throw createError({ statusCode: 400, statusMessage: 'Dados da resposta inválidos.' })
   }
