@@ -85,3 +85,7 @@ A terceira migração é `supabase/migrations/0003_student_goals_and_dashboard.s
 
 ## Migração de favoritos
 A quarta migração é `supabase/migrations/0004_question_favorites.sql`. Aplicar depois das migrações 0001–0003. Validar que uma conta não consegue ler, adicionar ou remover favoritos de outra conta e que questões não publicadas não podem ser favoritadas.
+
+
+## CI do módulo de estudo
+O GitHub Actions run #143 passou: instalação, typecheck, 28 testes unitários e build. Essa validação não executa as migrações SQL nem testa políticas RLS e RPCs contra um banco. Esses testes permanecem bloqueados até provisionar Supabase e aplicar 0001–0004.
