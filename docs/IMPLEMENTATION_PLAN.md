@@ -83,7 +83,11 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 ## Fase 9 — comunidade e administração
 - [ ] Perfis públicos/privados, seguidores, feed, grupos e comentários.
 - [ ] Denúncias, bloqueios e moderação.
-- [ ] RBAC administrativo e trilha de auditoria.
+- [x] Fundação RBAC (owner/editor), RLS para operações editoriais e trilha de auditoria por trigger (migração 0006; aplicação/teste real pendentes).
+- [x] Verificação server-side de papel e painel administrativo de leitura (/admin, /api/admin/overview).
+- [ ] CRUD editorial completo com formulários, validação, fluxo de rascunho/publicação e gestão de fontes/licenças.
+- [ ] Bootstrap manual e seguro do primeiro owner após provisionar Supabase.
+- [ ] Validar todas as políticas, triggers e operações com contas estudante/editor/owner no Supabase real.
 
 ## Fase 10 — tutor IA
 - [ ] Provedor e limites/custos definidos.
