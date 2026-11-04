@@ -24,6 +24,7 @@ interface AttemptResult {
 const route = useRoute()
 const query = computed(() => route.query.contestId ? { contestId: String(route.query.contestId) } : {})
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[] }>('/api/study/questions', { query })
+const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
 const selectedOptionId = ref('')
 const result = ref<AttemptResult | null>(null)
@@ -31,6 +32,23 @@ const submitPending = ref(false)
 const submitError = ref('')
 const idempotencyKey = ref('')
 const currentQuestion = computed(() => data.value?.questions[currentIndex.value] ?? null)
+const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
+const favoritePending = ref(false)
+const favoriteError = ref('')
+
+async function toggleFavorite() {
+  if (!currentQuestion.value || favoritePending.value) return
+  favoritePending.value = true
+  favoriteError.value = ''
+  try {
+    await $fetch(`/api/study/questions/${currentQuestion.value.id}/favorite`, { method: isFavorite.value ? 'DELETE' : 'POST' })
+    await refreshFavorites()
+  } catch {
+    favoriteError.value = 'Não foi possível atualizar seus favoritos. Verifique se a migração de favoritos foi aplicada.'
+  } finally {
+    favoritePending.value = false
+  }
+}
 
 async function submitAnswer() {
   if (!currentQuestion.value || !selectedOptionId.value || submitPending.value || result.value) return
@@ -68,7 +86,7 @@ function nextQuestion() {
   <main class="study-page">
     <header class="study-header">
       <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
+      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
     </header>
     <section class="study-content">
       <p class="auth-eyebrow">PRÁTICA</p>
@@ -94,6 +112,10 @@ function nextQuestion() {
             {{ currentQuestion.source_label || 'Fonte não identificada' }}<span v-if="currentQuestion.source_year"> · {{ currentQuestion.source_year }}</span>
           </p>
           <h2>{{ currentQuestion.statement }}</h2>
+          <button class="study-secondary-button study-favorite-button" :disabled="favoritePending || Boolean(favoritesError)" @click="toggleFavorite">
+            {{ favoritePending ? 'Salvando…' : isFavorite ? '★ Remover dos favoritos' : '☆ Salvar nos favoritos' }}
+          </button>
+          <p v-if="favoriteError" class="auth-error" role="alert">{{ favoriteError }}</p>
           <fieldset class="study-options" :disabled="Boolean(result) || submitPending">
             <legend>Selecione uma alternativa</legend>
             <label v-for="option in currentQuestion.options" :key="option.id" class="study-option" :class="{ 'is-selected': selectedOptionId === option.id, 'is-correct': result?.correctOptionId === option.id, 'is-wrong': result?.selectedOptionId === option.id && !result.isCorrect }">
