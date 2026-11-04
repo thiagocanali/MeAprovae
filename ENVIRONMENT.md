@@ -59,3 +59,13 @@ A integração de código Supabase está preparada, mas ainda não validada em r
 
 
 Para recuperação de senha, o Supabase Auth precisa estar configurado com envio de e-mail funcional e URLs permitidas para `/auth/callback` no domínio de produção e nos domínios de Preview usados. O redirect de recuperação usa `/auth/callback?next=%2Fredefinir-senha`; a aplicação restringe o destino final a uma rota local conhecida. Sem SMTP/serviço de e-mail validado, o fluxo não estará operacional.
+
+
+## Migração do catálogo e tentativas
+Antes de ativar as páginas de estudo, aplique na ordem:
+1. `supabase/migrations/0001_student_profiles.sql`
+2. `supabase/migrations/0002_study_catalog_and_question_attempts.sql`
+
+A segunda migração cria conteúdo editorial, RLS e a função RPC `submit_question_attempt`. Cadastre concursos, editeis, disciplinas e questões por um processo administrativo confiável; publique na ordem concurso → edital → vínculo das disciplinas → questão com ao menos duas alternativas → gabarito → publicação da questão. O trigger bloqueia publicação incompleta.
+
+Não conceda a estudantes permissões para inserir/alterar gabaritos. Não crie questões com fonte/banca fictícia. Antes de produção, teste leitura anônima/autenticada do catálogo, tentativa sem sessão, tentativa com opção de outra questão, repetição da mesma chave e isolamento entre duas contas.
