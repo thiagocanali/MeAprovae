@@ -169,3 +169,9 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Concorrência: RPC set_student_study_goal passa a bloquear a linha do usuário durante a substituição do objetivo, serializando mudanças concorrentes.
 - Dependência: aplicar 0007 após 0006. Nenhuma migração foi executada em Supabase real.
 - CI: run #168 passou em instalação, typecheck, 28 testes e build para o HEAD anterior (antes da migração 0007); o novo HEAD ainda precisa de CI.
+
+
+### 2026-11-04 — CI verde da proteção de ciclo editorial (PR #7)
+- GitHub Actions run #169 passou integralmente no HEAD f93026925213fe47015ecb2dcdea9963515f9b6e: instalação, typecheck, 28 testes unitários e build de produção.
+- PR #7 aberto em modo draft para integrar a migração 0007 e a documentação complementar; não mesclado.
+- O CI não executa migrações nem substitui os testes de integração/RLS no Supabase real.
