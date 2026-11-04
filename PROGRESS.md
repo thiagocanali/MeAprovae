@@ -122,3 +122,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Persistência real:** ainda não validada; migração 0003 não aplicada e sem projeto Supabase/credenciais.
 - **Conteúdo:** não há concursos/cargos publicados; estados vazios são intencionais.
 - **Testes:** CI run #117 passou no motor de questões antes desta nova entrega; a alteração de objetivos/dashboard precisa de nova execução de typecheck/testes/build.
+
+
+### 2026-11-04 — Favoritos de questões (código preparado)
+- **Migração:** `0004_question_favorites.sql`, com RLS por usuário, unicidade por questão/estudante e validação de questão publicada.
+- **APIs:** listagem, inclusão idempotente e remoção de favoritos.
+- **Interface:** botão de salvar/remover na prática e página `/app/favoritas`; link no dashboard.
+- **Persistência:** ainda não testada; aplicar migração 0004 após as anteriores.
+- **CI:** executar novamente no HEAD atual; o run #133 validou o módulo de objetivos/dashboard antes desta entrega.
