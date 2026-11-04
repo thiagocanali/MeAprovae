@@ -18,6 +18,14 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 - Privacidade, segurança e conformidade com a LGPD desde a concepção.
 - Nenhuma funcionalidade deve ser apresentada como operacional se ainda for demonstrativa ou estiver pendente.
 
+## Aplicação
+
+A fundação inicial está sendo preparada em **Nuxt 4 + Vue 3 + TypeScript**, em uma branch de spike separada. Ela contém uma landing page de apresentação e um endpoint de saúde (/api/health). Ainda não há autenticação, banco conectado ou funcionalidades de estudo operacionais.
+
+- Site: https://meaprovae.vercel.app
+- Repositório: https://github.com/thiagocanali/MeAprovae
+- Guia de deploy: [DEPLOYMENT.md](docs/DEPLOYMENT.md)
+
 ## Documentação
 
 | Documento | Finalidade |
@@ -29,6 +37,7 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 | [Arquitetura](docs/ARCHITECTURE.md) | Diretrizes e decisões técnicas |
 | [Modelo de dados](docs/DATA_MODEL.md) | Entidades e relacionamentos conceituais |
 | [Plano de implementação](docs/IMPLEMENTATION_PLAN.md) | Ordem sugerida de construção do MVP |
+| [Deploy](docs/DEPLOYMENT.md) | Ambientes, Vercel e variáveis |
 | [UX/UI](docs/UX_UI.md) | Navegação, experiência e identidade |
 | [Aprendizagem](docs/LEARNING_EXPERIENCE.md) | Princípios pedagógicos e revisão |
 | [Gamificação](docs/GAMIFICATION.md) | XP, níveis, conquistas e rankings |
@@ -41,7 +50,7 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 
 ## Status atual
 
-**Fase:** documentação, validação da arquitetura e preparação do MVP. Ainda não há aplicação implementada neste repositório.
+**Fase:** fundação técnica em validação. A landing page e o endpoint de saúde são o primeiro esqueleto da aplicação. A stack permanece proposta até concluir o spike de build, deploy, banco, migrações e autenticação SSR.
 
 ## Princípio sobre dados demonstrativos
 
@@ -49,11 +58,10 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 
 ## Próximos passos
 
-1. Aprovar a recomendação de stack.
-2. Validar o modelo de dados e os fluxos do MVP.
-3. Preparar a aplicação, ambientes e automação de qualidade.
-4. Implementar o primeiro fluxo vertical: conta → objetivo → edital → questão → tentativa → progresso.
-5. Validar com estudantes antes de ampliar o escopo.
+1. Validar build e preview de deploy na Vercel.
+2. Configurar PostgreSQL e Drizzle em ambiente de desenvolvimento.
+3. Validar autenticação SSR e isolamento entre duas contas.
+4. Só então aprovar a stack e iniciar os fluxos de produto.
 
 ---
 
