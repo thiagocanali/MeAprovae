@@ -50,7 +50,7 @@ A fundação inicial está sendo preparada em **Nuxt 4 + Vue 3 + TypeScript**, e
 
 ## Status atual
 
-**Fase:** fundação técnica em validação. A landing page e o endpoint de saúde são o primeiro esqueleto da aplicação. A stack permanece proposta até concluir o spike de build, deploy, banco, migrações e autenticação SSR.
+**Fase:** fundação publicada e auditoria inicial em andamento. A landing page e o endpoint de saúde existem; foi adicionada uma primeira regra de domínio para avaliação de respostas, testes unitários e workflow de CI na branch `feat/project-audit-foundation`. Esses testes ainda aguardam execução automatizada. Cadastro, banco, questões persistidas e funcionalidades de estudante continuam indisponíveis. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md) e [PROGRESS.md](PROGRESS.md) para o estado verificado.
 
 ## Princípio sobre dados demonstrativos
 
