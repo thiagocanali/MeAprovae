@@ -1,5 +1,7 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'auth' })
+import authMiddleware from '~/middleware/auth'
+
+definePageMeta({ middleware: authMiddleware })
 const route = useRoute()
 const slug = String(route.params.slug)
 useSeoMeta({ title: `Concurso | Me Aprovaê` })
