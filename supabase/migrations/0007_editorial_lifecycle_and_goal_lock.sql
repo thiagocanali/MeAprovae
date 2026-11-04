@@ -79,14 +79,18 @@ declare
 begin
   if tg_op = 'DELETE' then
     v_question_id := old.question_id;
+    select q.status into v_status from public.study_questions q where q.id = v_question_id for update;
+  elsif tg_op = 'UPDATE' then
+    select q.status into v_status from public.study_questions q where q.id = old.question_id for update;
+    if v_status = 'published' then
+      raise exception using errcode = '23514', message = 'Unpublish the question before changing alternatives or answer keys';
+    end if;
+    v_question_id := new.question_id;
+    select q.status into v_status from public.study_questions q where q.id = v_question_id for update;
   else
     v_question_id := new.question_id;
+    select q.status into v_status from public.study_questions q where q.id = v_question_id for update;
   end if;
-
-  select q.status into v_status
-  from public.study_questions q
-  where q.id = v_question_id
-  for update;
 
   if v_status = 'published' then
     raise exception using errcode = '23514',
@@ -122,14 +126,18 @@ declare
 begin
   if tg_op = 'DELETE' then
     v_notice_id := old.notice_id;
+    select n.status into v_status from public.study_notices n where n.id = v_notice_id for update;
+  elsif tg_op = 'UPDATE' then
+    select n.status into v_status from public.study_notices n where n.id = old.notice_id for update;
+    if v_status = 'published' then
+      raise exception using errcode = '23514', message = 'Unpublish the notice before changing its subjects';
+    end if;
+    v_notice_id := new.notice_id;
+    select n.status into v_status from public.study_notices n where n.id = v_notice_id for update;
   else
     v_notice_id := new.notice_id;
+    select n.status into v_status from public.study_notices n where n.id = v_notice_id for update;
   end if;
-
-  select n.status into v_status
-  from public.study_notices n
-  where n.id = v_notice_id
-  for update;
 
   if v_status = 'published' then
     raise exception using errcode = '23514',
@@ -212,3 +220,36 @@ $$;
 
 revoke all on function public.set_student_study_goal(uuid, uuid, uuid) from public, anon;
 grant execute on function public.set_student_study_goal(uuid, uuid, uuid) to authenticated;
+
+-- Published records must be archived before deletion; archiving is reversible
+-- and remains visible in the editorial audit trail.
+create or replace function public.prevent_published_editorial_delete()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if to_jsonb(old) ->> 'status' = 'published' then
+    raise exception using errcode = '23514',
+      message = 'Archive the editorial record before deleting it';
+  end if;
+  return old;
+end;
+$$;
+
+drop trigger if exists study_contests_prevent_published_delete on public.study_contests;
+create trigger study_contests_prevent_published_delete
+  before delete on public.study_contests
+  for each row execute function public.prevent_published_editorial_delete();
+drop trigger if exists study_notices_prevent_published_delete on public.study_notices;
+create trigger study_notices_prevent_published_delete
+  before delete on public.study_notices
+  for each row execute function public.prevent_published_editorial_delete();
+drop trigger if exists study_positions_prevent_published_delete on public.study_positions;
+create trigger study_positions_prevent_published_delete
+  before delete on public.study_positions
+  for each row execute function public.prevent_published_editorial_delete();
+drop trigger if exists study_questions_prevent_published_delete on public.study_questions;
+create trigger study_questions_prevent_published_delete
+  before delete on public.study_questions
+  for each row execute function public.prevent_published_editorial_delete();
