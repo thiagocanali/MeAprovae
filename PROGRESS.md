@@ -130,3 +130,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Interface:** botão de salvar/remover na prática e página `/app/favoritas`; link no dashboard.
 - **Persistência:** ainda não testada; aplicar migração 0004 após as anteriores.
 - **CI:** executar novamente no HEAD atual; o run #133 validou o módulo de objetivos/dashboard antes desta entrega.
+
+
+### 2026-11-04 — CI verde após favoritos
+- **GitHub Actions run #143:** instalação, typecheck, 28 testes unitários e build de produção passaram no commit `ad6121be0a058d006ef9607a4fb928b68dfc6704`.
+- **Escopo coberto:** autenticação preparada, catálogo, motor de questões, objetivos, dashboard e favoritos.
+- **Ainda pendente:** aplicar migrações 0001–0004 e validar RLS, RPCs, idempotência e isolamento entre contas em Supabase real.
+- **Deploy:** Preview Vercel indisponível por `build-rate-limit`; produção ainda sem deployment READY posterior ao hotfix #6.
