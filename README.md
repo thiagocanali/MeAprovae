@@ -50,7 +50,7 @@ A fundação inicial está sendo preparada em **Nuxt 4 + Vue 3 + TypeScript**, e
 
 ## Status atual
 
-**Fase:** fundação publicada e auditoria inicial em andamento. A landing page e o endpoint de saúde existem; foi adicionada uma primeira regra de domínio para avaliação de respostas, testes unitários e workflow de CI na branch `feat/project-audit-foundation`. Esses testes ainda aguardam execução automatizada. Cadastro, banco, questões persistidas e funcionalidades de estudante continuam indisponíveis. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md) e [PROGRESS.md](PROGRESS.md) para o estado verificado.
+**Fase:** auditoria e fundação de identidade em desenvolvimento na branch `feat/project-audit-foundation`. A landing page e o endpoint de saúde estão publicados. A branch contém base de testes, CI, cliente Supabase SSR, endpoints/telas de autenticação e migração inicial de perfil. O fluxo de autenticação depende de configurar o projeto Supabase e ainda não foi testado ponta a ponta. Não há catálogo de concursos nem questões persistidas. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
