@@ -137,3 +137,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Escopo coberto:** autenticação preparada, catálogo, motor de questões, objetivos, dashboard e favoritos.
 - **Ainda pendente:** aplicar migrações 0001–0004 e validar RLS, RPCs, idempotência e isolamento entre contas em Supabase real.
 - **Deploy:** Preview Vercel indisponível por `build-rate-limit`; produção ainda sem deployment READY posterior ao hotfix #6.
+
+
+### 2026-11-04 — Desempenho por disciplina e fila de revisão (código preparado)
+- **Migração:** `0005_subject_performance_and_wrong_questions.sql`, com RPCs de agregação por disciplina e seleção da tentativa mais recente incorreta.
+- **APIs:** dashboard inclui desempenho por disciplina; endpoint de questões erradas/revisão.
+- **Interface:** dashboard mostra acertos/taxa por disciplina; página `/app/erros` lista questões cuja tentativa mais recente foi incorreta e permite reabri-las para nova tentativa.
+- **Persistência:** migração 0005 não aplicada; teste real depende do Supabase.
+- **CI:** executar no HEAD atual para validar typecheck, testes e build.
