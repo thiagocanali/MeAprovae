@@ -175,3 +175,12 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - GitHub Actions run #169 passou integralmente no HEAD f93026925213fe47015ecb2dcdea9963515f9b6e: instalação, typecheck, 28 testes unitários e build de produção.
 - PR #7 aberto em modo draft para integrar a migração 0007 e a documentação complementar; não mesclado.
 - O CI não executa migrações nem substitui os testes de integração/RLS no Supabase real.
+
+
+### 2026-11-04 — Gestão inicial de editais (PR #8)
+- **APIs:** GET /api/admin/notices (com filtro por concurso), POST para criar edital em rascunho e PATCH para editar metadados, publicar, arquivar ou reabrir.
+- **Validação:** UUID, título, versão, data de publicação e URL HTTP/HTTPS da fonte oficial; conflitos de versão retornam 409.
+- **Interface:** formulário de edital no painel /admin, associação obrigatória a concurso, fonte oficial e controles de status; estados vazios e mensagens de erro/sucesso.
+- **Segurança:** todas as rotas exigem papel editorial no servidor; RLS e triggers do banco continuam como fronteira final.
+- **PR:** #8 em draft; CI run #173 iniciado, aguardando conclusão.
+- **Persistência:** não testada contra Supabase real; não há banco provisionado confirmado nem dados editoriais reais inseridos.
