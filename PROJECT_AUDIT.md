@@ -205,3 +205,8 @@ A dependência de auth usa `@supabase/ssr`, atualmente em versão beta conforme 
 ## 14. Atualização — validação de entradas
 
 Foi extraído um módulo compartilhado para normalizar e validar e-mail, nome de exibição e senha; cadastro e login agora reutilizam as mesmas regras. Foram adicionados 16 casos unitários. A branch está em PR separado (#4) para validar o conjunto completo da autenticação sobre a base auditada. Até o momento, o CI aprovado anteriormente não incluiu as alterações Supabase; o run do HEAD mais recente não foi confirmado. A implementação de autenticação continua parcial até validar build, ambiente e serviço Supabase real.
+
+
+## 15. Atualização — recuperação de acesso preparada
+
+Foram adicionados os fluxos de solicitação de recuperação, callback PKCE com destino local restrito, redefinição de senha para sessão validada e páginas correspondentes. A classificação de recuperação de senha passa a **parcialmente implementada (código preparado; SMTP/redirects e runtime não testados)**. Não marcar como funcional até testar entrega de e-mail, expiração do link, atualização da senha e login com a nova senha.
