@@ -53,9 +53,11 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 **Saída:** ciclo de questão completo e auditável.
 
 ## Fase 5 — progresso e aprendizagem
+- [x] Criar RPC de dashboard com questões respondidas, acertos, taxa, objetivo ativo e últimas tentativas.
 - [ ] Indicadores por disciplina/assunto.
 - [ ] Mapa de domínio do edital.
 - [ ] Histórico e recomendações explicáveis.
+- [ ] Validar consultas e RLS em banco Supabase real.
 **Saída:** evolução derivada de tentativas/sessões reais.
 
 ## Fase 6 — gamificação
