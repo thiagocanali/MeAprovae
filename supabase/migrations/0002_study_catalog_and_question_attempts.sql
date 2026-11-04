@@ -166,9 +166,12 @@ create policy "Anyone can read options of published questions"
 create policy "Students can read their own contest tracking"
   on public.student_contests for select to authenticated
   using ((select auth.uid()) = user_id);
-create policy "Students can follow contests"
+create policy "Students can follow published contests"
   on public.student_contests for insert to authenticated
-  with check ((select auth.uid()) = user_id);
+  with check ((select auth.uid()) = user_id and exists (
+    select 1 from public.study_contests c
+    where c.id = contest_id and c.status = 'published'
+  ));
 create policy "Students can unfollow contests"
   on public.student_contests for delete to authenticated
   using ((select auth.uid()) = user_id);
@@ -176,8 +179,11 @@ create policy "Students can read their own question attempts"
   on public.question_attempts for select to authenticated
   using ((select auth.uid()) = user_id);
 
--- Revoke broad table grants before exposing only safe question columns.
-revoke all on public.study_question_answer_keys from anon, authenticated;
+-- Revoke default broad table grants before exposing only safe operations.
+revoke all on public.study_contests, public.study_notices, public.study_subjects,
+  public.study_topics, public.study_notice_subjects, public.study_questions,
+  public.study_question_options, public.study_question_answer_keys,
+  public.student_contests, public.question_attempts from anon, authenticated;
 revoke all on public.study_questions from anon, authenticated;
 revoke all on public.study_question_options from anon, authenticated;
 grant select on public.study_contests, public.study_notices, public.study_subjects,
