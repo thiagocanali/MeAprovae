@@ -341,3 +341,11 @@ Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o regist
 - A interface está no painel /admin. Não há ainda CRUD completo de disciplinas/vínculos, cargos, questões, alternativas e gabaritos.
 - CI run #173 foi iniciado para o commit 0a8980eaf95d7a8bed400c0a13ea288a1f058bcc; resultado ainda não confirmado.
 - Sem Supabase real, as migrações e o ciclo editorial permanecem preparados em código, não validados em runtime.
+
+
+## Disciplinas e vínculos de edital — 04/11/2026
+- O painel administrativo passou a cadastrar disciplinas e associá-las a editais em rascunho/arquivados.
+- A migração 0008 adiciona RPC `set_notice_subjects`, com validação de papel editorial, lock do edital e substituição transacional da lista de disciplinas.
+- Editais publicados não podem ter sua estrutura de disciplinas alterada; é necessário despublicá-los primeiro, respeitando também as regras de questões publicadas.
+- As rotas usam `requirePlatformEditor`; a RPC também valida o papel no banco. O histórico editorial existente registra as mutações da tabela de vínculo.
+- A entrega está em código na branch do PR #8. A execução da migração, testes RLS/transacionais e operação real dependem de Supabase provisionado.
