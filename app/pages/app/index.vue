@@ -1,5 +1,7 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'auth' })
+import authMiddleware from '~/middleware/auth'
+
+definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Minha área | Me Aprovaê' })
 
 const { data } = await useFetch<{ user: { id: string; email?: string } | null }>('/api/auth/me')
