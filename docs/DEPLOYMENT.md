@@ -22,7 +22,7 @@ A branch `main` deve continuar sendo a produção. A branch `spike/nuxt-foundati
 
 ## Variáveis de ambiente
 
-Arquivo de referência: [../.env.example](../.env.example).
+Arquivo de referência: [../.env.example](../.env.example) e [../ENVIRONMENT.md](../ENVIRONMENT.md).
 
 | Variável | Ambiente | Segredo |
 |---|---|---|
