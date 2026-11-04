@@ -77,3 +77,7 @@ A Vercel registrou falha de typecheck no deployment da integração inicial por 
 
 ## Hotfix de typecheck
 O PR #6 foi mesclado em `main` após CI verde (typecheck, testes e build). A Vercel ainda não apresentou deployment novo após o merge; o último deployment consultado continua em estado ERROR. Validar deployment READY e HTTP antes de declarar o domínio de produção saudável.
+
+
+## Migração de objetivos e dashboard
+A terceira migração é `supabase/migrations/0003_student_goals_and_dashboard.sql`. Ela depende das migrações 0001 e 0002. Aplicar na ordem 0001 → 0002 → 0003. A migração 0003 cria cargos, objetivos, RLS e RPCs para objetivo ativo e dashboard. Testar com duas contas se cada uma só lê/edita seu objetivo e seus próprios indicadores. O dashboard agrega as tentativas persistidas; não requer variáveis adicionais além do Supabase já documentado.
