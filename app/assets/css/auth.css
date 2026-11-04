@@ -87,3 +87,5 @@
 .study-form select { width: 100%; min-height: 48px; padding: 10px 12px; color: #f3f6fb; background: #172338; border: 1px solid rgba(255,255,255,.16); border-radius: 10px; font: inherit; }
 .study-form select:focus { outline: 2px solid #8ee6ba; outline-offset: 2px; }
 .study-form .study-primary-button { margin-top: 12px; }
+
+.study-favorite-button { margin: -10px 0 22px; }
