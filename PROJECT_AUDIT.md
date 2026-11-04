@@ -258,3 +258,12 @@ O deployment de produção gerado após a integração da auditoria falhou no ty
 A origem foi o uso de `middleware: 'auth'` como string. Na branch `feat/study-question-engine`, as páginas agora importam explicitamente o guard tipado `~/middleware/auth` e passam a função para `definePageMeta`. A correção está no PR #5 junto ao motor de questões. O Preview Vercel deste PR não foi criado porque o provedor retornou `build-rate-limit`; portanto, a correção ainda precisa de build confirmado.
 
 A última implantação de produção observada para o commit de auditoria está em estado **ERROR**. Não declarar produção saudável até um deployment READY e teste HTTP da landing, páginas e health endpoint.
+
+
+## 18. Atualização — CI verde e hotfix de produção mesclado
+
+- GitHub Actions run #117 para o código do motor de questões: instalação, typecheck, 28 testes unitários e build concluídos com sucesso.
+- A primeira execução de testes encontrou um caso de teste incorreto: UUID versão 7 é válida segundo RFC 9562; o validador já aceitava corretamente versões 1–8. O teste foi corrigido para aceitar v7, e a execução #117 passou.
+- PR #6 (`fix/typed-auth-middleware`) foi validado pelo GitHub Actions run #118 (typecheck, testes e build: sucesso) e mesclado em `main` via squash, commit `a1d696df01a180823365cfb1363d39ef4fca23ea`.
+- O hotfix remove a falha de typecheck em `app/pages/app/index.vue`. Ainda não há deployment Vercel novo visível após o merge; o último deployment observado permanece ERROR no commit anterior. O limite de builds da Vercel continua impedindo Preview.
+- PR #5 permanece aberto e não mesclado; o código do motor de questões passou CI, mas ainda depende de Supabase real, migrações aplicadas, conteúdo editorial e testes de integração/RLS.
