@@ -22,7 +22,8 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [ ] Validar confirmação de e-mail, recuperação de senha e renovação de sessão.
 - [ ] Testar isolamento entre duas contas distintas.
 - [ ] Adicionar perfil editável e preferências.
-- [ ] Configurar Vitest e testes de integração; configurar CI.
+- [x] Configurar Vitest, testes unitários e workflow CI.
+- [ ] Obter execução CI verde para a branch atual e adicionar testes de integração com Supabase.
 **Saída:** estudante autenticado com dados privados persistidos e isolados.
 
 ## Fase 2 — dashboard mínimo
