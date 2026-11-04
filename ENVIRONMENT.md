@@ -89,3 +89,7 @@ A quarta migração é `supabase/migrations/0004_question_favorites.sql`. Aplica
 
 ## CI do módulo de estudo
 O GitHub Actions run #143 passou: instalação, typecheck, 28 testes unitários e build. Essa validação não executa as migrações SQL nem testa políticas RLS e RPCs contra um banco. Esses testes permanecem bloqueados até provisionar Supabase e aplicar 0001–0004.
+
+
+## Migração de desempenho e revisão
+A quinta migração é `supabase/migrations/0005_subject_performance_and_wrong_questions.sql`. Aplicar depois de 0001–0004. As RPCs são invoker e dependem de `auth.uid()` e das permissões/RLS já criadas. Testar que o desempenho por disciplina e a fila de questões erradas mostram apenas tentativas do usuário autenticado e que a questão sai da fila quando a tentativa mais recente passa a correta.
