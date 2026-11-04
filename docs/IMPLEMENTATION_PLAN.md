@@ -37,7 +37,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Criar schema de concursos, editais, disciplinas e tópicos com RLS.
 - [x] Criar APIs de catálogo/detalhe e acompanhar/deixar de acompanhar.
 - [x] CRUD inicial de concursos (PR #5 integrado) e editais (PR #8 em draft; validação de banco pendente).
-- [ ] Disciplinas, assuntos e subassuntos associados à versão de edital/cargo.
+- [x] Cadastro inicial de disciplinas e associação transacional a editais (PR #8 em draft; migração 0008 ainda não aplicada em Supabase).\n- [ ] Assuntos e subassuntos associados à disciplina/edital/cargo.
 - [ ] Pesquisa, filtros e favoritos.
 - [ ] Aplicar migração e validar isolamento de concursos acompanhados.
 **Saída:** objetivo de estudo selecionável e edital navegável.
@@ -86,7 +86,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Fundação RBAC (owner/editor), RLS para operações editoriais e trilha de auditoria por trigger (migração 0006; aplicação/teste real pendentes).
 - [x] Verificação server-side de papel e painel administrativo (/admin, /api/admin/overview).
 - [x] CRUD inicial de concursos: criar em rascunho, listar, publicar, arquivar e reabrir.
-- [ ] CRUD de editais, cargos, disciplinas, assuntos, questões, alternativas e gabaritos com validação e publicação controlada.
+- [x] CRUD inicial de editais e disciplinas/vínculos (PR #8 em draft).\n- [ ] CRUD de cargos, assuntos, questões, alternativas e gabaritos com validação e publicação controlada.
 - [ ] CRUD editorial completo com formulários, validação, fluxo de rascunho/publicação e gestão de fontes/licenças (questões, cargos e vínculos de disciplinas ainda pendentes).
 - [ ] Bootstrap manual e seguro do primeiro owner após provisionar Supabase.
 - [ ] Validar todas as políticas, triggers e operações com contas estudante/editor/owner no Supabase real.
