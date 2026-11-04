@@ -294,3 +294,14 @@ Classificação: **parcialmente implementado (código e CI; migração e operaç
 ## 21. Atualização — favoritos validados pelo CI
 
 O GitHub Actions run #143, no commit `ad6121be0a058d006ef9607a4fb928b68dfc6704`, concluiu com sucesso: instalação de dependências, `nuxt typecheck`, 28 testes unitários e `nuxt build`. Isso valida compilação e testes unitários do código de favoritos, onboarding, objetivos e dashboard. Não substitui testes de banco/RLS; as migrações 0001–0004 continuam sem aplicação no Supabase.
+
+
+## 22. Atualização — desempenho por disciplina e fila de erros
+
+A migração `0005_subject_performance_and_wrong_questions.sql` cria duas RPCs server-side:
+- `get_student_subject_performance`: agrupa tentativas do estudante por disciplina e calcula volume, acertos e taxa.
+- `get_student_wrong_questions`: seleciona a tentativa mais recente por questão e retorna apenas as que continuam incorretas, com enunciado, disciplina, fonte e alternativas.
+
+Foram adicionadas a API da fila de revisão, a página `/app/erros`, suporte a abrir uma questão específica pela query `questionId` e desempenho por disciplina no dashboard. Os resultados são derivados de tentativas persistidas e protegidos por RLS.
+
+Classificação: **parcialmente implementado (código preparado; migração 0005 e validação de dados reais pendentes)**. A fila de erros considera a tentativa mais recente, então uma questão respondida corretamente deixa a fila após nova submissão. Nenhuma métrica de disciplina é inventada quando não há tentativas.
