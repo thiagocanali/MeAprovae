@@ -31,7 +31,13 @@ interface AdminOverview {
 
 const { data, error, refresh } = await useFetch<AdminOverview>('/api/admin/overview')
 interface ContestRow { id: string; slug: string; title: string; organization: string | null; exam_board: string | null; status: 'draft' | 'published' | 'archived'; published_at: string | null }
+interface NoticeRow { id: string; contest_id: string; title: string; version: string; publication_date: string | null; source_url: string | null; status: 'draft' | 'published' | 'archived' }
 const { data: contestsData, error: contestsError, refresh: refreshContests } = await useFetch<{ contests: ContestRow[] }>('/api/admin/contests')
+const { data: noticesData, error: noticesError, refresh: refreshNotices } = await useFetch<{ notices: NoticeRow[] }>('/api/admin/notices')
+const noticeForm = reactive({ contestId: '', title: '', version: '1', publicationDate: '', sourceUrl: '' })
+const savingNotice = ref(false)
+const noticeMessage = ref('')
+const noticeError = ref('')
 const contestForm = reactive({ slug: '', title: '', organization: '', examBoard: '' })
 const savingContest = ref(false)
 const contestMessage = ref('')
@@ -65,6 +71,36 @@ async function changeContestStatus(contest: ContestRow, status: ContestRow['stat
     contestError.value = cause instanceof Error ? cause.message : 'Não foi possível atualizar o concurso.'
   }
 }
+async function createNotice() {
+  savingNotice.value = true
+  noticeMessage.value = ''
+  noticeError.value = ''
+  try {
+    await $fetch('/api/admin/notices', { method: 'POST', body: noticeForm })
+    noticeForm.title = ''
+    noticeForm.version = '1'
+    noticeForm.publicationDate = ''
+    noticeForm.sourceUrl = ''
+    noticeMessage.value = 'Edital salvo como rascunho.'
+    await Promise.all([refresh(), refreshNotices()])
+  } catch (cause: unknown) {
+    noticeError.value = cause instanceof Error ? cause.message : 'Não foi possível salvar o edital.'
+  } finally {
+    savingNotice.value = false
+  }
+}
+async function changeNoticeStatus(notice: NoticeRow, status: NoticeRow['status']) {
+  noticeError.value = ''
+  noticeMessage.value = ''
+  try {
+    await $fetch('/api/admin/notices/' + notice.id, { method: 'PATCH', body: { status } })
+    noticeMessage.value = status === 'published' ? 'Edital publicado.' : 'Status do edital atualizado.'
+    await Promise.all([refresh(), refreshNotices()])
+  } catch (cause: unknown) {
+    noticeError.value = cause instanceof Error ? cause.message : 'Não foi possível atualizar o edital.'
+  }
+}
+const contestTitle = (id: string) => contestsData.value?.contests.find(contest => contest.id === id)?.title || 'Concurso não encontrado'
 const date = (value: string) => new Date(value).toLocaleString('pt-BR')
 const label = (table: string) => ({
   study_contests: 'Concurso',
@@ -141,6 +177,46 @@ const label = (table: string) => ({
           </article>
         </section>
 
+        <section class="study-section student-empty">
+          <p class="auth-eyebrow">ESTRUTURA DO CONCURSO</p>
+          <h2>Novo edital</h2>
+          <form class="contest-form" @submit.prevent="createNotice">
+            <label>Concurso
+              <select v-model="noticeForm.contestId" required>
+                <option value="" disabled>Selecione um concurso</option>
+                <option v-for="contest in contestsData?.contests || []" :key="contest.id" :value="contest.id">{{ contest.title }} · {{ contest.status === 'published' ? 'Publicado' : contest.status === 'archived' ? 'Arquivado' : 'Rascunho' }}</option>
+              </select>
+            </label>
+            <label>Título do edital<input v-model="noticeForm.title" required minlength="3" maxlength="180" placeholder="Edital de abertura"></label>
+            <label>Versão<input v-model="noticeForm.version" required maxlength="40" placeholder="1.0"></label>
+            <label>Data de publicação<input v-model="noticeForm.publicationDate" type="date"></label>
+            <label class="form-wide">URL da fonte oficial<input v-model="noticeForm.sourceUrl" type="url" maxlength="2048" placeholder="https://site-oficial.gov.br/edital.pdf"></label>
+            <button class="study-secondary-button" type="submit" :disabled="savingNotice || !contestsData?.contests.length">{{ savingNotice ? 'Salvando…' : 'Salvar edital como rascunho' }}</button>
+          </form>
+          <p class="study-muted">O edital será criado como rascunho. Para publicar, o concurso associado também precisa estar publicado.</p>
+          <p v-if="noticeMessage" class="admin-success" role="status">{{ noticeMessage }}</p>
+          <p v-if="noticeError" class="admin-error" role="alert">{{ noticeError }}</p>
+        </section>
+
+        <section class="study-section">
+          <h2>Editais cadastrados</h2>
+          <p v-if="noticesError" class="admin-error" role="alert">Não foi possível carregar os editais.</p>
+          <div v-else-if="!noticesData?.notices.length" class="student-empty"><p>Nenhum edital cadastrado.</p></div>
+          <article v-for="notice in noticesData?.notices || []" :key="notice.id" class="admin-contest-row">
+            <div>
+              <strong>{{ notice.title }} · v{{ notice.version }}</strong>
+              <p class="study-muted">{{ contestTitle(notice.contest_id) }} · {{ notice.publication_date ? new Date(notice.publication_date + 'T00:00:00').toLocaleDateString('pt-BR') : 'Data não informada' }}</p>
+              <a v-if="notice.source_url" :href="notice.source_url" target="_blank" rel="noopener noreferrer" class="study-link">Consultar fonte oficial</a>
+              <span class="admin-status">{{ notice.status === 'published' ? 'Publicado' : notice.status === 'archived' ? 'Arquivado' : 'Rascunho' }}</span>
+            </div>
+            <div class="admin-actions">
+              <button v-if="notice.status !== 'published'" class="study-secondary-button" @click="changeNoticeStatus(notice, 'published')">Publicar</button>
+              <button v-if="notice.status !== 'archived'" class="study-secondary-button" @click="changeNoticeStatus(notice, 'archived')">Arquivar</button>
+              <button v-if="notice.status === 'archived'" class="study-secondary-button" @click="changeNoticeStatus(notice, 'draft')">Reabrir</button>
+            </div>
+          </article>
+        </section>
+
         <section class="study-section">
           <h2>Histórico editorial recente</h2>
           <div v-if="!data.recentChanges.length" class="student-empty">
@@ -169,9 +245,11 @@ const label = (table: string) => ({
 
 <style scoped>
 .contest-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+.contest-form select { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; color: var(--color-text); background: var(--color-bg); font: inherit; }
 .contest-form label { display: grid; gap: 7px; color: var(--color-muted); font-size: 12px; }
 .contest-form input { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; color: var(--color-text); background: var(--color-bg); font: inherit; }
 .contest-form button { justify-self: start; }
+.form-wide { grid-column: 1 / -1; }
 .admin-contest-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 12px; padding: 17px; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; }
 .admin-contest-row p { margin: 6px 0; font-size: 12px; }
 .admin-status { color: var(--color-primary); font-size: 11px; }
