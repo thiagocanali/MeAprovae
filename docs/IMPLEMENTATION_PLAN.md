@@ -15,6 +15,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Preparar cliente SSR com cookies e verificação server-side.
 - [x] Implementar endpoints e telas iniciais de cadastro/login/logout.
 - [x] Criar migração de perfil com RLS e trigger de criação.
+- [x] Extrair e testar validação compartilhada de entradas de cadastro/login.
 - [ ] Provisionar projeto Supabase e configurar variáveis nos ambientes.
 - [ ] Aplicar/testar migração em banco real.
 - [ ] Validar confirmação de e-mail, recuperação de senha e renovação de sessão.
