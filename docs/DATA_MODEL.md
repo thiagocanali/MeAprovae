@@ -196,3 +196,8 @@ A migração `supabase/migrations/0003_student_goals_and_dashboard.sql` acrescen
 - RPC `get_student_dashboard`: calcula métricas a partir de `question_attempts` e retorna objetivo ativo e atividade recente.
 
 As rotas e páginas foram adicionadas, mas a migração ainda não foi aplicada a um projeto Supabase real.
+
+
+## Implementação SQL — favoritos
+
+A migração `supabase/migrations/0004_question_favorites.sql` implementa `student_question_favorites`, com unicidade por usuário/questão e RLS de leitura, inclusão e remoção limitada ao próprio estudante. A inclusão só é permitida para questões publicadas. APIs e páginas de favoritos foram criadas, mas ainda dependem da aplicação da migração.
