@@ -55,6 +55,11 @@ async function logout() {
         <p class="study-muted">{{ dashboardData.dashboard.activeGoal.positionTitle || 'Cargo não selecionado' }}<span v-if="dashboardData.dashboard.activeGoal.noticeTitle"> · {{ dashboardData.dashboard.activeGoal.noticeTitle }}</span></p>
         <NuxtLink class="study-link" to="/app/concursos">Ver concursos e editais →</NuxtLink>
       </div>
+      <div v-else class="student-empty">
+        <h2>Vamos organizar seus estudos.</h2>
+        <p>Escolha um concurso como objetivo para acompanhar seu edital e orientar sua preparação. Nenhum indicador fictício será exibido aqui.</p>
+        <NuxtLink class="study-link" to="/app/onboarding">Definir meu objetivo →</NuxtLink>
+      </div>
       <section v-if="dashboardData?.dashboard.recentAttempts.length" class="study-section">
         <h2>Atividades recentes</h2>
         <ol class="study-history">
@@ -64,11 +69,6 @@ async function logout() {
           </li>
         </ol>
       </section>
-      <div v-else class="student-empty">
-        <h2>Vamos organizar seus estudos.</h2>
-        <p>Escolha um concurso como objetivo para acompanhar seu edital e orientar sua preparação. Nenhum indicador fictício será exibido aqui.</p>
-        <NuxtLink class="study-link" to="/app/onboarding">Definir meu objetivo →</NuxtLink>
-      </div>
     </section>
   </main>
 </template>
