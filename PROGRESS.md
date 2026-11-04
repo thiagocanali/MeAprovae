@@ -77,3 +77,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Branch:** `feat/auth-validation`, PR #4 para `feat/project-audit-foundation`.
 - **CI:** não foi possível confirmar um run para o HEAD mais recente pela integração; o run anterior passou antes do código Supabase. Não declarar typecheck/build do código de autenticação aprovados.
 - **Vercel:** status Vercel no commit atual falhou por limite de builds do plano (build-rate-limit). Nenhuma alteração em produção.
+
+
+### 2026-11-04 — Recuperação e redefinição de senha
+- **Código:** endpoint de solicitação de recuperação com resposta genérica, callback PKCE com destino local permitido, endpoint autenticado de atualização de senha e telas de recuperação/redefinição.
+- **Segurança:** o destino de callback é allowlist fixa (`/redefinir-senha` ou `/app`), a redefinição exige usuário validado no servidor e a resposta de solicitação não revela se o e-mail possui conta.
+- **Dependência:** configuração de Auth/SMTP e allowlist de redirects no Supabase ainda ausentes.
+- **Testes:** implementação não validada em runtime; CI do HEAD atual não confirmado.
