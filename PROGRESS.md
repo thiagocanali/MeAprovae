@@ -104,3 +104,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Correção implementada no PR #5: importar o guard como função tipada nas páginas protegidas.
 - Estado de produção observado: último deployment associado ao commit `acb07c340059accb672932336fb0c1b9eca3b2a7` está **ERROR**.
 - O Preview do PR #5 está bloqueado por `build-rate-limit`; não há build atualizado para validar a correção.
+
+
+### 2026-11-04 — CI e hotfix de produção
+- **CI do motor de questões:** GitHub Actions run #117 — `npm install`, `nuxt typecheck`, Vitest (28/28) e `nuxt build` concluídos com sucesso.
+- **Ajuste encontrado pelo teste:** um UUID v7 estava incorretamente listado como inválido; o teste foi corrigido porque o validador já aceitava corretamente UUID v7.
+- **Hotfix:** PR #6 mesclado em `main`; commit `a1d696df01a180823365cfb1363d39ef4fca23ea`; CI run #118 também verde.
+- **Deploy:** nenhum deployment Vercel novo confirmado após o merge; o último deployment observado ainda é o erro anterior. Não declarar produção corrigida até deployment READY e teste HTTP.
+- **PR #5:** permanece aberto; CI verde para o código atual do módulo, porém sem banco real e sem Preview.
