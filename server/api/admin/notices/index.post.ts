@@ -17,7 +17,7 @@ function validDate(value: string) {
 }
 
 function validSource(value: unknown): string | null | undefined {
-  if (value === undefined) return undefined
+  if (value === undefined || value === null || value === '') return null
   if (value === null || value === '') return null
   if (typeof value !== 'string' || value.length > 2048) return undefined
   try {
