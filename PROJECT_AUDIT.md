@@ -180,3 +180,14 @@ Problemas objetivos:
 
 ---
 Esta auditoria descreve o estado encontrado em 04/11/2026 e deve ser atualizada a cada entrega funcional.
+
+
+## 12. Atualização após a primeira entrega de engenharia
+
+Na branch `feat/project-audit-foundation` foram adicionados:
+- Vitest como runner de testes unitários.
+- Regra pura `evaluateAnswer` para avaliação de alternativa, preparada para ser chamada por lógica confiável no servidor.
+- Cinco cenários unitários: correta, incorreta, não respondida e duas entradas inválidas.
+- Workflow GitHub Actions para instalar dependências, executar typecheck, testes e build.
+
+**Status de validação:** os arquivos foram enviados ao GitHub; execução automatizada ainda pendente de um run do Actions. A regra de domínio ainda não está conectada a uma API, banco ou interface de resolução; portanto, o módulo de questões permanece **não implementado** em termos de produto. O setup de CI não resolve a ausência de lockfile.
