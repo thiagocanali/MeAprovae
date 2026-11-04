@@ -28,6 +28,7 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 | [Roadmap](docs/ROADMAP.md) | Evolução planejada por etapas |
 | [Arquitetura](docs/ARCHITECTURE.md) | Diretrizes e decisões técnicas |
 | [Modelo de dados](docs/DATA_MODEL.md) | Entidades e relacionamentos conceituais |
+| [Plano de implementação](docs/IMPLEMENTATION_PLAN.md) | Ordem sugerida de construção do MVP |
 | [UX/UI](docs/UX_UI.md) | Navegação, experiência e identidade |
 | [Aprendizagem](docs/LEARNING_EXPERIENCE.md) | Princípios pedagógicos e revisão |
 | [Gamificação](docs/GAMIFICATION.md) | XP, níveis, conquistas e rankings |
@@ -40,7 +41,7 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 
 ## Status atual
 
-<sub>Fase: documentação e definição da fundação. Ainda não há aplicação implementada neste repositório.</sub>
+**Fase:** documentação, validação da arquitetura e preparação do MVP. Ainda não há aplicação implementada neste repositório.
 
 ## Princípio sobre dados demonstrativos
 
@@ -48,11 +49,11 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 
 ## Próximos passos
 
-1. Revisar e aprovar a documentação-base.
-2. Definir stack e arquitetura inicial.
-3. Desenhar o modelo relacional e as políticas de acesso.
-4. Preparar ambiente de desenvolvimento e qualidade.
-5. Implementar o MVP em incrementos pequenos e verificáveis.
+1. Aprovar a recomendação de stack.
+2. Validar o modelo de dados e os fluxos do MVP.
+3. Preparar a aplicação, ambientes e automação de qualidade.
+4. Implementar o primeiro fluxo vertical: conta → objetivo → edital → questão → tentativa → progresso.
+5. Validar com estudantes antes de ampliar o escopo.
 
 ---
 
