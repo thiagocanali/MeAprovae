@@ -12,6 +12,7 @@ interface Question {
 }
 interface AttemptResult {
   attemptId: string
+  selectedOptionId: string
   isCorrect: boolean
   correctOptionId: string
   explanation: string
