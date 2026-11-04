@@ -1,124 +1,93 @@
-# Plano de implementação do MVP
+# Plano de implementação — Me Aprovaê
 
-## Objetivo
+Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PROGRESS.md](../PROGRESS.md); requisitos planejados não são funcionalidades implementadas.
 
-Construir o primeiro fluxo completo do Me Aprovaê em entregas pequenas, verificáveis e úteis. O plano organiza o trabalho; não significa que qualquer item já esteja implementado.
+## Fase 0 — auditoria e preparação
+- [x] Confirmar repositório, branch padrão e permissão de escrita.
+- [x] Confirmar integração GitHub/Vercel e último deployment READY.
+- [x] Identificar o estado real da aplicação e documentar lacunas.
+- [ ] Obter árvore completa do repositório e executar checkout local para `git status` e comandos npm.
+- [ ] Gerar lockfile e pipeline CI.
 
-## Marco 0 — decisões e preparação
+## Fase 1 — infraestrutura e identidade (P0)
+- [ ] Decidir/provisionar PostgreSQL gerenciado e configurar `DATABASE_URL`.
+- [x] Escolher Supabase Auth como integração inicial, condicionada a provisionamento e teste.
+- [x] Preparar cliente SSR com cookies e verificação server-side.
+- [x] Implementar endpoints e telas iniciais de cadastro/login/logout.
+- [x] Criar migração de perfil com RLS e trigger de criação.
+- [ ] Provisionar projeto Supabase e configurar variáveis nos ambientes.
+- [ ] Aplicar/testar migração em banco real.
+- [ ] Validar confirmação de e-mail, recuperação de senha e renovação de sessão.
+- [ ] Testar isolamento entre duas contas distintas.
+- [ ] Adicionar perfil editável e preferências.
+- [ ] Configurar Vitest e testes de integração; configurar CI.
+**Saída:** estudante autenticado com dados privados persistidos e isolados.
 
-- [ ] Aprovar ou ajustar a stack proposta na ADR-0002.
-- [ ] Confirmar provedor e região do PostgreSQL.
-- [ ] Confirmar autenticação e estratégia SSR.
-- [ ] Revisar ERD e regras de acesso.
-- [ ] Definir identidade visual mínima e tokens CSS.
-- [ ] Definir ambientes e gestão de segredos.
-- [ ] Criar pipeline de CI.
+## Fase 2 — dashboard mínimo
+- [ ] Criar dashboard após existirem registros reais.
+- [ ] Calcular tentativas, acertos, tempo e progresso por consultas persistidas.
+- [ ] Implementar estados de carregamento, vazio e erro.
+**Saída:** painel sem números artificiais.
 
-**Saída:** decisões fundamentais registradas e projeto pronto para receber código.
+## Fase 3 — concursos e editais
+- [ ] CRUD editorial de órgãos, concursos, cargos e editais.
+- [ ] Disciplinas, assuntos e subassuntos associados à versão de edital/cargo.
+- [ ] Pesquisa, filtros, favoritos e concursos acompanhados.
+**Saída:** objetivo de estudo selecionável e edital navegável.
 
-## Marco 1 — fundação da aplicação
+## Fase 4 — banco de questões
+- [ ] Questões, alternativas, gabaritos versionados, explicações e fontes/licenças.
+- [ ] Filtros e busca.
+- [ ] Resolução no servidor, tentativas persistidas e idempotentes.
+- [ ] Histórico, favoritas, cadernos e questões erradas.
+**Saída:** ciclo de questão completo e auditável.
 
-- [ ] Criar aplicação Nuxt com TypeScript.
-- [ ] Configurar lint, formatação e typecheck.
-- [ ] Configurar testes unitários e e2e.
-- [ ] Configurar variáveis de ambiente e validação no startup.
-- [ ] Criar layout público e layout autenticado.
-- [ ] Criar tratamento global de erros e estados vazios.
-- [ ] Configurar integração com banco e migrações.
-- [ ] Criar seed de desenvolvimento com dados fictícios identificados.
+## Fase 5 — progresso e aprendizagem
+- [ ] Indicadores por disciplina/assunto.
+- [ ] Mapa de domínio do edital.
+- [ ] Histórico e recomendações explicáveis.
+**Saída:** evolução derivada de tentativas/sessões reais.
 
-**Saída:** aplicação executa localmente, builda e possui estrutura mínima de qualidade.
+## Fase 6 — gamificação
+- [ ] Regras de XP no servidor.
+- [ ] Eventos de XP idempotentes e auditáveis.
+- [ ] Níveis, conquistas, metas e sequência.
+- [ ] Rankings após controles antifraude.
+**Saída:** recompensa íntegra, sem XP controlado pelo cliente.
 
-## Marco 2 — identidade e objetivo de estudo
+## Fase 7 — simulados
+- [ ] Montagem, cronômetro, salvamento e retomada.
+- [ ] Finalização transacional, correção e relatório.
+- [ ] Histórico e comparação.
 
-- [ ] Implementar cadastro e login.
-- [ ] Implementar logout e recuperação de acesso.
-- [ ] Criar perfil básico.
-- [ ] Implementar onboarding.
-- [ ] Criar seleção de concurso/cargo como objetivo.
-- [ ] Validar isolamento de dados entre contas.
-- [ ] Criar testes de autorização.
+## Fase 8 — flashcards e cronograma
+- [ ] Flashcards e revisões espaçadas.
+- [ ] Agenda, metas e planejamento semanal.
+- [ ] Sessões e histórico de estudo.
 
-**Saída:** estudante entra na plataforma e define o que está estudando.
+## Fase 9 — comunidade e administração
+- [ ] Perfis públicos/privados, seguidores, feed, grupos e comentários.
+- [ ] Denúncias, bloqueios e moderação.
+- [ ] RBAC administrativo e trilha de auditoria.
 
-## Marco 3 — catálogo e edital
+## Fase 10 — tutor IA
+- [ ] Provedor e limites/custos definidos.
+- [ ] Chaves server-side.
+- [ ] Contexto de edital e histórico com controles de privacidade.
+- [ ] Testes de segurança, citações e limites de conteúdo.
 
-- [ ] Criar entidades de organização, banca, concurso e cargo.
-- [ ] Criar cadastro e versionamento de edital.
-- [ ] Criar disciplinas e tópicos.
-- [ ] Mapear o conteúdo programático por edital/cargo.
-- [ ] Criar interface para visualizar o edital.
-- [ ] Criar fluxo administrativo mínimo para cadastrar e revisar catálogo.
-- [ ] Exibir origem e data de atualização.
+## Fase 11 — prontidão de lançamento
+- [ ] Testes e2e de fluxos críticos.
+- [ ] Testes de segurança, acessibilidade e responsividade.
+- [ ] Backup/restauração e retenção de dados.
+- [ ] Monitoramento, suporte e política de privacidade.
+- [ ] Revisão de custos e operação.
 
-**Saída:** estudante consegue navegar pelo conteúdo programático do seu objetivo.
+## Prioridades
+- **P0:** credenciais/provisionamento, banco, autenticação, autorização, isolamento e integridade.
+- **P1:** catálogo, questões, tentativas e progresso.
+- **P2:** dashboard, gamificação, simulados, revisão e administração.
+- **P3:** comunidade, IA avançada e monetização.
 
-## Marco 4 — questões e tentativas
-
-- [ ] Criar questões, alternativas, gabaritos, explicações e fontes.
-- [ ] Criar fluxo de revisão/publicação de questão.
-- [ ] Criar filtros básicos.
-- [ ] Implementar tela de resolução.
-- [ ] Calcular resultado no servidor.
-- [ ] Persistir tentativas com idempotência.
-- [ ] Implementar favoritos.
-- [ ] Testar gabarito, reenvio, concorrência e permissões.
-
-**Saída:** estudante consegue responder questões e consultar histórico confiável.
-
-## Marco 5 — progresso e dashboard
-
-- [ ] Definir regra de progresso por tópico.
-- [ ] Registrar sessões ou atividades relevantes.
-- [ ] Criar visão de progresso por edital.
-- [ ] Calcular questões respondidas e taxa de acerto.
-- [ ] Criar dashboard com dados reais.
-- [ ] Adicionar recomendações simples e explicáveis.
-- [ ] Validar métricas com cenários de teste.
-
-**Saída:** estudante entende o que já fez e quais assuntos precisam de atenção.
-
-## Marco 6 — validação do MVP 1.0
-
-- [ ] Testar em celular e desktop.
-- [ ] Executar testes de acessibilidade essenciais.
-- [ ] Executar testes e revisão de segurança.
-- [ ] Testar backup e restauração do banco.
-- [ ] Validar onboarding e ciclo de estudo com usuários.
-- [ ] Corrigir problemas críticos.
-- [ ] Atualizar documentação e changelog.
-
-**Saída:** MVP 1.0 apto para piloto controlado.
-
-## Marco 7 — complementos 1.1
-
-Somente após validação do núcleo:
-- [ ] Caderno de questões.
-- [ ] Meta diária.
-- [ ] Sessões de estudo com duração.
-- [ ] XP básico e eventos auditáveis.
-- [ ] Conquistas iniciais.
-
-## Ordem de prioridade
-
-P0 — segurança, autenticação, integridade de dados e fluxo central.
-
-P1 — experiência de estudo, catálogo, questões, tentativas e progresso.
-
-P2 — dashboard, acessibilidade, refinamento visual e administração mínima.
-
-P3 — gamificação complementar e recursos sociais.
-
-## Regra de execução
-
-Trabalhar em fatias verticais: cada entrega deve atravessar interface, regra de negócio, persistência, autorização e testes. Evitar criar várias telas desconectadas ou schemas sem fluxo real de uso.
-
-## Critério de conclusão
-
-Uma tarefa só deve ser marcada como concluída quando:
-- Código está no repositório.
-- Testes relevantes passam.
-- Permissões foram verificadas.
-- Estados de erro e vazio existem.
-- Documentação foi atualizada.
-- A funcionalidade foi conferida em execução.
+## Dependências que bloqueiam execução real
+A configuração atual da Vercel não possui variáveis de ambiente cadastradas. O fluxo real com banco e autenticação exige provisionar o serviço e adicionar as credenciais em ambientes apropriados. O desenvolvimento de código não deve fingir que essa integração está ativa enquanto essa dependência estiver ausente.

@@ -9,14 +9,19 @@
     "dev": "nuxt dev",
     "build": "nuxt build",
     "preview": "nuxt preview",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "nuxt": "4.6.3",
-    "vue": "^3.5.22"
+    "vue": "^3.5.22",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.1.1"
+    "vue-tsc": "^3.1.1",
+    "vitest": "^5.1.0"
   }
 }

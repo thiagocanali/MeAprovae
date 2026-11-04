@@ -1,0 +1,23 @@
+.auth-page, .student-home { min-height: 100vh; padding: 28px 24px; background: var(--color-bg); color: var(--color-text); }
+.auth-brand { display: inline-flex; color: var(--color-primary); font-family: var(--font-display); font-size: 20px; font-weight: 800; }
+.auth-panel { width: min(100%, 440px); margin: 8vh auto 0; padding: 38px; border: 1px solid rgba(255,255,255,.1); border-radius: 20px; background: var(--color-surface); box-shadow: 0 24px 80px rgba(0,0,0,.22); }
+.auth-eyebrow { color: var(--color-primary); font-size: 10px; font-weight: 700; letter-spacing: 1.8px; }
+.auth-panel h1, .student-welcome h1 { margin: 12px 0; font-family: var(--font-display); font-size: clamp(30px, 6vw, 42px); letter-spacing: -1.8px; }
+.auth-description { color: var(--color-muted); font-size: 14px; line-height: 1.7; }
+.auth-form { display: grid; gap: 10px; margin-top: 28px; }
+.auth-form label { margin-top: 8px; color: #dbe3ee; font-size: 12px; font-weight: 600; }
+.auth-form input { width: 100%; min-height: 46px; padding: 0 13px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; outline: none; background: #101827; color: var(--color-text); font: inherit; }
+.auth-form input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(155,227,189,.12); }
+.auth-form button, .logout-button { min-height: 46px; margin-top: 12px; padding: 0 18px; border: 0; border-radius: 9px; background: var(--color-primary); color: #10251b; font: inherit; font-weight: 700; cursor: pointer; }
+.auth-form button:disabled, .logout-button:disabled { cursor: wait; opacity: .65; }
+.auth-error { color: #ff9b9b; font-size: 12px; }
+.auth-success { color: var(--color-primary); font-size: 12px; line-height: 1.6; }
+.auth-switch { margin-top: 24px; color: var(--color-muted); font-size: 12px; }
+.auth-switch a { color: var(--color-primary); font-weight: 700; }
+.student-header { display: flex; align-items: center; justify-content: space-between; width: min(100%, 1100px); margin: 0 auto; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.student-welcome { width: min(100%, 900px); margin: 9vh auto; }
+.student-empty { margin-top: 42px; padding: 30px; border: 1px solid rgba(255,255,255,.1); border-radius: 16px; background: var(--color-surface); }
+.student-empty h2 { margin-top: 0; font-family: var(--font-display); }
+.student-empty p { max-width: 650px; color: var(--color-muted); font-size: 14px; line-height: 1.8; }
+.student-empty span { display: inline-block; margin-top: 14px; color: var(--color-primary); font-size: 11px; font-weight: 700; }
+@media (max-width: 520px) { .auth-page, .student-home { padding: 20px 16px; } .auth-panel { margin-top: 5vh; padding: 25px 20px; } .student-empty { padding: 22px; } }

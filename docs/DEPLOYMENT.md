@@ -22,7 +22,7 @@ A branch `main` deve continuar sendo a produção. A branch `spike/nuxt-foundati
 
 ## Variáveis de ambiente
 
-Arquivo de referência: [../.env.example](../.env.example).
+Arquivo de referência: [../.env.example](../.env.example) e [../ENVIRONMENT.md](../ENVIRONMENT.md).
 
 | Variável | Ambiente | Segredo |
 |---|---|---|
@@ -47,8 +47,9 @@ Depois que o Preview Deployment estiver pronto:
 - [x] Criar configuração inicial do Nuxt e TypeScript.
 - [x] Criar landing page de apresentação com aviso de produto em construção.
 - [x] Criar endpoint de saúde da aplicação.
-- [ ] Confirmar vínculo Vercel ↔ GitHub.
-- [ ] Confirmar build e Preview Deployment.
+- [x] Confirmar vínculo Vercel ↔ GitHub pelos metadados do deployment de produção.
+- [x] Confirmar build de produção READY no commit `8167a400`.
+- [ ] Validar resposta HTTP da landing page e `/api/health` (a integração Vercel não liberou o fetch nesta auditoria).
 - [ ] Conectar PostgreSQL e executar migração Drizzle.
 - [ ] Validar autenticação SSR e isolamento entre duas contas.
 - [ ] Aprovar ou revisar a ADR-0002.
