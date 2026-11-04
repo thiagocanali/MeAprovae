@@ -84,3 +84,15 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Segurança:** o destino de callback é allowlist fixa (`/redefinir-senha` ou `/app`), a redefinição exige usuário validado no servidor e a resposta de solicitação não revela se o e-mail possui conta.
 - **Dependência:** configuração de Auth/SMTP e allowlist de redirects no Supabase ainda ausentes.
 - **Testes:** implementação não validada em runtime; CI do HEAD atual não confirmado.
+
+
+### 2026-11-04 — Catálogo e motor de questões (código preparado)
+- **Branch:** `feat/study-question-engine`, baseada em `feat/auth-validation`.
+- **Migração:** `supabase/migrations/0002_study_catalog_and_question_attempts.sql` — concursos, editais, disciplinas, tópicos, questões, alternativas, gabaritos privados, concursos acompanhados, tentativas, índices, RLS, grants mínimos, triggers de publicação e RPC idempotente.
+- **APIs:** catálogo/detalhe de concursos, follow/unfollow, listagem de questões, submissão via RPC e histórico privado.
+- **Interface:** páginas de concursos, detalhe, prática de questões e histórico; dashboard com navegação para os módulos.
+- **Testes adicionados:** sete casos unitários de UUID; total de 28 casos escritos (5 de avaliação, 16 de auth, 7 de UUID).
+- **Persistência real:** não validada; migração ainda não aplicada e projeto/credenciais Supabase ausentes.
+- **Conteúdo:** nenhuma questão de demonstração foi inserida. O catálogo vazio é um estado real esperado até cadastro editorial.
+- **Build/CI:** pendente. Vercel reporta `build-rate-limit`; não há evidência de CI aprovado para este HEAD.
+- **Deploy:** nenhuma alteração na produção.
