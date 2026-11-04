@@ -282,3 +282,10 @@ Foram adicionados:
 - Catálogo e detalhe do concurso agora incluem cargos publicados.
 
 Classificação: **parcialmente implementado** até aplicar migração 0003 e testar em Supabase real. O catálogo continuará vazio enquanto não houver concursos, editais e cargos publicados. Não existe CRUD administrativo/editorial ainda. A taxa de acerto usa todas as tentativas registradas; deve ser exibida com o volume da amostra, como está no dashboard.
+
+
+## 20. Atualização — favoritos de questões
+
+A migração `0004_question_favorites.sql` cria favoritos privados por estudante com chave primária `(user_id, question_id)`, RLS de leitura/inclusão/remoção e verificação de que a questão está publicada. Foram adicionadas APIs autenticadas para listar, favoritar e remover favoritos, botão de favorito no fluxo de resolução e página `/app/favoritas`.
+
+Classificação: **parcialmente implementado (código e CI; migração e operação real pendentes)**. O botão fica indisponível quando a API de favoritos retorna erro, evitando uma falsa indicação de que o salvamento funcionou. Ainda não há cadernos pessoais nem filtro de questões erradas.
