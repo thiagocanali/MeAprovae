@@ -59,7 +59,7 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 ## Próximos passos
 
 1. Provisionar o projeto Supabase e configurar as variáveis de ambiente.
-2. Aplicar migrações 0001–0006 na ordem e atribuir manualmente o primeiro owner.
+2. Aplicar migrações 0001–0007 na ordem e atribuir manualmente o primeiro owner.
 3. Validar autenticação, RLS, CRUD editorial e tentativas com contas isoladas.
 4. Completar formulários de CRUD/publicação e validar CI/Preview antes de integrar o PR #5.
 
