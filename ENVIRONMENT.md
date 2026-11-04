@@ -136,3 +136,7 @@ Aplique supabase/migrations/0007_editorial_lifecycle_and_goal_lock.sql depois da
 - serializa alterações concorrentes de objetivo por estudante, bloqueando a linha correspondente em auth.users.
 
 O procedimento de aplicação passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0006 → 0007. Execute em ambiente de teste primeiro e valide os fluxos de publicar, arquivar, editar e excluir com papéis de editor/owner e com uma conta de estudante sem papel administrativo.
+
+
+## CI da migração 0007
+O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9b6e (instalação, typecheck, 28 testes unitários e build). O PR #7 está em draft e ainda não foi mesclado. Esse resultado valida compilação e testes unitários, não a execução da migração 0007 nem as políticas/triggers no PostgreSQL/Supabase.
