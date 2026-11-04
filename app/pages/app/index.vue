@@ -10,6 +10,7 @@ interface DashboardData {
   correctAnswers: number
   accuracy: number
   activeGoal: { contestTitle: string; noticeTitle: string | null; positionTitle: string | null } | null
+  recentAttempts: Array<{ id: string; questionId: string; isCorrect: boolean; submittedAt: string }>
 }
 const { data: dashboardData, error: dashboardError, refresh: refreshDashboard } = await useFetch<{ dashboard: DashboardData }>('/api/study/dashboard')
 const pending = ref(false)
@@ -54,6 +55,15 @@ async function logout() {
         <p class="study-muted">{{ dashboardData.dashboard.activeGoal.positionTitle || 'Cargo não selecionado' }}<span v-if="dashboardData.dashboard.activeGoal.noticeTitle"> · {{ dashboardData.dashboard.activeGoal.noticeTitle }}</span></p>
         <NuxtLink class="study-link" to="/app/concursos">Ver concursos e editais →</NuxtLink>
       </div>
+      <section v-if="dashboardData?.dashboard.recentAttempts.length" class="study-section">
+        <h2>Atividades recentes</h2>
+        <ol class="study-history">
+          <li v-for="attempt in dashboardData.dashboard.recentAttempts" :key="attempt.id" class="study-history-item">
+            <span :class="attempt.isCorrect ? 'study-dot-correct' : 'study-dot-wrong'"></span>
+            <div><strong>{{ attempt.isCorrect ? 'Resposta correta' : 'Resposta incorreta' }}</strong><p class="study-muted">{{ new Date(attempt.submittedAt).toLocaleString('pt-BR') }}</p></div>
+          </li>
+        </ol>
+      </section>
       <div v-else class="student-empty">
         <h2>Vamos organizar seus estudos.</h2>
         <p>Escolha um concurso como objetivo para acompanhar seu edital e orientar sua preparação. Nenhum indicador fictício será exibido aqui.</p>
