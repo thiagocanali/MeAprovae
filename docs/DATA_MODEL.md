@@ -1,20 +1,20 @@
 # Modelo de dados — visão conceitual
 
-Este documento descreve entidades e relações esperadas. Não é ainda um schema SQL definitivo.
+Este documento descreve entidades e relações esperadas. Ainda não é um schema SQL definitivo. O modelo será convertido em migrações após a aprovação da stack.
 
-## 1. Identidade
+## 1. Identidade e acesso
 
-### User
-Conta de acesso: identificador, e-mail normalizado, hash/identidade gerenciada pelo provedor, status e timestamps.
+### Auth identity
+Identidade gerenciada pelo provedor de autenticação. Se Supabase Auth for escolhido, a identidade ficará no schema reservado `auth`; não duplicar senha ou hash de senha nas tabelas de domínio.
 
 ### UserProfile
-Dados de perfil: nome público, apelido, biografia, avatar e preferências de visibilidade.
+Dados de produto associados ao identificador da identidade: nome público, apelido, biografia, avatar e timestamps.
 
 ### UserPreference
 Preferências de estudo, notificações, tema e configurações pessoais.
 
 ### Role / Permission
-Papéis e permissões administrativas. A autorização deve ser verificada no servidor.
+Papéis e permissões administrativas. A autorização deve ser verificada no servidor e, se aplicável, reforçada por políticas RLS.
 
 ## 2. Catálogo de concursos
 
@@ -33,8 +33,8 @@ Cargo relacionado ao concurso, com escolaridade, área e remuneração quando co
 ### Notice
 Edital e versão do documento, datas, origem e situação de publicação.
 
-### NoticeSubject
-Associação entre edital/cargo e disciplinas cobradas.
+### NoticePosition
+Associação entre edital e cargo, quando um edital abranger vários cargos.
 
 ## 3. Estrutura pedagógica
 
@@ -44,16 +44,19 @@ Disciplina.
 ### Topic
 Assunto, com possibilidade de hierarquia pai/filho para subassuntos.
 
+### NoticeSubject
+Associação do conteúdo programático a um edital/cargo e à disciplina.
+
 ### NoticeTopic
-Associação do conteúdo programático a um edital/cargo, preservando a estrutura e a redação de origem quando necessário.
+Associação do tópico ao conteúdo programático de um edital/cargo. Preservar a redação e a ordem de origem quando necessário; não assumir que todo tópico de catálogo se aplica a todos os editais.
 
 ## 4. Questões
 
 ### Question
-Enunciado, tipo, dificuldade, estado de publicação e classificação.
+Enunciado, tipo, dificuldade, estado editorial e classificação.
 
 ### QuestionOption
-Alternativas ordenadas, quando a questão for objetiva.
+Alternativas ordenadas, quando aplicável.
 
 ### QuestionAnswerKey
 Gabarito versionado e revisado. Alterações precisam manter trilha de auditoria.
@@ -68,89 +71,103 @@ Origem, URL/documento, titularidade/licença, data de captura e condições de u
 Associação entre questão e assuntos.
 
 ### QuestionAttempt
-Tentativa do usuário: resposta, resultado calculado no servidor, duração e timestamp.
+Tentativa do usuário: resposta selecionada/textual, resultado calculado no servidor, duração, chave de idempotência e timestamp.
 
-## 5. Estudo e progresso
+## 5. Objetivos, estudo e progresso
 
 ### StudyGoal
-Objetivo de preparação do usuário, ligado a concurso/cargo.
+Objetivo de preparação do usuário, ligado a concurso/cargo e com estado ativo/arquivado.
 
 ### UserTopicProgress
-Estado do usuário por tópico: status, domínio estimado, prioridade e última atividade.
+Estado do usuário por tópico do edital: status, autoavaliação/domínio estimado, prioridade e última atividade.
 
 ### StudySession
 Sessão de estudo com início, fim, duração e atividades associadas.
 
-### StudyPlan / StudyTask
-Plano e tarefas planejadas.
-
 ### Notebook / NotebookQuestion
 Cadernos pessoais e associação de questões.
 
-### Flashcard / FlashcardReview
-Cartões e histórico de revisões.
+## 6. Métricas e gamificação
 
-### MockExam / MockExamQuestion / MockExamAttempt
-Configuração, questões e tentativas de simulados.
-
-## 6. Gamificação
+### XpRule
+Regra versionada que determina elegibilidade e valor de XP.
 
 ### XpEvent
-Evento de XP imutável ou auditável, com origem, regra, usuário, valor e chave de idempotência.
+Evento de XP auditável, com origem, regra, usuário, valor e chave de idempotência.
 
 ### Achievement / UserAchievement
 Definição de conquista e desbloqueio do usuário.
 
-### Level / League / RankingSnapshot
-Regras de progressão e snapshots de classificação.
+Níveis, ligas e snapshots de ranking ficam fora do MVP. XP deve ser derivado de eventos elegíveis, nunca de valor enviado pelo cliente.
 
-XP deve ser derivado de eventos elegíveis, não de um valor enviado pelo cliente.
+## 7. Entidades futuras
 
-## 7. Comunidade
+Estas entidades não precisam ser implementadas no MVP:
+- StudyPlan / StudyTask.
+- Flashcard / FlashcardReview.
+- MockExam / MockExamQuestion / MockExamAttempt.
+- Follow / Friendship.
+- Post / Comment / Reaction.
+- StudyGroup / GroupMember / Challenge.
+- Report / ModerationAction / Block.
+- AiConversation / AiMessage.
+- SubscriptionPlan / Subscription / Entitlement.
+- PaymentEvent.
 
-### Follow / Friendship
-Relações sociais.
+## 8. Relacionamentos principais
 
-### Post / Comment / Reaction
-Publicações, comentários e reações.
-
-### StudyGroup / GroupMember / Challenge
-Grupos e desafios.
-
-### Report / ModerationAction / Block
-Denúncias, ações de moderação e bloqueios.
-
-## 8. IA e assinaturas
-
-### AiConversation / AiMessage
-Histórico de interação, com política de retenção e exclusão definida.
-
-### SubscriptionPlan / Subscription / Entitlement
-Planos, assinaturas e direitos de acesso.
-
-### PaymentEvent
-Eventos do provedor de pagamento, com validação de assinatura/webhook.
-
-## 9. Relações principais
-
-- Um concurso possui vários cargos e editais.
-- Um edital/cargo referencia disciplinas e tópicos.
+- Uma organização pode possuir vários concursos.
+- Um concurso pode possuir vários cargos.
+- Um concurso pode ter várias versões de edital.
+- Um edital pode abranger vários cargos; a associação edital/cargo determina o conteúdo programático aplicável.
+- Um edital/cargo possui disciplinas e tópicos ordenados.
 - Questões podem se relacionar a vários tópicos e fontes.
 - Usuários possuem objetivos, tentativas, sessões e progresso.
+- Tentativas referenciam questão e usuário e não devem ser alteradas para recalcular silenciosamente o histórico.
 - XP é registrado por eventos ligados a atividades verificáveis.
-- Conquistas são desbloqueadas conforme regras versionadas.
-- Conteúdo comunitário pertence a usuários e está sujeito a controles de privacidade e moderação.
+
+## 9. Diagrama conceitual simplificado
+
+```mermaid
+erDiagram
+  ORGANIZATION ||--o{ CONTEST : owns
+  EXAM_BOARD ||--o{ CONTEST : organizes
+  CONTEST ||--o{ POSITION : offers
+  CONTEST ||--o{ NOTICE : publishes
+  NOTICE ||--o{ NOTICE_POSITION : includes
+  POSITION ||--o{ NOTICE_POSITION : belongs
+  NOTICE_POSITION ||--o{ NOTICE_SUBJECT : defines
+  SUBJECT ||--o{ NOTICE_SUBJECT : classifies
+  NOTICE_SUBJECT ||--o{ NOTICE_TOPIC : contains
+  TOPIC ||--o{ NOTICE_TOPIC : maps
+  QUESTION ||--o{ QUESTION_OPTION : has
+  QUESTION ||--o{ QUESTION_ANSWER_KEY : has
+  QUESTION ||--o{ QUESTION_EXPLANATION : has
+  QUESTION ||--o{ QUESTION_SOURCE : sourced_by
+  QUESTION ||--o{ QUESTION_TOPIC : maps
+  TOPIC ||--o{ QUESTION_TOPIC : classifies
+  USER_PROFILE ||--o{ STUDY_GOAL : creates
+  STUDY_GOAL }o--|| CONTEST : targets
+  USER_PROFILE ||--o{ QUESTION_ATTEMPT : answers
+  QUESTION ||--o{ QUESTION_ATTEMPT : receives
+  USER_PROFILE ||--o{ USER_TOPIC_PROGRESS : tracks
+  NOTICE_TOPIC ||--o{ USER_TOPIC_PROGRESS : measures
+  USER_PROFILE ||--o{ XP_EVENT : earns
+```
+
+O diagrama é conceitual e não substitui constraints, índices, políticas de acesso ou o schema definitivo.
 
 ## 10. Regras de integridade
 
 - IDs estáveis e chaves estrangeiras.
 - Unicidade para eventos idempotentes.
-- Timestamps consistentes.
-- Soft delete apenas quando houver justificativa; retenção e exclusão devem respeitar obrigações legais.
+- Timestamps consistentes e datas de publicação explícitas.
 - Auditoria de alterações em gabaritos, permissões e conteúdo publicado.
 - Separação entre conteúdo demonstrativo e conteúdo verificado.
+- Restrições de acesso por usuário em todas as entidades privadas.
 - Índices orientados a consultas reais, definidos após medir uso.
+- Exclusão e retenção de dados conforme política de privacidade e obrigações aplicáveis.
 
 ## 11. Próxima etapa
 
-Converter este modelo conceitual em ERD e migrações SQL depois da aprovação da stack, políticas de acesso e fluxos do MVP.
+Validar este modelo com os fluxos do MVP e produzir um ERD detalhado e migrações SQL. Não criar tabelas de módulos futuros apenas porque aparecem nesta visão.
