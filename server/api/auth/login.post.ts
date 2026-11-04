@@ -8,7 +8,7 @@ interface LoginBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<LoginBody>(event)
+  const body = (await readBody<LoginBody>(event)
   const email = normalizeEmail(body.email)
   const password = body.password
 
