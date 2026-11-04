@@ -73,3 +73,7 @@ Não conceda a estudantes permissões para inserir/alterar gabaritos. Não crie 
 
 ## Situação atual do deploy e typecheck
 A Vercel registrou falha de typecheck no deployment da integração inicial por `middleware: 'auth'` como string em `definePageMeta`. O PR #5 troca por import da função de middleware tipada. A tentativa de Preview do PR #5 está bloqueada por `build-rate-limit`; aguardar quota/limite ser liberado e validar o build antes de mesclar.
+
+
+## Hotfix de typecheck
+O PR #6 foi mesclado em `main` após CI verde (typecheck, testes e build). A Vercel ainda não apresentou deployment novo após o merge; o último deployment consultado continua em estado ERROR. Validar deployment READY e HTTP antes de declarar o domínio de produção saudável.
