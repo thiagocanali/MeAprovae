@@ -12,6 +12,7 @@ interface ContestDetail {
   title: string
   organization: string | null
   exam_board: string | null
+  study_positions: Array<{ id: string; title: string; education_level: string | null; area: string | null }>
   study_notices: Array<{
     id: string
     title: string
