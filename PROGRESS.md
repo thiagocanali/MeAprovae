@@ -145,3 +145,9 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Interface:** dashboard mostra acertos/taxa por disciplina; página `/app/erros` lista questões cuja tentativa mais recente foi incorreta e permite reabri-las para nova tentativa.
 - **Persistência:** migração 0005 não aplicada; teste real depende do Supabase.
 - **CI:** executar no HEAD atual para validar typecheck, testes e build.
+
+
+### 2026-11-04 — CI verde para desempenho e revisão de erros
+- **GitHub Actions run #155:** instalação, typecheck, 28 testes e build passaram no commit `bda023fc61232e60133cf4ecfe57eca858835145`.
+- **Escopo:** migração 0005, agregação por disciplina, fila da tentativa mais recente incorreta, dashboard e página de revisão.
+- **Banco:** migração 0005 não aplicada; integração Supabase real e testes RLS continuam pendentes.
