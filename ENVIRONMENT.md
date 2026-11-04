@@ -41,3 +41,15 @@ Configure os valores em Project → Settings → Environment Variables, separand
 - Se um segredo for exposto, revogue/rotacione no provedor antes de remover o valor do código.
 - Não registrar tokens, senhas, URLs de conexão completas ou payloads pessoais nos logs.
 - Use variáveis server-only para credenciais privilegiadas.
+
+## Supabase Auth — implementação preparada
+
+O código usa `@supabase/ssr` com cookies no servidor. Configure:
+- `NUXT_SUPABASE_URL`: Project URL do projeto Supabase do Me Aprovaê.
+- `NUXT_SUPABASE_ANON_KEY`: chave publicável/anon do projeto (nunca service role).
+
+O valor deve ser adicionado em Development, Preview e Production conforme cada ambiente. A chave privilegiada `service_role` não é necessária para o fluxo de autenticação e não deve ser colocada nesta aplicação.
+
+No Supabase, configure a URL de redirecionamento permitida para `https://meaprovae.vercel.app/auth/callback` e a URL equivalente de Preview/local. A confirmação de e-mail depende da configuração de Auth/SMTP do projeto.
+
+Antes de considerar o fluxo pronto: aplicar `supabase/migrations/0001_student_profiles.sql`, criar duas contas de teste e validar cadastro, confirmação, login, logout e bloqueio cruzado. A migração SQL ainda não foi aplicada nem testada contra banco real.
