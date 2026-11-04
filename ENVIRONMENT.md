@@ -1,0 +1,43 @@
+# ENVIRONMENT.md — configuração de ambientes
+
+Este documento lista nomes e finalidades. **Não inclua valores secretos aqui nem no Git.**
+
+## Estado observado em 04/11/2026
+
+- Projeto Vercel: `meaprovae`.
+- A listagem de variáveis retornou zero variáveis cadastradas e zero variáveis ocultas.
+- `.env.example` atualmente contém apenas `DATABASE_URL` e `NODE_ENV`.
+- Não há credenciais de banco, auth, e-mail ou IA configuradas na Vercel.
+
+## Variáveis previstas
+
+| Variável | Obrigatória quando | Exposição | Ambientes |
+|---|---|---|---|
+| `DATABASE_URL` | Banco PostgreSQL habilitado | Apenas servidor; segredo | Development, Preview, Production |
+| `NODE_ENV` | Gerenciada pelo runtime | Não é segredo | Gerenciada pela plataforma |
+| `SUPABASE_URL` | Se Supabase for aprovado | Pode ser pública, mas validada | Todos |
+| `SUPABASE_ANON_KEY` | Se Supabase Auth/cliente for aprovado | Chave pública com RLS obrigatório | Todos |
+| `SUPABASE_SERVICE_ROLE_KEY` | Somente operações administrativas server-side que realmente precisem | **Segredo crítico; nunca usar no cliente** | Apenas ambientes necessários |
+| `RESEND_API_KEY` | Se Resend for escolhido para e-mail transacional | Segredo server-side | Todos os ambientes usados |
+| `AI_GATEWAY_API_KEY` | Quando tutor IA for implementado | Segredo server-side | Preview/Production |
+| `AI_MODEL` | Quando tutor IA for implementado | Configuração não secreta | Todos |
+
+As variáveis Supabase, Resend e AI Gateway são candidatas condicionais, não integrações já contratadas ou implementadas. Não adicionar chaves até a decisão técnica e o provisionamento.
+
+## Configuração local
+
+1. Copie `.env.example` para `.env`.
+2. Preencha apenas com credenciais de desenvolvimento próprias.
+3. Não compartilhe valores secretos no chat ou em commits.
+4. Execute `npm install` após o lockfile ser criado.
+5. Execute os scripts documentados no `package.json`.
+
+## Vercel
+
+Configure os valores em Project → Settings → Environment Variables, separando Development, Preview e Production. Não reutilize banco de produção em testes destrutivos ou dados de demonstração.
+
+## Rotação e incidentes
+
+- Se um segredo for exposto, revogue/rotacione no provedor antes de remover o valor do código.
+- Não registrar tokens, senhas, URLs de conexão completas ou payloads pessoais nos logs.
+- Use variáveis server-only para credenciais privilegiadas.
