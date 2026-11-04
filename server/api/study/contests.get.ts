@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const supabase = createSupabaseServerClient(event)
   const { data, error } = await supabase
     .from('study_contests')
-    .select('id, slug, title, organization, exam_board, published_at, study_notices(id, title, version, publication_date)')
+    .select('id, slug, title, organization, exam_board, published_at, study_notices(id, title, version, publication_date), study_positions(id, title, education_level, area)')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
 
