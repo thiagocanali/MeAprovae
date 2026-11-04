@@ -69,3 +69,7 @@ Antes de ativar as páginas de estudo, aplique na ordem:
 A segunda migração cria conteúdo editorial, RLS e a função RPC `submit_question_attempt`. Cadastre concursos, editeis, disciplinas e questões por um processo administrativo confiável; publique na ordem concurso → edital → vínculo das disciplinas → questão com ao menos duas alternativas → gabarito → publicação da questão. O trigger bloqueia publicação incompleta.
 
 Não conceda a estudantes permissões para inserir/alterar gabaritos. Não crie questões com fonte/banca fictícia. Antes de produção, teste leitura anônima/autenticada do catálogo, tentativa sem sessão, tentativa com opção de outra questão, repetição da mesma chave e isolamento entre duas contas.
+
+
+## Situação atual do deploy e typecheck
+A Vercel registrou falha de typecheck no deployment da integração inicial por `middleware: 'auth'` como string em `definePageMeta`. O PR #5 troca por import da função de middleware tipada. A tentativa de Preview do PR #5 está bloqueada por `build-rate-limit`; aguardar quota/limite ser liberado e validar o build antes de mesclar.
