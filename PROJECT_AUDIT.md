@@ -267,3 +267,18 @@ A última implantação de produção observada para o commit de auditoria está
 - PR #6 (`fix/typed-auth-middleware`) foi validado pelo GitHub Actions run #118 (typecheck, testes e build: sucesso) e mesclado em `main` via squash, commit `a1d696df01a180823365cfb1363d39ef4fca23ea`.
 - O hotfix remove a falha de typecheck em `app/pages/app/index.vue`. Ainda não há deployment Vercel novo visível após o merge; o último deployment observado permanece ERROR no commit anterior. O limite de builds da Vercel continua impedindo Preview.
 - PR #5 permanece aberto e não mesclado; o código do motor de questões passou CI, mas ainda depende de Supabase real, migrações aplicadas, conteúdo editorial e testes de integração/RLS.
+
+
+## 19. Atualização — objetivo de estudo e dashboard real
+
+A migração `0003_student_goals_and_dashboard.sql` acrescenta cargos publicados e objetivos de preparação individuais. Um estudante pode manter apenas um objetivo ativo, ligado ao concurso e opcionalmente ao edital/cargo; a alteração é feita por RPC autenticada e arquiva o objetivo anterior. A função de dashboard calcula questões respondidas, acertos, taxa de acerto, objetivo ativo e até cinco tentativas recentes diretamente das tabelas persistidas.
+
+Foram adicionados:
+- API para ler/salvar objetivo do estudante.
+- RPC `set_student_study_goal` com validação de vínculo entre concurso, edital e cargo.
+- RPC `get_student_dashboard` com métricas reais sob `auth.uid()`.
+- Onboarding para selecionar concurso, edital e cargo.
+- Dashboard com indicadores reais, objetivo ativo e atividades recentes.
+- Catálogo e detalhe do concurso agora incluem cargos publicados.
+
+Classificação: **parcialmente implementado** até aplicar migração 0003 e testar em Supabase real. O catálogo continuará vazio enquanto não houver concursos, editais e cargos publicados. Não existe CRUD administrativo/editorial ainda. A taxa de acerto usa todas as tentativas registradas; deve ser exibida com o volume da amostra, como está no dashboard.
