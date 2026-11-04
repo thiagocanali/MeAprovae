@@ -161,7 +161,7 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Interface: /admin apresenta indicadores editoriais e histórico recente. Formulários CRUD/publicação ainda não foram entregues.
 - Bootstrap: primeiro owner deve ser atribuído manualmente no SQL Editor do Supabase após a conta Auth confirmada existir; não há autoelevação ou usuário presumido.
 - Validação: migração 0006 ainda não aplicada; RLS, triggers e permissões precisam ser testados no Supabase real. CI do novo HEAD ainda precisa ser consultado.
-- Branch: feat/study-question-engine; PR #5 permanece aberto e não mesclado.
+- Branch: feat/study-question-engine; PR #5 foi integrado à main no commit db37823eb855db865d0adc8419f7d4e942e25d5a. A migração 0007 e sua documentação seguem no PR #7, em draft.
 
 
 ### 2026-11-04 — Integridade do ciclo editorial e concorrência de objetivos (código preparado)
