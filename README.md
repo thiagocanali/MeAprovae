@@ -20,7 +20,7 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 
 ## Aplicação
 
-A fundação inicial está sendo preparada em **Nuxt 4 + Vue 3 + TypeScript**, em uma branch de spike separada. Ela contém uma landing page de apresentação e um endpoint de saúde (/api/health). Ainda não há autenticação, banco conectado ou funcionalidades de estudo operacionais.
+A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS próprio. A branch de trabalho contém identidade Supabase SSR, catálogo e motor de questões, progresso, favoritos, revisão e fundação administrativa. Esses módulos ainda dependem de provisionamento e validação do Supabase; não devem ser considerados operacionais antes dos testes de integração e publicação.
 
 - Site: https://meaprovae.vercel.app
 - Repositório: https://github.com/thiagocanali/MeAprovae
@@ -50,7 +50,7 @@ A fundação inicial está sendo preparada em **Nuxt 4 + Vue 3 + TypeScript**, e
 
 ## Status atual
 
-**Fase:** auditoria e fundação de identidade em desenvolvimento na branch `feat/project-audit-foundation`. A landing page e o endpoint de saúde estão publicados. As branches de trabalho contêm base de testes, CI, cliente Supabase SSR, cadastro/login/logout, recuperação de senha, migração inicial de perfil e validação compartilhada de entradas. O fluxo de autenticação depende de configurar o projeto Supabase e ainda não foi testado ponta a ponta. Não há catálogo de concursos nem questões persistidas. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
+**Fase:** núcleo de estudos e administração editorial em desenvolvimento na branch `feat/study-question-engine` (PR #5 ainda aberto). O código inclui cadastro/login/recuperação, catálogo, questões, tentativas, objetivos, dashboard, favoritos, revisão de erros e RBAC editorial com auditoria. O CI passou no núcleo de estudo até o run #155; a camada administrativa adicionada depois ainda aguarda CI. Supabase não foi provisionado nem as migrações 0001–0006 aplicadas; não há conteúdo editorial real, primeiro owner ou deployment atualizado confirmado. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
@@ -58,10 +58,10 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 
 ## Próximos passos
 
-1. Validar build e preview de deploy na Vercel.
-2. Configurar PostgreSQL e Drizzle em ambiente de desenvolvimento.
-3. Validar autenticação SSR e isolamento entre duas contas.
-4. Só então aprovar a stack e iniciar os fluxos de produto.
+1. Provisionar o projeto Supabase e configurar as variáveis de ambiente.
+2. Aplicar migrações 0001–0006 na ordem e atribuir manualmente o primeiro owner.
+3. Validar autenticação, RLS, CRUD editorial e tentativas com contas isoladas.
+4. Completar formulários de CRUD/publicação e validar CI/Preview antes de integrar o PR #5.
 
 ---
 
