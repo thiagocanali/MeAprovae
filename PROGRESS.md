@@ -162,3 +162,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Bootstrap: primeiro owner deve ser atribuído manualmente no SQL Editor do Supabase após a conta Auth confirmada existir; não há autoelevação ou usuário presumido.
 - Validação: migração 0006 ainda não aplicada; RLS, triggers e permissões precisam ser testados no Supabase real. CI do novo HEAD ainda precisa ser consultado.
 - Branch: feat/study-question-engine; PR #5 permanece aberto e não mesclado.
+
+
+### 2026-11-04 — Integridade do ciclo editorial e concorrência de objetivos (código preparado)
+- Migração 0007: revalida vínculos de publicação ao alterar concurso/edital/questão; impede alterar alternativas, gabaritos ou disciplinas de edital enquanto publicados; exige arquivamento antes de excluir registros publicados.
+- Concorrência: RPC set_student_study_goal passa a bloquear a linha do usuário durante a substituição do objetivo, serializando mudanças concorrentes.
+- Dependência: aplicar 0007 após 0006. Nenhuma migração foi executada em Supabase real.
+- CI: run #168 passou em instalação, typecheck, 28 testes e build para o HEAD anterior (antes da migração 0007); o novo HEAD ainda precisa de CI.
