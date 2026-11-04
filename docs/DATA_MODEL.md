@@ -171,3 +171,17 @@ O diagrama é conceitual e não substitui constraints, índices, políticas de a
 ## 11. Próxima etapa
 
 Validar este modelo com os fluxos do MVP e produzir um ERD detalhado e migrações SQL. Não criar tabelas de módulos futuros apenas porque aparecem nesta visão.
+
+
+## Implementação SQL inicial — catálogo e questões
+
+A migração `supabase/migrations/0002_study_catalog_and_question_attempts.sql` implementa:
+- `study_contests`, `study_notices`, `study_subjects`, `study_topics`, `study_notice_subjects`.
+- `study_questions` e `study_question_options` com campos públicos limitados por grants de coluna.
+- `study_question_answer_keys` sem leitura direta para `anon`/estudante.
+- `student_contests` com RLS por `auth.uid()`.
+- `question_attempts` com chave única `(user_id, idempotency_key)`, sem INSERT direto por cliente.
+- RPC `submit_question_attempt` como única via de submissão, validação do gabarito e retorno de explicação após responder.
+- Triggers para bloquear publicação de edital/questão sem seus pré-requisitos.
+
+A migração é versionada no repositório, mas ainda não foi aplicada ao Supabase. O modelo só se torna operacional após provisionamento e testes reais.
