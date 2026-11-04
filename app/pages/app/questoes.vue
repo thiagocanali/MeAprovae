@@ -1,5 +1,7 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'auth' })
+import authMiddleware from '~/middleware/auth'
+
+definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Resolver questões | Me Aprovaê' })
 
 interface QuestionOption { id: string; option_label: string; content: string; position: number }
