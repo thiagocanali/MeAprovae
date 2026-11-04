@@ -80,3 +80,10 @@
   .study-content { width: min(100% - 32px, 960px); padding: 36px 0 64px; }
   .study-actions { flex-direction: column; align-items: stretch; }
 }
+
+
+.study-form { display: grid; gap: 12px; max-width: 680px; margin-top: 28px; }
+.study-form label { color: #dce5f0; font-weight: 650; margin-top: 8px; }
+.study-form select { width: 100%; min-height: 48px; padding: 10px 12px; color: #f3f6fb; background: #172338; border: 1px solid rgba(255,255,255,.16); border-radius: 10px; font: inherit; }
+.study-form select:focus { outline: 2px solid #8ee6ba; outline-offset: 2px; }
+.study-form .study-primary-button { margin-top: 12px; }
