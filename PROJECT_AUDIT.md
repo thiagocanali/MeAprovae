@@ -210,3 +210,39 @@ Foi extraído um módulo compartilhado para normalizar e validar e-mail, nome de
 ## 15. Atualização — recuperação de acesso preparada
 
 Foram adicionados os fluxos de solicitação de recuperação, callback PKCE com destino local restrito, redefinição de senha para sessão validada e páginas correspondentes. A classificação de recuperação de senha passa a **parcialmente implementada (código preparado; SMTP/redirects e runtime não testados)**. Não marcar como funcional até testar entrega de e-mail, expiração do link, atualização da senha e login com a nova senha.
+
+
+## 16. Atualização — catálogo e motor de questões preparados
+
+Na branch `feat/study-question-engine` foi criada a migração `0002_study_catalog_and_question_attempts.sql` e as rotas/páginas de concursos, acompanhamento, questões e histórico.
+
+### Componentes adicionados
+- Catálogo de concursos e editais publicados.
+- Disciplinas, tópicos/subtópicos e vínculo com edital.
+- Questões de múltipla escolha com alternativas, origem e ano.
+- Gabarito e explicação separados do conteúdo público; a chave correta não possui grant de leitura direta para estudantes.
+- Tentativas por usuário, com chave de idempotência única.
+- RPC transacional `submit_question_attempt`, que valida usuário, publicação, pertencimento da alternativa, grava a tentativa e retorna correção/explicação.
+- RLS para catálogo publicado, concursos acompanhados e histórico privado.
+- Rotas server-side para listar concursos, consultar detalhe, seguir/deixar de seguir, listar questões, submeter respostas e consultar histórico.
+- Páginas para concursos, detalhe do edital, resolução e histórico.
+
+### Classificação atualizada
+- Cadastro/login: **parcialmente implementado**, aguardando Supabase real e CI.
+- Catálogo de concursos: **parcialmente implementado** — código/schema prontos; não há registros editoriais publicados.
+- Acompanhamento de concurso: **parcialmente implementado** — endpoints e RLS criados; sem teste no banco real.
+- Banco de questões: **parcialmente implementado** — listagem e UI preparadas; conteúdo publicado ainda inexistente.
+- Resolução/histórico: **parcialmente implementado** — RPC idempotente e APIs criadas; migração e transação ainda não executadas contra banco real.
+- XP, dashboard analítico e recomendações: **não implementados**. A submissão ainda não concede XP, intencionalmente.
+
+### Segurança e limites
+- A resposta correta e a explicação não são selecionáveis diretamente por estudantes; só são devolvidas após submissão autorizada.
+- A função SQL usa `SECURITY DEFINER` com `search_path` vazio e nomes de schema qualificados.
+- RLS restringe tentativas ao próprio usuário e o banco impede escrita direta de tentativas.
+- A chave de idempotência impede duplicação por repetição de uma mesma submissão. Reutilizar a chave para outra resposta retorna conflito.
+- Triggers impedem publicar edital sem concurso publicado e questão sem edital/assunto, duas alternativas e gabarito.
+- Não há conteúdo de questões fictícias ou atribuído indevidamente a bancas.
+- A migração ainda não foi aplicada. Sem credenciais Supabase, nenhum fluxo persistente pode ser declarado funcional.
+
+### Validação pendente
+Não foi possível executar npm/build local nesta sessão. A Vercel segue retornando `build-rate-limit`; o CI do GitHub Actions precisa confirmar typecheck, testes e build para o HEAD deste módulo. Testes de RLS/idempotência exigem projeto Supabase real e duas contas.
