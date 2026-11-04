@@ -8,6 +8,7 @@ interface Attempt {
   selected_option_id: string
   is_correct: boolean
   submitted_at: string
+  study_questions: { statement: string } | null
 }
 const { data, pending, error, refresh } = await useFetch<{ attempts: Attempt[] }>('/api/study/attempts')
 const total = computed(() => data.value?.attempts.length ?? 0)
@@ -40,7 +41,7 @@ const accuracy = computed(() => total.value ? Math.round((correct.value / total.
         <ol v-else class="study-history">
           <li v-for="attempt in data?.attempts" :key="attempt.id" class="study-history-item">
             <span :class="attempt.is_correct ? 'study-dot-correct' : 'study-dot-wrong'"></span>
-            <div><strong>{{ attempt.is_correct ? 'Acertou' : 'Errou' }}</strong><p class="study-muted">Questão {{ attempt.question_id.slice(0, 8) }} · {{ new Date(attempt.submitted_at).toLocaleString('pt-BR') }}</p></div>
+            <div><strong>{{ attempt.is_correct ? 'Acertou' : 'Errou' }}</strong><p class="study-muted">{{ attempt.study_questions?.statement || `Questão ${attempt.question_id.slice(0, 8)}` }} · {{ new Date(attempt.submitted_at).toLocaleString('pt-BR') }}</p></div>
           </li>
         </ol>
       </template>
