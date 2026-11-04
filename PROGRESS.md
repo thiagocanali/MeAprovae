@@ -57,3 +57,14 @@
 
 ## Regra de atualização
 Uma tarefa só será marcada como concluída quando código, persistência, autorização, testes pertinentes, documentação e deploy (quando aplicável) forem verificados. Commits e pushes devem ser registrados com SHA e link.
+
+
+### 2026-11-04 — Implementação inicial de identidade Supabase
+- **Código adicionado:** cliente SSR server-only, endpoints de registro/login/logout/sessão, callback PKCE, middleware de proteção, telas de cadastro/login/área do estudante e estilos responsivos.
+- **Banco:** migração SQL inicial para `student_profiles`, trigger de criação e RLS por usuário.
+- **Dependências:** `@supabase/ssr` e `@supabase/supabase-js` adicionados.
+- **Credenciais:** ausentes na Vercel; o fluxo não pode autenticar até configurar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY`.
+- **Migração:** criada no GitHub; ainda não aplicada a um projeto Supabase.
+- **Testes:** build/CI pós-alteração pendentes; cadastro/login não testados contra serviço real.
+- **Commit/push:** commits individuais publicados na branch; ver histórico da branch para SHAs.
+- **Deploy:** previews em andamento/pendentes; produção não foi alterada.
