@@ -96,3 +96,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Conteúdo:** nenhuma questão de demonstração foi inserida. O catálogo vazio é um estado real esperado até cadastro editorial.
 - **Build/CI:** pendente. Vercel reporta `build-rate-limit`; não há evidência de CI aprovado para este HEAD.
 - **Deploy:** nenhuma alteração na produção.
+
+
+### Atualização de integração na branch principal
+- PR #3 e PR #4 foram mesclados em `main`; documentação, CI, autenticação Supabase SSR e migração de perfil estão agora na branch principal.
+- O deploy de produção posterior à integração falhou no typecheck devido ao uso de middleware nomeado como string em `definePageMeta`.
+- Correção implementada no PR #5: importar o guard como função tipada nas páginas protegidas.
+- Estado de produção observado: último deployment associado ao commit `acb07c340059accb672932336fb0c1b9eca3b2a7` está **ERROR**.
+- O Preview do PR #5 está bloqueado por `build-rate-limit`; não há build atualizado para validar a correção.
