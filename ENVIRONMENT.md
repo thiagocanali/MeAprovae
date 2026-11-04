@@ -123,3 +123,16 @@ where lower(email) = lower('EMAIL_DA_CONTA_CONFIRMADA')
 Confirme que uma linha foi inserida e valide a conta em /api/admin/overview. Se nenhuma linha for inserida, confira o e-mail e a confirmação; não relaxe RLS nem crie uma rota pública de promoção. O gerenciamento de papéis pela interface não está implementado.
 
 O painel /admin e a API /api/admin/overview dependem da migração 0006 e de um usuário com papel owner ou editor. Sem isso, o comportamento esperado é negar acesso. O código usa a sessão Supabase SSR do usuário e políticas RLS; não requer a chave service_role.
+
+
+## Migração 0007 — integridade editorial e concorrência
+
+Aplique supabase/migrations/0007_editorial_lifecycle_and_goal_lock.sql depois da migração 0006. Ela:
+- impede despublicar concurso enquanto houver editais publicados;
+- impede despublicar/mover edital enquanto houver questões publicadas;
+- revalida publicação de questão quando status, edital ou disciplina mudam;
+- exige despublicar questão antes de alterar alternativas/gabarito e despublicar edital antes de alterar seus vínculos de disciplinas;
+- exige arquivar registros publicados antes de excluí-los;
+- serializa alterações concorrentes de objetivo por estudante, bloqueando a linha correspondente em auth.users.
+
+O procedimento de aplicação passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0006 → 0007. Execute em ambiente de teste primeiro e valide os fluxos de publicar, arquivar, editar e excluir com papéis de editor/owner e com uma conta de estudante sem papel administrativo.
