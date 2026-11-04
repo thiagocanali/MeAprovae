@@ -1,7 +1,11 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-04',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/auth.css'],
+  runtimeConfig: {
+    supabaseUrl: '',
+    supabaseAnonKey: '',
+  },
   typescript: {
     strict: true,
     typeCheck: true,
