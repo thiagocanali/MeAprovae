@@ -111,7 +111,7 @@ create or replace function public.guard_study_notice_publication()
 returns trigger
 language plpgsql
 set search_path = ''
-as $
+as $notice_guard$
 begin
   if new.status = 'published' and not exists (
     select 1 from public.study_contests c
@@ -121,7 +121,7 @@ begin
   end if;
   return new;
 end;
-$;
+$notice_guard$;
 
 create trigger study_notice_publication_guard
   before insert or update of status on public.study_notices
@@ -131,7 +131,7 @@ create or replace function public.guard_study_question_publication()
 returns trigger
 language plpgsql
 set search_path = ''
-as $
+as $question_guard$
 declare
   v_option_count integer;
 begin
@@ -168,7 +168,7 @@ begin
   end if;
   return new;
 end;
-$;
+$question_guard$;
 
 create trigger study_question_publication_guard
   before insert or update of status on public.study_questions
