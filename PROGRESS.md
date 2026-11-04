@@ -13,6 +13,14 @@
 - [x] Integração Vercel ↔ GitHub confirmada pelos metadados do deployment.
 - [x] Auditoria inicial registrada em [PROJECT_AUDIT.md](PROJECT_AUDIT.md).
 
+### Base de qualidade adicionada na branch de trabalho
+- [x] Adicionar Vitest e scripts `test` / `test:watch`.
+- [x] Criar regra de domínio isolada para avaliar uma resposta de alternativa.
+- [x] Criar cinco testes unitários para a regra de avaliação.
+- [x] Criar workflow GitHub Actions para typecheck, testes e build.
+- [ ] Aguardar e revisar execução do GitHub Actions; os testes ainda não foram executados nesta sessão.
+- [ ] Conectar a regra ao fluxo de resolução persistido; ainda não é funcionalidade disponível ao estudante.
+
 ### Não implementado
 - [ ] PostgreSQL, ORM e migrações.
 - [ ] Autenticação, sessão, recuperação de senha e RBAC.
@@ -25,6 +33,14 @@
 - [ ] Testes automatizados e CI.
 
 ## Registro de entregas
+
+### 2026-11-04 — Base inicial de qualidade e regra de domínio
+- **Arquivos:** `package.json`, `vitest.config.ts`, `shared/domain/questions/evaluate-answer.ts`, `tests/unit/evaluate-answer.test.ts`, `.github/workflows/ci.yml`.
+- **Commits:** `90e9a4f`, `7668682`, `d80c201`, `d269543`, `14021ec` (na branch `feat/project-audit-foundation`).
+- **Testes:** cinco casos escritos; execução pendente do Actions.
+- **Push:** commits publicados no GitHub pela API de conteúdo.
+- **Deploy:** preview aguardando atualização/validação.
+
 
 ### 2026-11-04 — Auditoria técnica inicial
 - **Alterações:** criação de `PROJECT_AUDIT.md`, atualização do plano, registro do progresso e documentação de ambiente.
