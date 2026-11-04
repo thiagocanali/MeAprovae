@@ -18,6 +18,7 @@ Estrutura recomendada:
 
 Decisões aceitas não devem ser editadas para apagar seu histórico. Quando uma decisão mudar, criar uma nova ADR que a substitua.
 
-## Decisões iniciais
+## Decisões
 
 - [ADR-0001 — Arquitetura inicial e critérios de escolha](0001-initial-architecture.md)
+- [ADR-0002 — Recomendação de stack para o MVP](0002-stack-recommendation.md) — proposta para aprovação.
