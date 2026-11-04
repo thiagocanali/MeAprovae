@@ -191,3 +191,12 @@ Na branch `feat/project-audit-foundation` foram adicionados:
 - Workflow GitHub Actions para instalar dependências, executar typecheck, testes e build.
 
 **Status de validação:** os arquivos foram enviados ao GitHub; execução automatizada ainda pendente de um run do Actions. A regra de domínio ainda não está conectada a uma API, banco ou interface de resolução; portanto, o módulo de questões permanece **não implementado** em termos de produto. O setup de CI não resolve a ausência de lockfile.
+
+
+## 13. Atualização — identidade preparada, integração externa pendente
+
+Foi iniciada uma implementação de autenticação Supabase SSR na branch `feat/project-audit-foundation`: cliente server-side com cookies, cadastro, login, logout, consulta de usuário verificado, callback PKCE, middleware de rota, telas de autenticação e área inicial. Também foi criada a migração `supabase/migrations/0001_student_profiles.sql` com RLS para que cada estudante leia/edite somente seu próprio perfil.
+
+Isso muda a classificação de **não implementada** para **parcialmente implementada (código preparado, serviço externo não configurado)** em cadastro/login/sessão e perfil. Ainda não existe validação de ponta a ponta porque a listagem Vercel não encontrou variáveis de ambiente e não há projeto Supabase vinculado/configurado. A migração não foi aplicada. Não declarar cadastro/login operacional até executar os testes com duas contas distintas.
+
+A dependência de auth usa `@supabase/ssr`, atualmente em versão beta conforme a documentação oficial; manter atenção a alterações de API e validar o comportamento de cookies/renovação no preview antes de produção. Referência: https://supabase.com/docs/guides/auth/server-side
