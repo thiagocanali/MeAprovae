@@ -81,3 +81,7 @@ O PR #6 foi mesclado em `main` após CI verde (typecheck, testes e build). A Ver
 
 ## Migração de objetivos e dashboard
 A terceira migração é `supabase/migrations/0003_student_goals_and_dashboard.sql`. Ela depende das migrações 0001 e 0002. Aplicar na ordem 0001 → 0002 → 0003. A migração 0003 cria cargos, objetivos, RLS e RPCs para objetivo ativo e dashboard. Testar com duas contas se cada uma só lê/edita seu objetivo e seus próprios indicadores. O dashboard agrega as tentativas persistidas; não requer variáveis adicionais além do Supabase já documentado.
+
+
+## Migração de favoritos
+A quarta migração é `supabase/migrations/0004_question_favorites.sql`. Aplicar depois das migrações 0001–0003. Validar que uma conta não consegue ler, adicionar ou remover favoritos de outra conta e que questões não publicadas não podem ser favoritadas.
