@@ -32,7 +32,7 @@ async function removeFavorite(questionId: string) {
   <main class="study-page">
     <header class="study-header">
       <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/historico">Histórico</NuxtLink></nav>
+      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/erros">Revisar erros</NuxtLink><NuxtLink to="/app/historico">Histórico</NuxtLink></nav>
     </header>
     <section class="study-content">
       <p class="auth-eyebrow">SUA BIBLIOTECA</p>
