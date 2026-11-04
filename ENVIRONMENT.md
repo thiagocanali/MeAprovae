@@ -93,3 +93,7 @@ O GitHub Actions run #143 passou: instalação, typecheck, 28 testes unitários 
 
 ## Migração de desempenho e revisão
 A quinta migração é `supabase/migrations/0005_subject_performance_and_wrong_questions.sql`. Aplicar depois de 0001–0004. As RPCs são invoker e dependem de `auth.uid()` e das permissões/RLS já criadas. Testar que o desempenho por disciplina e a fila de questões erradas mostram apenas tentativas do usuário autenticado e que a questão sai da fila quando a tentativa mais recente passa a correta.
+
+
+## CI da migração 0005
+GitHub Actions run #155 passou com instalação, typecheck, 28 testes e build. Isso não executa SQL contra o banco; aplicar a migração e testar RLS/RPCs em ambiente Supabase antes de produção.
