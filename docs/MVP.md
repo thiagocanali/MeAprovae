@@ -4,75 +4,96 @@
 
 Validar o núcleo de valor do Me Aprovaê: permitir que uma pessoa escolha um objetivo de concurso, acompanhe um edital, estude por assuntos, resolva questões e entenda seu progresso.
 
-O MVP deve ser pequeno, integrado e confiável. Não deve tentar entregar toda a visão da plataforma de uma vez.
+O MVP deve ser pequeno, integrado e confiável. A visão completa permanece no [roadmap](ROADMAP.md).
 
-## Escopo proposto
+## Escopo do MVP
 
-### Incluído
+### Entrega essencial (MVP 1.0)
 
-1. Landing page simples com proposta de valor.
-2. Cadastro, login e recuperação de acesso.
-3. Onboarding com objetivo de estudo e disponibilidade.
-4. Perfil básico e preferências.
-5. Dashboard com dados reais da própria conta.
-6. Catálogo inicial controlado de concursos e cargos.
-7. Edital estruturado em disciplinas e assuntos.
-8. Mapa de progresso com status de conteúdo.
-9. Banco inicial de questões com origem e classificação.
-10. Resolução de questão, feedback e histórico de tentativas.
-11. Favoritos e caderno pessoal básico.
-12. Indicadores iniciais de questões, acertos e progresso.
-13. XP básico, com regras no servidor e histórico de concessões.
-14. Identificação explícita de conteúdo demonstrativo, quando usado.
+1. Landing page simples.
+2. Cadastro, login, logout e recuperação de acesso.
+3. Onboarding e perfil básico.
+4. Seleção de um concurso/cargo como objetivo ativo.
+5. Catálogo inicial administrado manualmente.
+6. Concurso, cargo e edital com fonte e data de atualização.
+7. Edital organizado em disciplinas e assuntos.
+8. Mapa de progresso por assunto.
+9. Banco inicial de questões com origem, classificação e gabarito revisado.
+10. Filtros básicos de questões por disciplina/assunto.
+11. Resolução de questão com feedback e explicação.
+12. Histórico persistido de tentativas.
+13. Favoritar questão.
+14. Dashboard com dados reais: questões respondidas, acertos, taxa de acerto e progresso do edital.
+15. Estados de carregamento, vazio, erro e sucesso.
+16. Interface responsiva e acessível.
 
-### Fora do MVP
+### Entrega complementar (MVP 1.1, após validar o fluxo principal)
+
+- Caderno pessoal de questões.
+- Meta diária simples.
+- Sessão de estudo com duração registrada.
+- XP inicial, com regras no servidor e histórico auditável.
+- Conquistas iniciais sem ranking público.
+
+A divisão 1.0/1.1 evita que gamificação e métricas adiem a validação do ciclo central de aprendizagem.
+
+## Fora do MVP
 
 - Feed social completo, mensagens e grupos.
 - Batalhas em tempo real.
-- Rankings regionais e ligas avançadas.
+- Rankings públicos, ligas e desafios avançados.
 - Tutor IA com geração livre de conteúdo.
 - Importação automatizada de editais em escala.
-- Sistema completo de pagamentos e assinaturas.
-- Simulados avançados e comparações entre usuários.
+- Pagamentos e assinaturas reais.
+- Simulados avançados.
 - Recomendação preditiva de aprovação.
+- Aplicativo mobile nativo.
 
-Esses módulos permanecem no roadmap, não são descartados.
+Esses módulos permanecem no roadmap.
 
 ## Fluxos essenciais
 
 ### Fluxo A — começar a estudar
+
 Cadastro → onboarding → escolher concurso/cargo → visualizar edital → selecionar assunto → iniciar estudo.
 
 ### Fluxo B — resolver questão
-Abrir questões → filtrar → responder → receber feedback → registrar tentativa → atualizar indicadores e progresso pertinente.
+
+Abrir questões → filtrar → responder → receber feedback → registrar tentativa → atualizar indicadores.
 
 ### Fluxo C — acompanhar evolução
-Dashboard → visualizar métricas → identificar assunto prioritário → abrir conteúdo ou questões recomendadas.
+
+Dashboard → visualizar métricas → identificar assunto com menor desempenho → abrir questões relacionadas.
 
 ## Critérios de aceite
 
-- Um usuário consegue criar conta e acessar apenas seus próprios dados privados.
-- O usuário consegue selecionar e acompanhar um objetivo.
+- Uma conta consegue se cadastrar, autenticar e recuperar acesso.
+- Dados privados de uma conta não podem ser consultados por outra.
+- A pessoa consegue selecionar e acompanhar um objetivo.
 - O edital apresenta hierarquia consistente de disciplinas e assuntos.
-- O usuário consegue alterar status de estudo e consultar o progresso.
-- Questões têm origem, classificação e gabarito revisados.
-- Uma resposta gera tentativa persistida e feedback correto.
-- Reenvio da mesma ação não duplica XP ou tentativa indevidamente.
-- Métricas são calculadas a partir de registros persistidos.
-- Dados demonstrativos estão claramente identificados.
-- A interface funciona em celular e desktop.
+- O progresso por assunto é persistido e calculado conforme regra documentada.
+- Questões publicadas possuem fonte, situação editorial e gabarito revisado.
+- Uma resposta gera tentativa persistida e feedback calculado no servidor.
+- Reenvio da mesma submissão não duplica a tentativa nem os efeitos associados.
+- Dashboard consulta dados persistidos, não números fixos.
+- Conteúdo demonstrativo é identificado visualmente.
+- Interface funciona em celular e desktop.
 - Erros e estados vazios são tratados.
-- Testes cobrem regras críticas e permissões.
+- Testes cobrem autorização, resolução de questão e atualização de progresso.
+
+## Dados e conteúdo para validação
+
+Começar com um catálogo pequeno e curado. Não fazer scraping em massa nem republicar questões sem verificar direitos de uso. Se não houver material autorizado suficiente, usar questões demonstrativas claramente identificadas, sem atribuí-las a bancas reais.
 
 ## Estratégia de validação
 
 Testar com um grupo pequeno de estudantes e observar:
 - Se conseguem configurar um objetivo sem ajuda.
-- Se entendem o mapa do edital.
+- Se entendem a estrutura do edital.
 - Se sabem qual é o próximo passo.
 - Se o feedback das questões é útil.
 - Se os indicadores refletem corretamente sua atividade.
 
 ## Definição de pronto
 
-Uma funcionalidade só é considerada concluída quando possui interface, regra de negócio, persistência necessária, autorização, estados de erro, testes relevantes e documentação atualizada.
+Uma funcionalidade só é concluída quando possui interface, regra de negócio, persistência necessária, autorização, estados de erro, testes relevantes e documentação atualizada.
