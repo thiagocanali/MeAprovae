@@ -105,6 +105,75 @@ create table if not exists public.question_attempts (
     references public.study_question_options(question_id, id)
 );
 
+
+-- Prevent incomplete or orphaned questions from being published.
+create or replace function public.guard_study_notice_publication()
+returns trigger
+language plpgsql
+set search_path = ''
+as $
+begin
+  if new.status = 'published' and not exists (
+    select 1 from public.study_contests c
+    where c.id = new.contest_id and c.status = 'published'
+  ) then
+    raise exception using errcode = '23514', message = 'A notice can only be published under a published contest';
+  end if;
+  return new;
+end;
+$;
+
+create trigger study_notice_publication_guard
+  before insert or update of status on public.study_notices
+  for each row execute function public.guard_study_notice_publication();
+
+create or replace function public.guard_study_question_publication()
+returns trigger
+language plpgsql
+set search_path = ''
+as $
+declare
+  v_option_count integer;
+begin
+  if new.status = 'published' then
+    if not exists (
+      select 1 from public.study_notices n
+      join public.study_contests c on c.id = n.contest_id
+      where n.id = new.notice_id and n.status = 'published' and c.status = 'published'
+    ) then
+      raise exception using errcode = '23514', message = 'A question requires a published notice and contest';
+    end if;
+
+    if not exists (
+      select 1 from public.study_notice_subjects ns
+      where ns.notice_id = new.notice_id and ns.subject_id = new.subject_id
+    ) then
+      raise exception using errcode = '23514', message = 'Question subject must belong to its notice';
+    end if;
+
+    select count(*) into v_option_count
+    from public.study_question_options o
+    where o.question_id = new.id;
+
+    if v_option_count < 2 then
+      raise exception using errcode = '23514', message = 'A published question requires at least two options';
+    end if;
+
+    if not exists (
+      select 1 from public.study_question_answer_keys ak
+      where ak.question_id = new.id
+    ) then
+      raise exception using errcode = '23514', message = 'A published question requires an answer key';
+    end if;
+  end if;
+  return new;
+end;
+$;
+
+create trigger study_question_publication_guard
+  before insert or update of status on public.study_questions
+  for each row execute function public.guard_study_question_publication();
+
 create index if not exists study_notices_contest_status_idx
   on public.study_notices (contest_id, status);
 create index if not exists study_questions_notice_status_idx
