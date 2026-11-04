@@ -9,7 +9,7 @@ interface RegisterBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<RegisterBody>(event)
+  const body = (await readBody<RegisterBody>(event)
   const email = normalizeEmail(body.email)
   const password = body.password
   const displayName = normalizeDisplayName(body.displayName)
