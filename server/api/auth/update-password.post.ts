@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Sua sessão expirou. Solicite um novo link de recuperação.' })
   }
 
-  const body = await readBody<UpdatePasswordBody>(event)
+  const body = (await readBody<UpdatePasswordBody>(event)
   if (!isValidPassword(body.password)) {
     throw createError({ statusCode: 400, statusMessage: 'A senha deve ter entre 8 e 72 caracteres.' })
   }
