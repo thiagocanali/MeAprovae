@@ -59,3 +59,67 @@ A integração de código Supabase está preparada, mas ainda não validada em r
 
 
 Para recuperação de senha, o Supabase Auth precisa estar configurado com envio de e-mail funcional e URLs permitidas para `/auth/callback` no domínio de produção e nos domínios de Preview usados. O redirect de recuperação usa `/auth/callback?next=%2Fredefinir-senha`; a aplicação restringe o destino final a uma rota local conhecida. Sem SMTP/serviço de e-mail validado, o fluxo não estará operacional.
+
+
+## Migração do catálogo e tentativas
+Antes de ativar as páginas de estudo, aplique na ordem:
+1. `supabase/migrations/0001_student_profiles.sql`
+2. `supabase/migrations/0002_study_catalog_and_question_attempts.sql`
+
+A segunda migração cria conteúdo editorial, RLS e a função RPC `submit_question_attempt`. Cadastre concursos, editeis, disciplinas e questões por um processo administrativo confiável; publique na ordem concurso → edital → vínculo das disciplinas → questão com ao menos duas alternativas → gabarito → publicação da questão. O trigger bloqueia publicação incompleta.
+
+Não conceda a estudantes permissões para inserir/alterar gabaritos. Não crie questões com fonte/banca fictícia. Antes de produção, teste leitura anônima/autenticada do catálogo, tentativa sem sessão, tentativa com opção de outra questão, repetição da mesma chave e isolamento entre duas contas.
+
+
+## Situação atual do deploy e typecheck
+A Vercel registrou falha de typecheck no deployment da integração inicial por `middleware: 'auth'` como string em `definePageMeta`. O PR #5 troca por import da função de middleware tipada. A tentativa de Preview do PR #5 está bloqueada por `build-rate-limit`; aguardar quota/limite ser liberado e validar o build antes de mesclar.
+
+
+## Hotfix de typecheck
+O PR #6 foi mesclado em `main` após CI verde (typecheck, testes e build). A Vercel ainda não apresentou deployment novo após o merge; o último deployment consultado continua em estado ERROR. Validar deployment READY e HTTP antes de declarar o domínio de produção saudável.
+
+
+## Migração de objetivos e dashboard
+A terceira migração é `supabase/migrations/0003_student_goals_and_dashboard.sql`. Ela depende das migrações 0001 e 0002. Aplicar na ordem 0001 → 0002 → 0003. A migração 0003 cria cargos, objetivos, RLS e RPCs para objetivo ativo e dashboard. Testar com duas contas se cada uma só lê/edita seu objetivo e seus próprios indicadores. O dashboard agrega as tentativas persistidas; não requer variáveis adicionais além do Supabase já documentado.
+
+
+## Migração de favoritos
+A quarta migração é `supabase/migrations/0004_question_favorites.sql`. Aplicar depois das migrações 0001–0003. Validar que uma conta não consegue ler, adicionar ou remover favoritos de outra conta e que questões não publicadas não podem ser favoritadas.
+
+
+## CI do módulo de estudo
+O GitHub Actions run #143 passou: instalação, typecheck, 28 testes unitários e build. Essa validação não executa as migrações SQL nem testa políticas RLS e RPCs contra um banco. Esses testes permanecem bloqueados até provisionar Supabase e aplicar 0001–0004.
+
+
+## Migração de desempenho e revisão
+A quinta migração é `supabase/migrations/0005_subject_performance_and_wrong_questions.sql`. Aplicar depois de 0001–0004. As RPCs são invoker e dependem de `auth.uid()` e das permissões/RLS já criadas. Testar que o desempenho por disciplina e a fila de questões erradas mostram apenas tentativas do usuário autenticado e que a questão sai da fila quando a tentativa mais recente passa a correta.
+
+
+## CI da migração 0005
+GitHub Actions run #155 passou com instalação, typecheck, 28 testes e build. Isso não executa SQL contra o banco; aplicar a migração e testar RLS/RPCs em ambiente Supabase antes de produção.
+
+
+## Migração 0006 — administração editorial e auditoria
+
+Aplique supabase/migrations/0006_editorial_admin_and_audit.sql somente depois das migrações 0001–0005. Ela cria:
+- platform_admins com papéis owner e editor;
+- has_platform_role('editor') para autorização no banco;
+- políticas RLS de CRUD editorial nas tabelas de concursos, editais, cargos, disciplinas, assuntos, questões, alternativas e gabaritos;
+- editorial_audit_log e triggers para registrar alterações editoriais;
+- leitura administrativa do histórico e gestão de papéis restrita ao owner.
+
+### Atribuição inicial do owner
+
+Não existe bootstrap automático. Depois de criar e confirmar a conta no Supabase Auth, execute no SQL Editor, substituindo pelo e-mail exato da conta confiável:
+
+```sql
+insert into public.platform_admins (user_id, role, granted_by)
+select id, 'owner', id
+from auth.users
+where lower(email) = lower('EMAIL_DA_CONTA_CONFIRMADA')
+  and email_confirmed_at is not null;
+```
+
+Confirme que uma linha foi inserida e valide a conta em /api/admin/overview. Se nenhuma linha for inserida, confira o e-mail e a confirmação; não relaxe RLS nem crie uma rota pública de promoção. O gerenciamento de papéis pela interface não está implementado.
+
+O painel /admin e a API /api/admin/overview dependem da migração 0006 e de um usuário com papel owner ou editor. Sem isso, o comportamento esperado é negar acesso. O código usa a sessão Supabase SSR do usuário e políticas RLS; não requer a chave service_role.

@@ -22,7 +22,9 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [ ] Validar confirmação de e-mail, recuperação de senha e renovação de sessão.
 - [ ] Testar isolamento entre duas contas distintas.
 - [ ] Adicionar perfil editável e preferências.
-- [ ] Configurar Vitest e testes de integração; configurar CI.
+- [x] Configurar Vitest, testes unitários e workflow CI.
+- [x] Obter CI verde para typecheck, 28 testes unitários e build no motor de questões.
+- [ ] Adicionar testes de integração/RLS/idempotência com Supabase provisionado.
 **Saída:** estudante autenticado com dados privados persistidos e isolados.
 
 ## Fase 2 — dashboard mínimo
@@ -32,22 +34,33 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 **Saída:** painel sem números artificiais.
 
 ## Fase 3 — concursos e editais
-- [ ] CRUD editorial de órgãos, concursos, cargos e editais.
+- [x] Criar schema de concursos, editais, disciplinas e tópicos com RLS.
+- [x] Criar APIs de catálogo/detalhe e acompanhar/deixar de acompanhar.
+- [ ] Criar CRUD editorial seguro de órgãos, concursos, cargos e editais.
 - [ ] Disciplinas, assuntos e subassuntos associados à versão de edital/cargo.
-- [ ] Pesquisa, filtros, favoritos e concursos acompanhados.
+- [ ] Pesquisa, filtros e favoritos.
+- [ ] Aplicar migração e validar isolamento de concursos acompanhados.
 **Saída:** objetivo de estudo selecionável e edital navegável.
 
 ## Fase 4 — banco de questões
-- [ ] Questões, alternativas, gabaritos versionados, explicações e fontes/licenças.
-- [ ] Filtros e busca.
-- [ ] Resolução no servidor, tentativas persistidas e idempotentes.
-- [ ] Histórico, favoritas, cadernos e questões erradas.
+- [x] Criar schema de questões, alternativas, gabarito privado, explicação e fonte.
+- [x] Criar listagem autenticada de questões e interface de resolução.
+- [x] Criar RPC server-side transacional para tentativa idempotente.
+- [x] Criar histórico privado e painel inicial de acertos.
+- [ ] Aplicar migração e validar RPC/RLS com duas contas.
+- [ ] Criar CRUD editorial, importação e curadoria/licenças do conteúdo.
+- [ ] Adicionar filtros, busca, favoritas, cadernos e questões erradas.
 **Saída:** ciclo de questão completo e auditável.
 
 ## Fase 5 — progresso e aprendizagem
-- [ ] Indicadores por disciplina/assunto.
+- [x] Criar RPC de dashboard com questões respondidas, acertos, taxa, objetivo ativo e últimas tentativas.
+- [x] Criar agregação de desempenho por disciplina baseada em tentativas reais.
+- [x] Criar fila de revisão com última tentativa incorreta por questão.
 - [ ] Mapa de domínio do edital.
 - [ ] Histórico e recomendações explicáveis.
+- [x] Validar typecheck, testes unitários e build do módulo de desempenho/revisão no CI.
+- [ ] Validar agregações/RPCs com dados reais no Supabase.
+- [ ] Validar consultas e RLS em banco Supabase real.
 **Saída:** evolução derivada de tentativas/sessões reais.
 
 ## Fase 6 — gamificação
@@ -70,7 +83,11 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 ## Fase 9 — comunidade e administração
 - [ ] Perfis públicos/privados, seguidores, feed, grupos e comentários.
 - [ ] Denúncias, bloqueios e moderação.
-- [ ] RBAC administrativo e trilha de auditoria.
+- [x] Fundação RBAC (owner/editor), RLS para operações editoriais e trilha de auditoria por trigger (migração 0006; aplicação/teste real pendentes).
+- [x] Verificação server-side de papel e painel administrativo de leitura (/admin, /api/admin/overview).
+- [ ] CRUD editorial completo com formulários, validação, fluxo de rascunho/publicação e gestão de fontes/licenças.
+- [ ] Bootstrap manual e seguro do primeiro owner após provisionar Supabase.
+- [ ] Validar todas as políticas, triggers e operações com contas estudante/editor/owner no Supabase real.
 
 ## Fase 10 — tutor IA
 - [ ] Provedor e limites/custos definidos.

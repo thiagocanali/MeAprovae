@@ -9,20 +9,14 @@ interface RegisterBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<RegisterBody>(event)
+  const body = (await readBody<RegisterBody>(event)) ?? {}
   const email = normalizeEmail(body.email)
   const password = body.password
   const displayName = normalizeDisplayName(body.displayName)
 
-  if (!email) {
-    throw createError({ statusCode: 400, statusMessage: 'Informe um e-mail válido.' })
-  }
-  if (!isValidPassword(password)) {
-    throw createError({ statusCode: 400, statusMessage: 'A senha deve ter entre 8 e 72 caracteres.' })
-  }
-  if (!displayName) {
-    throw createError({ statusCode: 400, statusMessage: 'Informe um nome entre 2 e 60 caracteres.' })
-  }
+  if (!email) throw createError({ statusCode: 400, statusMessage: 'Informe um e-mail válido.' })
+  if (!isValidPassword(password)) throw createError({ statusCode: 400, statusMessage: 'A senha deve ter entre 8 e 72 caracteres.' })
+  if (!displayName) throw createError({ statusCode: 400, statusMessage: 'Informe um nome entre 2 e 60 caracteres.' })
 
   const supabase = createSupabaseServerClient(event)
   const { data, error } = await supabase.auth.signUp({
@@ -34,9 +28,7 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  if (error) {
-    throw createError({ statusCode: 400, statusMessage: 'Não foi possível criar a conta. Confira os dados e tente novamente.' })
-  }
+  if (error) throw createError({ statusCode: 400, statusMessage: 'Não foi possível criar a conta. Confira os dados e tente novamente.' })
 
   return {
     user: data.user ? { id: data.user.id, email: data.user.email } : null,

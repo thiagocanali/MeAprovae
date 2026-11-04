@@ -210,3 +210,117 @@ Foi extraído um módulo compartilhado para normalizar e validar e-mail, nome de
 ## 15. Atualização — recuperação de acesso preparada
 
 Foram adicionados os fluxos de solicitação de recuperação, callback PKCE com destino local restrito, redefinição de senha para sessão validada e páginas correspondentes. A classificação de recuperação de senha passa a **parcialmente implementada (código preparado; SMTP/redirects e runtime não testados)**. Não marcar como funcional até testar entrega de e-mail, expiração do link, atualização da senha e login com a nova senha.
+
+
+## 16. Atualização — catálogo e motor de questões preparados
+
+Na branch `feat/study-question-engine` foi criada a migração `0002_study_catalog_and_question_attempts.sql` e as rotas/páginas de concursos, acompanhamento, questões e histórico.
+
+### Componentes adicionados
+- Catálogo de concursos e editais publicados.
+- Disciplinas, tópicos/subtópicos e vínculo com edital.
+- Questões de múltipla escolha com alternativas, origem e ano.
+- Gabarito e explicação separados do conteúdo público; a chave correta não possui grant de leitura direta para estudantes.
+- Tentativas por usuário, com chave de idempotência única.
+- RPC transacional `submit_question_attempt`, que valida usuário, publicação, pertencimento da alternativa, grava a tentativa e retorna correção/explicação.
+- RLS para catálogo publicado, concursos acompanhados e histórico privado.
+- Rotas server-side para listar concursos, consultar detalhe, seguir/deixar de seguir, listar questões, submeter respostas e consultar histórico.
+- Páginas para concursos, detalhe do edital, resolução e histórico.
+
+### Classificação atualizada
+- Cadastro/login: **parcialmente implementado**, aguardando Supabase real e CI.
+- Catálogo de concursos: **parcialmente implementado** — código/schema prontos; não há registros editoriais publicados.
+- Acompanhamento de concurso: **parcialmente implementado** — endpoints e RLS criados; sem teste no banco real.
+- Banco de questões: **parcialmente implementado** — listagem e UI preparadas; conteúdo publicado ainda inexistente.
+- Resolução/histórico: **parcialmente implementado** — RPC idempotente e APIs criadas; migração e transação ainda não executadas contra banco real.
+- XP, dashboard analítico e recomendações: **não implementados**. A submissão ainda não concede XP, intencionalmente.
+
+### Segurança e limites
+- A resposta correta e a explicação não são selecionáveis diretamente por estudantes; só são devolvidas após submissão autorizada.
+- A função SQL usa `SECURITY DEFINER` com `search_path` vazio e nomes de schema qualificados.
+- RLS restringe tentativas ao próprio usuário e o banco impede escrita direta de tentativas.
+- A chave de idempotência impede duplicação por repetição de uma mesma submissão. Reutilizar a chave para outra resposta retorna conflito.
+- Triggers impedem publicar edital sem concurso publicado e questão sem edital/assunto, duas alternativas e gabarito.
+- Não há conteúdo de questões fictícias ou atribuído indevidamente a bancas.
+- A migração ainda não foi aplicada. Sem credenciais Supabase, nenhum fluxo persistente pode ser declarado funcional.
+
+### Validação pendente
+Não foi possível executar npm/build local nesta sessão. A Vercel segue retornando `build-rate-limit`; o CI do GitHub Actions precisa confirmar typecheck, testes e build para o HEAD deste módulo. Testes de RLS/idempotência exigem projeto Supabase real e duas contas.
+
+
+## 17. Atualização — integração da autenticação em main e correção do build
+
+Os PRs #3 e #4 foram mesclados em `main`. A fundação Supabase SSR e as páginas de autenticação agora fazem parte da branch principal, mas seguem **não operacionais até provisionar o Supabase e configurar variáveis/SMTP**.
+
+O deployment de produção gerado após a integração da auditoria falhou no typecheck com:
+`app/pages/app/index.vue(2,18): error TS2322: Type 'string' is not assignable to type 'NavigationGuard | NavigationGuard[] | undefined'.`
+
+A origem foi o uso de `middleware: 'auth'` como string. Na branch `feat/study-question-engine`, as páginas agora importam explicitamente o guard tipado `~/middleware/auth` e passam a função para `definePageMeta`. A correção está no PR #5 junto ao motor de questões. O Preview Vercel deste PR não foi criado porque o provedor retornou `build-rate-limit`; portanto, a correção ainda precisa de build confirmado.
+
+A última implantação de produção observada para o commit de auditoria está em estado **ERROR**. Não declarar produção saudável até um deployment READY e teste HTTP da landing, páginas e health endpoint.
+
+
+## 18. Atualização — CI verde e hotfix de produção mesclado
+
+- GitHub Actions run #117 para o código do motor de questões: instalação, typecheck, 28 testes unitários e build concluídos com sucesso.
+- A primeira execução de testes encontrou um caso de teste incorreto: UUID versão 7 é válida segundo RFC 9562; o validador já aceitava corretamente versões 1–8. O teste foi corrigido para aceitar v7, e a execução #117 passou.
+- PR #6 (`fix/typed-auth-middleware`) foi validado pelo GitHub Actions run #118 (typecheck, testes e build: sucesso) e mesclado em `main` via squash, commit `a1d696df01a180823365cfb1363d39ef4fca23ea`.
+- O hotfix remove a falha de typecheck em `app/pages/app/index.vue`. Ainda não há deployment Vercel novo visível após o merge; o último deployment observado permanece ERROR no commit anterior. O limite de builds da Vercel continua impedindo Preview.
+- PR #5 permanece aberto e não mesclado; o código do motor de questões passou CI, mas ainda depende de Supabase real, migrações aplicadas, conteúdo editorial e testes de integração/RLS.
+
+
+## 19. Atualização — objetivo de estudo e dashboard real
+
+A migração `0003_student_goals_and_dashboard.sql` acrescenta cargos publicados e objetivos de preparação individuais. Um estudante pode manter apenas um objetivo ativo, ligado ao concurso e opcionalmente ao edital/cargo; a alteração é feita por RPC autenticada e arquiva o objetivo anterior. A função de dashboard calcula questões respondidas, acertos, taxa de acerto, objetivo ativo e até cinco tentativas recentes diretamente das tabelas persistidas.
+
+Foram adicionados:
+- API para ler/salvar objetivo do estudante.
+- RPC `set_student_study_goal` com validação de vínculo entre concurso, edital e cargo.
+- RPC `get_student_dashboard` com métricas reais sob `auth.uid()`.
+- Onboarding para selecionar concurso, edital e cargo.
+- Dashboard com indicadores reais, objetivo ativo e atividades recentes.
+- Catálogo e detalhe do concurso agora incluem cargos publicados.
+
+Classificação: **parcialmente implementado** até aplicar migração 0003 e testar em Supabase real. O catálogo continuará vazio enquanto não houver concursos, editais e cargos publicados. Não existe CRUD administrativo/editorial ainda. A taxa de acerto usa todas as tentativas registradas; deve ser exibida com o volume da amostra, como está no dashboard.
+
+
+## 20. Atualização — favoritos de questões
+
+A migração `0004_question_favorites.sql` cria favoritos privados por estudante com chave primária `(user_id, question_id)`, RLS de leitura/inclusão/remoção e verificação de que a questão está publicada. Foram adicionadas APIs autenticadas para listar, favoritar e remover favoritos, botão de favorito no fluxo de resolução e página `/app/favoritas`.
+
+Classificação: **parcialmente implementado (código e CI; migração e operação real pendentes)**. O botão fica indisponível quando a API de favoritos retorna erro, evitando uma falsa indicação de que o salvamento funcionou. Ainda não há cadernos pessoais nem filtro de questões erradas.
+
+
+## 21. Atualização — favoritos validados pelo CI
+
+O GitHub Actions run #143, no commit `ad6121be0a058d006ef9607a4fb928b68dfc6704`, concluiu com sucesso: instalação de dependências, `nuxt typecheck`, 28 testes unitários e `nuxt build`. Isso valida compilação e testes unitários do código de favoritos, onboarding, objetivos e dashboard. Não substitui testes de banco/RLS; as migrações 0001–0004 continuam sem aplicação no Supabase.
+
+
+## 22. Atualização — desempenho por disciplina e fila de erros
+
+A migração `0005_subject_performance_and_wrong_questions.sql` cria duas RPCs server-side:
+- `get_student_subject_performance`: agrupa tentativas do estudante por disciplina e calcula volume, acertos e taxa.
+- `get_student_wrong_questions`: seleciona a tentativa mais recente por questão e retorna apenas as que continuam incorretas, com enunciado, disciplina, fonte e alternativas.
+
+Foram adicionadas a API da fila de revisão, a página `/app/erros`, suporte a abrir uma questão específica pela query `questionId` e desempenho por disciplina no dashboard. Os resultados são derivados de tentativas persistidas e protegidos por RLS.
+
+Classificação: **parcialmente implementado (código preparado; migração 0005 e validação de dados reais pendentes)**. A fila de erros considera a tentativa mais recente, então uma questão respondida corretamente deixa a fila após nova submissão. Nenhuma métrica de disciplina é inventada quando não há tentativas.
+
+
+## 23. Atualização — desempenho e revisão aprovados pelo CI
+
+GitHub Actions run #155, no commit `bda023fc61232e60133cf4ecfe57eca858835145`, concluiu com sucesso: instalação, typecheck, 28 testes unitários e build. O escopo inclui a migração 0005, APIs de desempenho/revisão e páginas de revisão de erros. A execução confirma compilação e testes unitários, não execução SQL nem isolamento RLS real.
+
+
+## Atualização de estado — 04/11/2026
+
+A auditoria inicial acima descreve o ponto de partida da fundação e não representa mais o estado do branch de trabalho. Na branch feat/study-question-engine foram adicionados, como código preparado:
+- Supabase SSR Auth, rotas de identidade e middleware;
+- schema/RLS de concursos, editais, questões, tentativas e favoritos;
+- objetivo de estudo, dashboard, desempenho por disciplina e fila de revisão;
+- CI com typecheck, 28 testes unitários e build verde até o commit validado no run #155;
+- migração 0006 de RBAC editorial e auditoria, helper server-side, endpoint de resumo e página /admin.
+
+Limitações atuais: as migrações 0001–0006 não foram aplicadas em um projeto Supabase provisionado; nenhuma conta administrativa foi atribuída; não há conteúdo editorial real; os formulários CRUD ainda não foram implementados; o CI do novo módulo administrativo ainda precisa ser confirmado; e a Vercel ainda não tem deployment atualizado e saudável confirmado após o hotfix de typecheck. Portanto, as telas administrativas e de estudo são código em branch, não funcionalidades operacionais publicadas.
+
+Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o registro atualizado das entregas e dependências.
