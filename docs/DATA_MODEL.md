@@ -201,3 +201,13 @@ As rotas e páginas foram adicionadas, mas a migração ainda não foi aplicada 
 ## Implementação SQL — favoritos
 
 A migração `supabase/migrations/0004_question_favorites.sql` implementa `student_question_favorites`, com unicidade por usuário/questão e RLS de leitura, inclusão e remoção limitada ao próprio estudante. A inclusão só é permitida para questões publicadas. APIs e páginas de favoritos foram criadas, mas ainda dependem da aplicação da migração.
+
+
+## Implementação SQL — desempenho e revisão de erros
+
+A migração `0005_subject_performance_and_wrong_questions.sql` implementa:
+- RPC `get_student_subject_performance`, que agrega tentativas por disciplina sob a identidade autenticada.
+- RPC `get_student_wrong_questions`, que usa a tentativa mais recente por questão e retorna a fila de revisão sem expor gabaritos.
+- APIs e telas para desempenho por disciplina e revisão de questões erradas.
+
+A migração ainda não foi aplicada a um banco real; a classificação permanece parcial.
