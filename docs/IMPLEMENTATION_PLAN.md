@@ -23,7 +23,8 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [ ] Testar isolamento entre duas contas distintas.
 - [ ] Adicionar perfil editável e preferências.
 - [x] Configurar Vitest, testes unitários e workflow CI.
-- [ ] Obter execução CI verde para a branch atual e adicionar testes de integração com Supabase.
+- [x] Obter CI verde para typecheck, 28 testes unitários e build no motor de questões.
+- [ ] Adicionar testes de integração/RLS/idempotência com Supabase provisionado.
 **Saída:** estudante autenticado com dados privados persistidos e isolados.
 
 ## Fase 2 — dashboard mínimo
