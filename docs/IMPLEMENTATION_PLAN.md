@@ -14,6 +14,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Escolher Supabase Auth como integração inicial, condicionada a provisionamento e teste.
 - [x] Preparar cliente SSR com cookies e verificação server-side.
 - [x] Implementar endpoints e telas iniciais de cadastro/login/logout.
+- [x] Preparar solicitação de recuperação e redefinição de senha.
 - [x] Criar migração de perfil com RLS e trigger de criação.
 - [x] Extrair e testar validação compartilhada de entradas de cadastro/login.
 - [ ] Provisionar projeto Supabase e configurar variáveis nos ambientes.
