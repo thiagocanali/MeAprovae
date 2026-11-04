@@ -246,3 +246,15 @@ Na branch `feat/study-question-engine` foi criada a migração `0002_study_catal
 
 ### Validação pendente
 Não foi possível executar npm/build local nesta sessão. A Vercel segue retornando `build-rate-limit`; o CI do GitHub Actions precisa confirmar typecheck, testes e build para o HEAD deste módulo. Testes de RLS/idempotência exigem projeto Supabase real e duas contas.
+
+
+## 17. Atualização — integração da autenticação em main e correção do build
+
+Os PRs #3 e #4 foram mesclados em `main`. A fundação Supabase SSR e as páginas de autenticação agora fazem parte da branch principal, mas seguem **não operacionais até provisionar o Supabase e configurar variáveis/SMTP**.
+
+O deployment de produção gerado após a integração da auditoria falhou no typecheck com:
+`app/pages/app/index.vue(2,18): error TS2322: Type 'string' is not assignable to type 'NavigationGuard | NavigationGuard[] | undefined'.`
+
+A origem foi o uso de `middleware: 'auth'` como string. Na branch `feat/study-question-engine`, as páginas agora importam explicitamente o guard tipado `~/middleware/auth` e passam a função para `definePageMeta`. A correção está no PR #5 junto ao motor de questões. O Preview Vercel deste PR não foi criado porque o provedor retornou `build-rate-limit`; portanto, a correção ainda precisa de build confirmado.
+
+A última implantação de produção observada para o commit de auditoria está em estado **ERROR**. Não declarar produção saudável até um deployment READY e teste HTTP da landing, páginas e health endpoint.
