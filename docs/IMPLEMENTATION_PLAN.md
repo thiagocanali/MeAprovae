@@ -58,6 +58,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Criar fila de revisão com última tentativa incorreta por questão.
 - [ ] Mapa de domínio do edital.
 - [ ] Histórico e recomendações explicáveis.
+- [x] Validar typecheck, testes unitários e build do módulo de desempenho/revisão no CI.
 - [ ] Validar agregações/RPCs com dados reais no Supabase.
 - [ ] Validar consultas e RLS em banco Supabase real.
 **Saída:** evolução derivada de tentativas/sessões reais.
