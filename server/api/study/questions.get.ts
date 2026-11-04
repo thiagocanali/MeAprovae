@@ -10,8 +10,9 @@ export default defineEventHandler(async (event) => {
   const subjectId = query.subjectId
   const topicId = query.topicId
   const contestId = query.contestId
+  const questionId = query.questionId
 
-  for (const [field, value] of Object.entries({ subjectId, topicId, contestId })) {
+  for (const [field, value] of Object.entries({ subjectId, topicId, contestId, questionId })) {
     if (value !== undefined && !isUuid(value)) {
       throw createError({ statusCode: 400, statusMessage: `Filtro ${field} inválido.` })
     }
@@ -39,6 +40,7 @@ export default defineEventHandler(async (event) => {
     .order('created_at', { ascending: false })
     .limit(20)
 
+  if (questionId) request = request.eq('id', questionId)
   if (subjectId) request = request.eq('subject_id', subjectId)
   if (topicId) request = request.eq('topic_id', topicId)
   if (noticeIds) request = request.in('notice_id', noticeIds)
