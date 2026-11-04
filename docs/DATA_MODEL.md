@@ -185,3 +185,14 @@ A migração `supabase/migrations/0002_study_catalog_and_question_attempts.sql` 
 - Triggers para bloquear publicação de edital/questão sem seus pré-requisitos.
 
 A migração é versionada no repositório, mas ainda não foi aplicada ao Supabase. O modelo só se torna operacional após provisionamento e testes reais.
+
+
+## Implementação SQL — cargos, objetivos e dashboard
+
+A migração `supabase/migrations/0003_student_goals_and_dashboard.sql` acrescenta:
+- `study_positions`: cargos vinculados a concursos.
+- `study_goals`: objetivo do estudante, com concurso e associações opcionais a edital/cargo; índice parcial impede mais de um objetivo ativo por usuário.
+- RPC `set_student_study_goal`: valida os vínculos e arquiva o objetivo ativo anterior dentro da mesma transação.
+- RPC `get_student_dashboard`: calcula métricas a partir de `question_attempts` e retorna objetivo ativo e atividade recente.
+
+As rotas e páginas foram adicionadas, mas a migração ainda não foi aplicada a um projeto Supabase real.
