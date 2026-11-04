@@ -1,17 +1,18 @@
 import { createError, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
+import { isValidPassword, normalizeEmail } from '../../../shared/domain/auth/validation'
 
 interface LoginBody {
-  email?: string
-  password?: string
+  email?: unknown
+  password?: unknown
 }
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<LoginBody>(event)
-  const email = body.email?.trim().toLowerCase()
+  const email = normalizeEmail(body.email)
   const password = body.password
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !password) {
+  if (!email || !isValidPassword(password)) {
     throw createError({ statusCode: 400, statusMessage: 'Informe e-mail e senha válidos.' })
   }
 

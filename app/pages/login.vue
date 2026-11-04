@@ -39,6 +39,7 @@ async function submit() {
         <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
         <button type="submit" :disabled="pending">{{ pending ? 'Entrando…' : 'Entrar' }}</button>
       </form>
+      <p class="auth-switch"><NuxtLink to="/esqueci-senha">Esqueci minha senha</NuxtLink></p>
       <p class="auth-switch">Ainda não tem conta? <NuxtLink to="/cadastro">Criar conta</NuxtLink></p>
     </section>
   </main>

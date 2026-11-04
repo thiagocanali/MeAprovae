@@ -68,3 +68,19 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Testes:** build/CI pós-alteração pendentes; cadastro/login não testados contra serviço real.
 - **Commit/push:** commits individuais publicados na branch; ver histórico da branch para SHAs.
 - **Deploy:** previews em andamento/pendentes; produção não foi alterada.
+
+
+### 2026-11-04 — Validação isolada de entradas de autenticação
+- **Arquivos:** `shared/domain/auth/validation.ts`, `tests/unit/auth-validation.test.ts`, endpoints de registro e login.
+- **Alteração:** normalização e validação de e-mail, nome e senha extraídas para funções puras e reutilizadas nos endpoints.
+- **Testes:** 16 casos novos; total de 21 casos unitários escritos entre avaliação de questão e autenticação.
+- **Branch:** `feat/auth-validation`, PR #4 para `feat/project-audit-foundation`.
+- **CI:** não foi possível confirmar um run para o HEAD mais recente pela integração; o run anterior passou antes do código Supabase. Não declarar typecheck/build do código de autenticação aprovados.
+- **Vercel:** status Vercel no commit atual falhou por limite de builds do plano (build-rate-limit). Nenhuma alteração em produção.
+
+
+### 2026-11-04 — Recuperação e redefinição de senha
+- **Código:** endpoint de solicitação de recuperação com resposta genérica, callback PKCE com destino local permitido, endpoint autenticado de atualização de senha e telas de recuperação/redefinição.
+- **Segurança:** o destino de callback é allowlist fixa (`/redefinir-senha` ou `/app`), a redefinição exige usuário validado no servidor e a resposta de solicitação não revela se o e-mail possui conta.
+- **Dependência:** configuração de Auth/SMTP e allowlist de redirects no Supabase ainda ausentes.
+- **Testes:** implementação não validada em runtime; CI do HEAD atual não confirmado.
