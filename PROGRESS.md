@@ -112,3 +112,13 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Hotfix:** PR #6 mesclado em `main`; commit `a1d696df01a180823365cfb1363d39ef4fca23ea`; CI run #118 também verde.
 - **Deploy:** nenhum deployment Vercel novo confirmado após o merge; o último deployment observado ainda é o erro anterior. Não declarar produção corrigida até deployment READY e teste HTTP.
 - **PR #5:** permanece aberto; CI verde para o código atual do módulo, porém sem banco real e sem Preview.
+
+
+### 2026-11-04 — Objetivo de estudo e dashboard conectado ao histórico (código preparado)
+- **Migração:** `0003_student_goals_and_dashboard.sql` cria cargos, objetivos ativos/arquivados, índice de um objetivo ativo por usuário e RLS.
+- **RPCs:** `set_student_study_goal` valida concurso/edital/cargo e substitui objetivo ativo; `get_student_dashboard` agrega tentativas reais, acertos, taxa de acerto, objetivo e atividades recentes.
+- **APIs:** GET/POST de objetivo e GET de dashboard.
+- **Interface:** onboarding para selecionar concurso/edital/cargo; dashboard com indicadores e atividade recente; detalhes de concurso exibem cargos.
+- **Persistência real:** ainda não validada; migração 0003 não aplicada e sem projeto Supabase/credenciais.
+- **Conteúdo:** não há concursos/cargos publicados; estados vazios são intencionais.
+- **Testes:** CI run #117 passou no motor de questões antes desta nova entrega; a alteração de objetivos/dashboard precisa de nova execução de typecheck/testes/build.
