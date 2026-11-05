@@ -133,3 +133,9 @@ A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Discipl
 - [x] API de gabarito com validação da alternativa.
 - [ ] Interface administrativa dedicada para criação/edição de questões.
 - [ ] Testes de integração das regras editoriais em Supabase real.
+
+### Atualização de 2026-11-05 — interface do editor
+- [x] Interface administrativa para criação e edição de questões.
+- [x] Interface de alternativas e gabarito.
+- [x] Listagem e ciclo editorial de questões.
+- [ ] Refinar publicação com checklist visual de integridade e confirmação explícita.
