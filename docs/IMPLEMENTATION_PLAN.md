@@ -37,7 +37,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Criar schema de concursos, editais, disciplinas e tópicos com RLS.
 - [x] Criar APIs de catálogo/detalhe e acompanhar/deixar de acompanhar.
 - [x] CRUD inicial de concursos (PR #5 integrado) e editais (PR #8 em draft; validação de banco pendente).
-- [x] Cadastro inicial de disciplinas e associação transacional a editais (PR #8 em draft; migração 0008 ainda não aplicada em Supabase).\n- [ ] Assuntos e subassuntos associados à disciplina/edital/cargo.
+- [x] Cadastro inicial de disciplinas e associação transacional a editais (PR #8 em draft; migração 0008 ainda não aplicada em Supabase).\n- [x] Cadastro inicial de assuntos e subassuntos por disciplina (API/painel em implementação; edição/remoção ainda pendentes).\n- [ ] Associar assuntos às questões e consolidar a taxonomia por edital/cargo.
 - [ ] Pesquisa, filtros e favoritos.
 - [ ] Aplicar migração e validar isolamento de concursos acompanhados.
 **Saída:** objetivo de estudo selecionável e edital navegável.
