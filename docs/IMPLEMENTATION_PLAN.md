@@ -48,7 +48,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Criar RPC server-side transacional para tentativa idempotente.
 - [x] Criar histórico privado e painel inicial de acertos.
 - [ ] Aplicar migração e validar RPC/RLS com duas contas.
-- [ ] Criar CRUD editorial, importação e curadoria/licenças do conteúdo.
+- [x] Criar CRUD editorial inicial de concursos, editais, disciplinas, cargos, questões, alternativas e gabaritos; importação e curadoria/licenças seguem pendentes.
 - [ ] Adicionar filtros, busca, favoritas, cadernos e questões erradas.
 **Saída:** ciclo de questão completo e auditável.
 
@@ -86,8 +86,8 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Fundação RBAC (owner/editor), RLS para operações editoriais e trilha de auditoria por trigger (migração 0006; aplicação/teste real pendentes).
 - [x] Verificação server-side de papel e painel administrativo (/admin, /api/admin/overview).
 - [x] CRUD inicial de concursos: criar em rascunho, listar, publicar, arquivar e reabrir.
-- [x] CRUD inicial de editais e disciplinas/vínculos (PR #8 em draft).\n- [ ] CRUD de cargos, assuntos, questões, alternativas e gabaritos com validação e publicação controlada.
-- [ ] CRUD editorial completo com formulários, validação, fluxo de rascunho/publicação e gestão de fontes/licenças (questões, cargos e vínculos de disciplinas ainda pendentes).
+- [x] CRUD inicial de editais e disciplinas/vínculos (PR #8 em draft).\n- [x] CRUD inicial de cargos, questões, alternativas e gabaritos com validação e publicação controlada.\n- [ ] Associar assuntos/subassuntos às disciplinas e questões.
+- [x] Formulários administrativos iniciais para concursos, editais, disciplinas, cargos e questões, com validação e ciclo editorial.\n- [ ] Completar gestão editorial de assuntos/subassuntos, importação e curadoria/licenças.
 - [ ] Bootstrap manual e seguro do primeiro owner após provisionar Supabase.
 - [ ] Validar todas as políticas, triggers e operações com contas estudante/editor/owner no Supabase real.
 
@@ -124,21 +124,21 @@ Na Fase 3, o cadastro e a associação de cargos agora estão preparados:
 - [ ] CRUD editorial de questões, alternativas e gabaritos.
 - [ ] Aplicar migrações 0001–0010 e validar RLS/transações no Supabase real.
 
-A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Disciplina → Assunto/Subassunto → Questão → Alternativas → Gabarito**.
+A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Disciplina → Assunto/Subassunto → Questão → Alternativas → Gabarito**. A estrutura de assuntos/subassuntos ainda precisa ser implementada; o editor atual cobre questões vinculadas diretamente à disciplina.
 
 
 ### Atualização de 2026-11-05 — editor de questões
 - [x] API editorial de questões.
 - [x] API de alternativas com substituição atômica.
 - [x] API de gabarito com validação da alternativa.
-- [ ] Interface administrativa dedicada para criação/edição de questões.
+- [x] Interface administrativa dedicada para criação/edição de questões.
 - [ ] Testes de integração das regras editoriais em Supabase real.
 
 ### Atualização de 2026-11-05 — interface do editor
 - [x] Interface administrativa para criação e edição de questões.
 - [x] Interface de alternativas e gabarito.
 - [x] Listagem e ciclo editorial de questões.
-- [ ] Refinar publicação com checklist visual de integridade e confirmação explícita.
+- [x] Checklist visual de integridade para publicação.
 
 - [x] Checklist visual de publicação com validação de concurso, edital, disciplina, alternativas e gabarito.
 - [x] Contrato de retorno da RPC alinhado com a API editorial.
@@ -150,7 +150,7 @@ A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Discipl
 - [x] Deployment de produção do merge commit `cd1f6393394c8b8875660daf765bb66c8e82904b`: `READY`.
 - [ ] Provisionar/configurar Supabase e variáveis de ambiente; a Vercel retornou zero variáveis configuradas na verificação de 2026-11-05.
 - [ ] Aplicar migrações 0001–0011 e validar RLS, triggers e RPCs com contas de estudante/editor.
-- [ ] Corrigir/validar substituição atômica de alternativas preservando o gabarito pela migração 0011 antes de ativar o editor com dados reais.
+- [x] Corrigir a substituição atômica de alternativas preservando o gabarito pela migração 0011 (correção versionada; aplicação no banco ainda pendente).
 - [ ] Validar fluxo autenticado completo em produção/preview após configuração do backend.
 
 O estado `READY` da Vercel confirma somente que o artefato foi construído e publicado. Não é evidência de autenticação ou persistência operacional sem variáveis e banco configurados.
@@ -162,7 +162,7 @@ O estado `READY` da Vercel confirma somente que o artefato foi construído e pub
 - [x] Correção da RPC para preservar o gabarito ao substituir alternativas, versionada na migração 0011.
 - [ ] Aplicar e validar migração 0011 em Supabase real (e confirmar previamente a aplicação das 0001–0010).
 - [ ] Configurar variáveis de ambiente Vercel; a consulta anterior retornou zero variáveis configuradas.
-- [ ] Revalidar deployment quando a Vercel liberar a cota diária; o Preview do PR #11 foi recusado por `api-deployments-free-per-day`.
+- [ ] Revalidar deployment após a liberação da cota diária; o Preview do PR #11 foi recusado por `api-deployments-free-per-day`.
 - [ ] Testar RLS, RPCs e fluxos com contas de estudante e editor.
 
 O CI aprovado comprova typecheck/testes/build. Não comprova a execução das migrações nem o funcionamento do Supabase. O deployment Preview do PR #11 não foi criado devido ao limite da Vercel.
