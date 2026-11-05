@@ -41,6 +41,37 @@ const savingSubject = ref(false)
 const subjectMessage = ref('')
 const subjectError = ref('')
 const assignmentForm = reactive({ noticeId: '', subjectIds: [] as string[] })
+interface TopicRow { id: string; subject_id: string; parent_topic_id: string | null; name: string; created_at: string }
+const { data: topicsData, error: topicsError, refresh: refreshTopics } = await useFetch<{ topics: TopicRow[] }>('/api/admin/topics')
+const topicForm = reactive({ subjectId: '', parentTopicId: '', name: '' })
+const savingTopic = ref(false)
+const topicMessage = ref('')
+const topicError = ref('')
+const topicParents = computed(() => topicsData.value?.topics.filter(topic => topic.subject_id === topicForm.subjectId) ?? [])
+const topicLabel = (topic: TopicRow) => topic.parent_topic_id ? '↳ ' + topic.name : topic.name
+async function createTopic() {
+  savingTopic.value = true
+  topicMessage.value = ''
+  topicError.value = ''
+  try {
+    await $fetch('/api/admin/topics', {
+      method: 'POST',
+      body: {
+        subjectId: topicForm.subjectId,
+        parentTopicId: topicForm.parentTopicId || null,
+        name: topicForm.name,
+      },
+    })
+    topicForm.name = ''
+    topicForm.parentTopicId = ''
+    topicMessage.value = 'Assunto cadastrado.'
+    await Promise.all([refreshTopics(), refresh()])
+  } catch (cause: unknown) {
+    topicError.value = cause instanceof Error ? cause.message : 'Não foi possível cadastrar o assunto.'
+  } finally {
+    savingTopic.value = false
+  }
+}
 const savingAssignment = ref(false)
 const assignmentMessage = ref('')
 const assignmentError = ref('')
@@ -309,6 +340,33 @@ const label = (table: string) => ({
           <p class="study-muted">Use Ctrl (ou ⌘ no Mac) para selecionar mais de uma disciplina. Editais publicados precisam ser despublicados antes de alterar a estrutura.</p>
           <p v-if="assignmentMessage" class="admin-success" role="status">{{ assignmentMessage }}</p>
           <p v-if="assignmentError" class="admin-error" role="alert">{{ assignmentError }}</p>
+        </section>
+
+        <section class="study-section student-empty">
+          <p class="auth-eyebrow">TAXONOMIA DE CONTEÚDO</p>
+          <h2>Assuntos e subassuntos</h2>
+          <form class="contest-form" @submit.prevent="createTopic">
+            <label class="form-wide">Disciplina
+              <select v-model="topicForm.subjectId" required @change="topicForm.parentTopicId = ''">
+                <option value="" disabled>Selecione uma disciplina</option>
+                <option v-for="subject in subjectsData?.subjects || []" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
+              </select>
+            </label>
+            <label class="form-wide">Assunto pai (opcional)
+              <select v-model="topicForm.parentTopicId" :disabled="!topicForm.subjectId">
+                <option value="">Nenhum — assunto principal</option>
+                <option v-for="topic in topicParents" :key="topic.id" :value="topic.id">{{ topicLabel(topic) }}</option>
+              </select>
+            </label>
+            <label class="form-wide">Nome do assunto
+              <input v-model="topicForm.name" required minlength="2" maxlength="120" placeholder="Direito Constitucional">
+            </label>
+            <button class="study-secondary-button" type="submit" :disabled="savingTopic || !topicForm.subjectId">{{ savingTopic ? 'Salvando…' : 'Cadastrar assunto' }}</button>
+          </form>
+          <p v-if="topicMessage" class="admin-success" role="status">{{ topicMessage }}</p>
+          <p v-if="topicError || topicsError" class="admin-error" role="alert">{{ topicError || 'Não foi possível carregar os assuntos.' }}</p>
+          <p v-if="topicsData?.topics.length" class="study-muted">Total cadastrado: {{ topicsData.topics.length }}</p>
+          <p v-else-if="!topicsError" class="study-muted">Nenhum assunto cadastrado.</p>
         </section>
 
         <section class="study-section">
