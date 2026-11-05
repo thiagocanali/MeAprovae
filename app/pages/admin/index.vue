@@ -32,10 +32,21 @@ interface AdminOverview {
 const { data, error, refresh } = await useFetch<AdminOverview>('/api/admin/overview')
 interface ContestRow { id: string; slug: string; title: string; organization: string | null; exam_board: string | null; status: 'draft' | 'published' | 'archived'; published_at: string | null }
 interface NoticeRow { id: string; contest_id: string; title: string; version: string; publication_date: string | null; source_url: string | null; status: 'draft' | 'published' | 'archived' }
+interface PositionRow { id: string; contest_id: string; title: string; education_level: string | null; area: string | null; status: 'draft' | 'published' | 'archived' }
 const { data: contestsData, error: contestsError, refresh: refreshContests } = await useFetch<{ contests: ContestRow[] }>('/api/admin/contests')
 const { data: noticesData, error: noticesError, refresh: refreshNotices } = await useFetch<{ notices: NoticeRow[] }>('/api/admin/notices')
 interface SubjectRow { id: string; name: string; created_at: string }
 const { data: subjectsData, error: subjectsError, refresh: refreshSubjects } = await useFetch<{ subjects: SubjectRow[] }>('/api/admin/subjects')
+const { data: positionsData, error: positionsError, refresh: refreshPositions } = await useFetch<{ positions: PositionRow[] }>('/api/admin/positions')
+const positionForm = reactive({ contestId: '', title: '', educationLevel: '', area: '' })
+const savingPosition = ref(false)
+const positionMessage = ref('')
+const positionError = ref('')
+const positionAssignmentForm = reactive({ noticeId: '', positionIds: [] as string[] })
+const savingPositionAssignment = ref(false)
+const positionAssignmentMessage = ref('')
+const positionAssignmentError = ref('')
+const loadingPositionAssignment = ref(false)
 const subjectForm = reactive({ name: '' })
 const savingSubject = ref(false)
 const subjectMessage = ref('')
@@ -45,6 +56,65 @@ const savingAssignment = ref(false)
 const assignmentMessage = ref('')
 const assignmentError = ref('')
 const loadingAssignment = ref(false)
+async function createPosition() {
+  savingPosition.value = true
+  positionMessage.value = ''
+  positionError.value = ''
+  try {
+    await $fetch('/api/admin/positions', { method: 'POST', body: positionForm })
+    positionForm.title = ''
+    positionForm.educationLevel = ''
+    positionForm.area = ''
+    positionMessage.value = 'Cargo cadastrado como rascunho.'
+    await Promise.all([refreshPositions(), refresh()])
+  } catch (cause: unknown) {
+    positionError.value = cause instanceof Error ? cause.message : 'Não foi possível cadastrar o cargo.'
+  } finally {
+    savingPosition.value = false
+  }
+}
+async function changePositionStatus(position: PositionRow, status: PositionRow['status']) {
+  positionError.value = ''
+  positionMessage.value = ''
+  try {
+    await $fetch('/api/admin/positions/' + position.id, { method: 'PATCH', body: { status } })
+    positionMessage.value = status === 'published' ? 'Cargo publicado.' : 'Status do cargo atualizado.'
+    await Promise.all([refreshPositions(), refresh()])
+  } catch (cause: unknown) {
+    positionError.value = cause instanceof Error ? cause.message : 'Não foi possível atualizar o cargo.'
+  }
+}
+async function loadNoticePositions() {
+  if (!positionAssignmentForm.noticeId) return
+  loadingPositionAssignment.value = true
+  positionAssignmentError.value = ''
+  try {
+    const result = await $fetch<{ assignments: Array<{ position_id: string }> }>(`/api/admin/notices/${positionAssignmentForm.noticeId}/positions`)
+    positionAssignmentForm.positionIds = result.assignments.map(item => item.position_id)
+  } catch (cause: unknown) {
+    positionAssignmentError.value = cause instanceof Error ? cause.message : 'Não foi possível carregar os cargos do edital.'
+  } finally {
+    loadingPositionAssignment.value = false
+  }
+}
+async function saveNoticePositions() {
+  if (!positionAssignmentForm.noticeId) return
+  savingPositionAssignment.value = true
+  positionAssignmentMessage.value = ''
+  positionAssignmentError.value = ''
+  try {
+    await $fetch(`/api/admin/notices/${positionAssignmentForm.noticeId}/positions`, {
+      method: 'PUT',
+      body: { positionIds: positionAssignmentForm.positionIds },
+    })
+    positionAssignmentMessage.value = 'Cargos do edital atualizados.'
+    await refresh()
+  } catch (cause: unknown) {
+    positionAssignmentError.value = cause instanceof Error ? cause.message : 'Não foi possível salvar os cargos do edital.'
+  } finally {
+    savingPositionAssignment.value = false
+  }
+}
 async function createSubject() {
   savingSubject.value = true
   subjectMessage.value = ''
@@ -272,6 +342,66 @@ const label = (table: string) => ({
               <button v-if="notice.status === 'archived'" class="study-secondary-button" @click="changeNoticeStatus(notice, 'draft')">Reabrir</button>
             </div>
           </article>
+        </section>
+
+        <section class="study-section student-empty">
+          <p class="auth-eyebrow">ESTRUTURA DO CONCURSO</p>
+          <h2>Cargos</h2>
+          <form class="contest-form" @submit.prevent="createPosition">
+            <label>Concurso
+              <select v-model="positionForm.contestId" required>
+                <option value="" disabled>Selecione um concurso</option>
+                <option v-for="contest in contestsData?.contests || []" :key="contest.id" :value="contest.id">{{ contest.title }}</option>
+              </select>
+            </label>
+            <label>Cargo<input v-model="positionForm.title" required minlength="2" maxlength="160" placeholder="Analista Administrativo"></label>
+            <label>Escolaridade<input v-model="positionForm.educationLevel" maxlength="120" placeholder="Nível superior"></label>
+            <label>Área<input v-model="positionForm.area" maxlength="120" placeholder="Administrativa"></label>
+            <button class="study-secondary-button" type="submit" :disabled="savingPosition || !contestsData?.contests.length">{{ savingPosition ? 'Salvando…' : 'Cadastrar cargo' }}</button>
+          </form>
+          <p class="study-muted">O cargo nasce como rascunho e pode ser publicado somente depois da revisão editorial.</p>
+          <p v-if="positionMessage" class="admin-success" role="status">{{ positionMessage }}</p>
+          <p v-if="positionError" class="admin-error" role="alert">{{ positionError }}</p>
+        </section>
+
+        <section class="study-section">
+          <h2>Cargos cadastrados</h2>
+          <p v-if="positionsError" class="admin-error" role="alert">Não foi possível carregar os cargos.</p>
+          <div v-else-if="!positionsData?.positions.length" class="student-empty"><p>Nenhum cargo cadastrado.</p></div>
+          <article v-for="position in positionsData?.positions || []" :key="position.id" class="admin-contest-row">
+            <div>
+              <strong>{{ position.title }}</strong>
+              <p class="study-muted">{{ contestTitle(position.contest_id) }} · {{ position.education_level || 'Escolaridade não informada' }} · {{ position.area || 'Área não informada' }}</p>
+              <span class="admin-status">{{ position.status === 'published' ? 'Publicado' : position.status === 'archived' ? 'Arquivado' : 'Rascunho' }}</span>
+            </div>
+            <div class="admin-actions">
+              <button v-if="position.status !== 'published'" class="study-secondary-button" @click="changePositionStatus(position, 'published')">Publicar</button>
+              <button v-if="position.status !== 'archived'" class="study-secondary-button" @click="changePositionStatus(position, 'archived')">Arquivar</button>
+              <button v-if="position.status === 'archived'" class="study-secondary-button" @click="changePositionStatus(position, 'draft')">Reabrir</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="study-section student-empty">
+          <p class="auth-eyebrow">ESTRUTURA DO EDITAL</p>
+          <h2>Associar cargos a um edital</h2>
+          <form class="contest-form" @submit.prevent="saveNoticePositions">
+            <label class="form-wide">Edital
+              <select v-model="positionAssignmentForm.noticeId" required @change="loadNoticePositions">
+                <option value="" disabled>Selecione um edital</option>
+                <option v-for="notice in noticesData?.notices || []" :key="notice.id" :value="notice.id">{{ notice.title }} · {{ notice.status === 'published' ? 'Publicado' : notice.status === 'archived' ? 'Arquivado' : 'Rascunho' }}</option>
+              </select>
+            </label>
+            <label class="form-wide">Cargos
+              <select v-model="positionAssignmentForm.positionIds" multiple size="6" :disabled="!positionAssignmentForm.noticeId || loadingPositionAssignment || !positionsData?.positions.length">
+                <option v-for="position in positionsData?.positions || []" :key="position.id" :value="position.id">{{ position.title }} · {{ contestTitle(position.contest_id) }}</option>
+              </select>
+            </label>
+            <button class="study-secondary-button" type="submit" :disabled="savingPositionAssignment || loadingPositionAssignment || !positionAssignmentForm.noticeId">{{ savingPositionAssignment ? 'Salvando…' : 'Salvar cargos do edital' }}</button>
+          </form>
+          <p class="study-muted">Somente cargos do mesmo concurso do edital podem ser associados. Editais publicados precisam ser despublicados antes de alterar sua estrutura.</p>
+          <p v-if="positionAssignmentMessage" class="admin-success" role="status">{{ positionAssignmentMessage }}</p>
+          <p v-if="positionAssignmentError" class="admin-error" role="alert">{{ positionAssignmentError }}</p>
         </section>
 
         <section class="study-section student-empty">

@@ -112,3 +112,16 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 
 ## Dependências que bloqueiam execução real
 A configuração atual da Vercel não possui variáveis de ambiente cadastradas. O fluxo real com banco e autenticação exige provisionar o serviço e adicionar as credenciais em ambientes apropriados. O desenvolvimento de código não deve fingir que essa integração está ativa enquanto essa dependência estiver ausente.
+
+
+### Atualização de 2026-11-05 — estrutura editorial de cargos
+
+Na Fase 3, o cadastro e a associação de cargos agora estão preparados:
+- [x] CRUD inicial de cargos: criar como rascunho, listar e alterar status.
+- [x] Associar múltiplos cargos a um edital com RPC transacional.
+- [x] Validar no banco que cargo e edital pertencem ao mesmo concurso.
+- [ ] Associar assuntos/subassuntos às disciplinas e questões.
+- [ ] CRUD editorial de questões, alternativas e gabaritos.
+- [ ] Aplicar migrações 0001–0009 e validar RLS/transações no Supabase real.
+
+A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Disciplina → Assunto/Subassunto → Questão → Alternativas → Gabarito**.

@@ -349,3 +349,24 @@ Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o regist
 - Editais publicados não podem ter sua estrutura de disciplinas alterada; é necessário despublicá-los primeiro, respeitando também as regras de questões publicadas.
 - As rotas usam `requirePlatformEditor`; a RPC também valida o papel no banco. O histórico editorial existente registra as mutações da tabela de vínculo.
 - A entrega está em código na branch do PR #8. A execução da migração, testes RLS/transacionais e operação real dependem de Supabase provisionado.
+
+
+## Atualização — cargos e vínculo cargo-edital
+
+A evolução editorial seguinte adiciona o nível de **cargo** de forma explícita e permite definir quais cargos pertencem a cada edital. O modelo mantém `study_positions` no escopo do concurso, permitindo reutilização, e usa `study_notice_positions` para materializar a composição específica de cada edital.
+
+### Componentes adicionados
+- Migração `0009_notice_position_assignment.sql`.
+- APIs administrativas de cadastro/listagem/alteração de cargos.
+- APIs para consultar e sincronizar cargos associados a um edital.
+- RPC `set_notice_positions` com autorização editorial, lock do edital, validação de concurso e substituição atômica.
+- Interface administrativa para cadastro, ciclo editorial e associação múltipla de cargos.
+
+### Integridade
+- Um vínculo cargo-edital só pode existir quando o cargo e o edital pertencem ao mesmo concurso.
+- Editais publicados não podem ter seus cargos alterados sem passar pelo ciclo de despublicação.
+- A autorização é verificada tanto nas rotas quanto na RPC.
+- Nenhum conteúdo real foi inventado ou inserido.
+
+### Validação pendente
+A migração 0009, RLS e transações ainda precisam ser executadas em Supabase real. O novo branch também precisa de typecheck, testes unitários e build confirmados no GitHub Actions.

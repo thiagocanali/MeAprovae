@@ -192,3 +192,12 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Migração `0008_notice_subject_assignment.sql`: bloqueio de alteração quando o edital está publicado, validação de papel editorial, lock da linha do edital e substituição atômica dos vínculos.
 - Painel `/admin` com cadastro de disciplinas e associação múltipla a editais.
 - Código preparado na branch do PR #8; CI e validação SQL em Supabase real ainda pendentes.
+
+
+### 2026-11-05 — Cargos e vínculo cargo-edital
+- Criada a migração `0009_notice_position_assignment.sql` para associar cargos reutilizáveis do concurso a editais específicos, preservando o vínculo de concurso por FK composta.
+- Criadas APIs editoriais para listar/cadastrar cargos, alterar metadados/status e listar/sincronizar cargos de um edital.
+- A sincronização usa RPC `set_notice_positions`, com papel editorial, lock do edital, validação de pertencimento ao concurso e substituição atômica.
+- O painel `/admin` agora cadastra cargos e permite associá-los a editais; editais publicados continuam bloqueados para alterações estruturais.
+- Nenhum cargo, concurso ou edital fictício foi inserido.
+- A migração e as políticas ainda não foram executadas contra Supabase real; CI/deploy do novo branch precisam ser verificados antes de considerar a entrega validada.
