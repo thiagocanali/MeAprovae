@@ -68,8 +68,8 @@ begin
 
   select coalesce(jsonb_agg(jsonb_build_object(
     'id', o.id,
-    'questionId', o.question_id,
-    'optionLabel', o.option_label,
+    'question_id', o.question_id,
+    'option_label', o.option_label,
     'content', o.content,
     'position', o.position
   ) order by o.position), '[]'::jsonb)
