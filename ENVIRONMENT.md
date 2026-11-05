@@ -140,3 +140,11 @@ O procedimento de aplicação passa a ser 0001 → 0002 → 0003 → 0004 → 00
 
 ## CI da migração 0007
 O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9b6e (instalação, typecheck, 28 testes unitários e build). O PR #7 está em draft e ainda não foi mesclado. Esse resultado valida compilação e testes unitários, não a execução da migração 0007 nem as políticas/triggers no PostgreSQL/Supabase.
+
+## Estado verificado — 2026-11-05
+
+- O deployment de produção do commit `cd1f6393394c8b8875660daf765bb66c8e82904b` está em estado `READY`; isso confirma o build/publicação, não a operação autenticada com banco.
+- A consulta atual de variáveis da Vercel retornou zero variáveis configuradas e zero variáveis ocultas.
+- Não há conexão Supabase disponível nesta sessão para confirmar projeto, aplicar SQL ou testar RLS/RPCs.
+- As migrações versionadas chegam a `0011_preserve_question_answer_key_on_option_replace.sql`. A aplicação real depende de provisionar/configurar Supabase, cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente e aplicar 0001–0011 na ordem.
+- Até essa configuração e validação real, não considerar cadastro, login, painel administrativo, catálogo ou tentativas como funcionais em produção.
