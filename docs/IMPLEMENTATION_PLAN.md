@@ -166,3 +166,15 @@ O estado `READY` da Vercel confirma somente que o artefato foi construído e pub
 - [ ] Testar RLS, RPCs e fluxos com contas de estudante e editor.
 
 O CI aprovado comprova typecheck/testes/build. Não comprova a execução das migrações nem o funcionamento do Supabase. O deployment Preview do PR #11 não foi criado devido ao limite da Vercel.
+
+
+## Atualização — integridade histórica de questões (2026-11-05)
+
+- [x] Identificar conflito entre a FK de tentativas e a substituição integral de alternativas na migração 0011.
+- [x] Preparar migração 0012 para bloquear alterações de conteúdo, alternativas e gabarito após a primeira tentativa.
+- [ ] Revisar a migração 0012 e obter CI aprovado.
+- [ ] Aplicar migrações 0001–0012 em projeto Supabase de desenvolvimento.
+- [ ] Testar edição antes/depois de tentativas, preservação do histórico, publicação/despublicação e permissões estudante/editor.
+- [ ] Definir fluxo editorial de versionamento para corrigir questões já respondidas.
+
+A migração 0012 está na branch `fix/lock-question-history`; ainda não foi integrada à `main` nem aplicada a banco real.
