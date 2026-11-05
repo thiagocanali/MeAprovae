@@ -148,3 +148,11 @@ O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9
 - Não há conexão Supabase disponível nesta sessão para confirmar projeto, aplicar SQL ou testar RLS/RPCs.
 - As migrações versionadas chegam a `0011_preserve_question_answer_key_on_option_replace.sql`. A aplicação real depende de provisionar/configurar Supabase, cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente e aplicar 0001–0011 na ordem.
 - Até essa configuração e validação real, não considerar cadastro, login, painel administrativo, catálogo ou tentativas como funcionais em produção.
+
+## Atualização após PR #11 — 2026-11-05
+
+- PR #11 foi mesclado à `main` no commit `1fd30bf049c547213f528edbb5153ce11f194ae1`.
+- CI da branch `fix/question-editor-integrity` (run `42034208681`) passou em instalação, typecheck, testes unitários e build de produção.
+- A migração 0011 agora preserva o gabarito durante a substituição de alternativas. Ela está versionada no repositório, mas ainda não foi aplicada/validada em Supabase.
+- A Vercel recusou o deployment Preview do PR #11 por limite diário de deployments do plano (`api-deployments-free-per-day`); aguardar a janela de 24 horas ou resolver o limite antes de tentar novo deployment.
+- A consulta anterior de variáveis Vercel retornou zero variáveis configuradas. Não há conexão Supabase disponível nesta sessão. Configuração do backend e testes reais permanecem bloqueadores P0.
