@@ -383,3 +383,18 @@ Ainda falta uma interface administrativa dedicada para editar questões e uma va
 A interface administrativa agora fecha o primeiro fluxo visual de autoria: seleção de edital/disciplina/assunto, enunciado, fonte, explicação, alternativas, gabarito e status editorial. O frontend não contém conteúdo de prova inventado.
 
 O checklist visual de publicação foi adicionado ao editor. A interface só habilita a publicação quando concurso, edital, disciplina, alternativas e gabarito atendem aos critérios; o banco mantém a validação autoritativa. A resposta da RPC de alternativas foi alinhada ao contrato snake_case da API.
+
+## Reauditoria — 2026-11-05 após integração do PR #10
+
+### Estado de entrega
+- PR #10 mesclado na `main` pelo commit `cd1f6393394c8b8875660daf765bb66c8e82904b`.
+- GitHub Actions: typecheck, testes unitários e build passaram na revisão final da branch.
+- Vercel: deployment de produção do merge commit em estado `READY`.
+
+### Bloqueio operacional P0
+A consulta de variáveis da Vercel em 2026-11-05 retornou lista vazia e zero variáveis ocultas. Não há integração Supabase disponível nesta sessão para confirmar o estado do banco. Assim, deployment READY não deve ser confundido com aplicação autenticada funcional. Provisionamento, variáveis `NUXT_SUPABASE_URL`/`NUXT_SUPABASE_ANON_KEY`, aplicação de migrações e testes reais continuam obrigatórios.
+
+### Defeito encontrado na revisão do editor
+A RPC `set_question_options` removia alternativas antes de preservar/remover o gabarito, mas a FK do gabarito referencia a alternativa. A substituição podia falhar quando a questão já tinha gabarito. A correção proposta na migração 0011 remove o gabarito dentro da mesma transação e o recria pela correspondência do rótulo, quando possível. Se o rótulo correto não existir mais, o gabarito fica pendente para seleção editorial explícita.
+
+Também foi identificado que o formulário enviava `noticeId` no PATCH, mas a API não atualizava `notice_id`; a rota foi ajustada no branch de correção. O painel passa a oferecer despublicação explícita para edição e remove um bloco de interface que ainda anunciava o editor como trabalho futuro.
