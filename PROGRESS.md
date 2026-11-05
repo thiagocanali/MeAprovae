@@ -201,3 +201,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - O painel `/admin` agora cadastra cargos e permite associá-los a editais; editais publicados continuam bloqueados para alterações estruturais.
 - Nenhum cargo, concurso ou edital fictício foi inserido.
 - A migração e as políticas ainda não foram executadas contra Supabase real; CI/deploy do novo branch precisam ser verificados antes de considerar a entrega validada.
+
+
+### 2026-11-05 — Editor inicial de questões
+- Criadas APIs editoriais para listar/criar/editar questões.
+- Criada API para substituir alternativas e definir o gabarito.
+- A edição de alternativas usa RPC transacional `set_question_options`, com lock da questão e bloqueio para questões publicadas.
+- A estrutura existente de banco continua exigindo edital/disciplina válidos e, para publicação, alternativas suficientes e gabarito.
