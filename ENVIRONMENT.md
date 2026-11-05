@@ -164,3 +164,12 @@ Aplique `supabase/migrations/0012_lock_question_history.sql` depois da 0011. Qua
 A migração foi preparada após auditoria estática: a FK de `question_attempts` referencia as alternativas, portanto a substituição integral das alternativas pode falhar quando já há tentativas. A proteção é uma regra conservadora de integridade; ainda precisa ser aplicada e testada em Supabase real.
 
 A sequência de banco passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0006 → 0007 → 0008 → 0009 → 0010 → 0011 → 0012.
+
+
+## Atualização pós PR #12 — 2026-11-05
+
+- PR #12 integrado à `main` no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
+- O check `Supabase Preview` associado ao commit integrado concluiu com sucesso e aponta para o projeto Supabase `htukocebmvczejxexsab`. Confirmar no dashboard se a branch preview foi criada e se as migrações foram aplicadas; não assumir que o banco de produção foi alterado.
+- A consulta de variáveis da Vercel retornou zero variáveis cadastradas e zero ocultas. Cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente Nuxt necessário.
+- O deployment Vercel do commit integrado foi recusado por limite diário de deployments. O último deployment READY observado é anterior às alterações dos PRs #11 e #12.
+- A sequência de migrações versionadas chega a 0012. Aplicação/validação real, testes de RLS/RPC e teste autenticado continuam pendentes.
