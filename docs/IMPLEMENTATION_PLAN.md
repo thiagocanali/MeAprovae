@@ -154,3 +154,15 @@ A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Discipl
 - [ ] Validar fluxo autenticado completo em produção/preview após configuração do backend.
 
 O estado `READY` da Vercel confirma somente que o artefato foi construído e publicado. Não é evidência de autenticação ou persistência operacional sem variáveis e banco configurados.
+
+## Atualização após PR #11 — 2026-11-05
+
+- [x] PR #11 integrado à `main` no commit `1fd30bf049c547213f528edbb5153ce11f194ae1`.
+- [x] CI run `42034208681`: instalação, typecheck, testes unitários e build de produção aprovados.
+- [x] Correção da RPC para preservar o gabarito ao substituir alternativas, versionada na migração 0011.
+- [ ] Aplicar e validar migração 0011 em Supabase real (e confirmar previamente a aplicação das 0001–0010).
+- [ ] Configurar variáveis de ambiente Vercel; a consulta anterior retornou zero variáveis configuradas.
+- [ ] Revalidar deployment quando a Vercel liberar a cota diária; o Preview do PR #11 foi recusado por `api-deployments-free-per-day`.
+- [ ] Testar RLS, RPCs e fluxos com contas de estudante e editor.
+
+O CI aprovado comprova typecheck/testes/build. Não comprova a execução das migrações nem o funcionamento do Supabase. O deployment Preview do PR #11 não foi criado devido ao limite da Vercel.
