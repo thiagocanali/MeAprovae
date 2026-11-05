@@ -18,16 +18,17 @@ export default defineEventHandler(async (event) => {
   const rows=options.map((o,i)=>({id:isUuid(typeof o.id==='string'?o.id:'')?o.id:undefined,question_id:questionId,option_label:labels[i],content:typeof o.content==='string'?o.content.trim():'',position:i+1}))
   if(rows.some(r=>r.content.length<1||r.content.length>5000)) throw createError({statusCode:400,statusMessage:'Conteúdo de alternativa inválido.'})
 
-  const existing=await supabase.from('study_question_options').select('id').eq('question_id',questionId)
-  if(existing.error) throw createError({statusCode:503,statusMessage:'Não foi possível ler as alternativas.'})
-  const {error:delError}=await supabase.from('study_question_options').delete().eq('question_id',questionId)
-  if(delError) {
-    if(delError.code==='23514') throw createError({statusCode:409,statusMessage:'Despublique a questão antes de alterar as alternativas.'})
-    throw createError({statusCode:503,statusMessage:'Não foi possível substituir as alternativas.'})
-  }
-  const insertRows=rows.map(({id,...row})=>row)
-  const {data,error}=await supabase.from('study_question_options').insert(insertRows)
-    .select('id, question_id, option_label, content, position').order('position',{ascending:true})
-  if(error) throw createError({statusCode:503,statusMessage:'Não foi possível salvar as alternativas.'})
-  return { options:data??[] }
+  const { data, error } = await supabase.rpc('set_question_options', {
+    p_question_id: questionId,
+    p_options: rows.map(({ id, ...row }) => ({
+      option_label: row.option_label,
+      content: row.content,
+      position: row.position,
+    })),
+  })
+  if (error?.code === 'P0002') throw createError({ statusCode: 404, statusMessage: 'Questão não encontrada.' })
+  if (error?.code === '23514') throw createError({ statusCode: 409, statusMessage: 'Despublique a questão antes de alterar as alternativas.' })
+  if (error?.code === '22023') throw createError({ statusCode: 400, statusMessage: 'Dados de alternativas inválidos.' })
+  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível salvar as alternativas.' })
+  return { options: data ?? [] }
 })
