@@ -139,3 +139,6 @@ A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Discipl
 - [x] Interface de alternativas e gabarito.
 - [x] Listagem e ciclo editorial de questões.
 - [ ] Refinar publicação com checklist visual de integridade e confirmação explícita.
+
+- [x] Checklist visual de publicação com validação de concurso, edital, disciplina, alternativas e gabarito.
+- [x] Contrato de retorno da RPC alinhado com a API editorial.
