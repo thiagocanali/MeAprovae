@@ -398,3 +398,17 @@ A consulta de variáveis da Vercel em 2026-11-05 retornou lista vazia e zero var
 A RPC `set_question_options` removia alternativas antes de preservar/remover o gabarito, mas a FK do gabarito referencia a alternativa. A substituição podia falhar quando a questão já tinha gabarito. A correção proposta na migração 0011 remove o gabarito dentro da mesma transação e o recria pela correspondência do rótulo, quando possível. Se o rótulo correto não existir mais, o gabarito fica pendente para seleção editorial explícita.
 
 Também foi identificado que o formulário enviava `noticeId` no PATCH, mas a API não atualizava `notice_id`; a rota foi ajustada no branch de correção. O painel passa a oferecer despublicação explícita para edição e remove um bloco de interface que ainda anunciava o editor como trabalho futuro.
+
+## Reauditoria — após PR #11 (2026-11-05)
+
+### Entrega e CI
+- PR #11 mesclado à `main`: commit `1fd30bf049c547213f528edbb5153ce11f194ae1`.
+- CI run `42034208681` passou integralmente: instalação, typecheck, testes unitários e build.
+- Migração 0011 integrada para preservar o gabarito por rótulo ao substituir alternativas.
+- PATCH editorial atualizado para gravar `notice_id`; painel oferece despublicação antes da edição.
+
+### Limitação de deployment
+A Vercel recusou o Preview do PR #11 por limite diário do plano (`api-deployments-free-per-day`, orientação de tentar novamente após 24 horas). Não afirmar que o código do PR #11 foi publicado em Preview/produção até obter novo deployment READY.
+
+### Bloqueio de backend
+A verificação anterior retornou zero variáveis de ambiente na Vercel e não há conexão Supabase nesta sessão. A migração 0011 está apenas versionada. Ainda faltam provisionamento/configuração, aplicação ordenada das migrações 0001–0011 e testes reais de RLS/RPC/autenticação.
