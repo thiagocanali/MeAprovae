@@ -125,3 +125,11 @@ Na Fase 3, o cadastro e a associação de cargos agora estão preparados:
 - [ ] Aplicar migrações 0001–0009 e validar RLS/transações no Supabase real.
 
 A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Disciplina → Assunto/Subassunto → Questão → Alternativas → Gabarito**.
+
+
+### Atualização de 2026-11-05 — editor de questões
+- [x] API editorial de questões.
+- [x] API de alternativas com substituição atômica.
+- [x] API de gabarito com validação da alternativa.
+- [ ] Interface administrativa dedicada para criação/edição de questões.
+- [ ] Testes de integração das regras editoriais em Supabase real.
