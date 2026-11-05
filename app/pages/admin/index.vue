@@ -42,6 +42,122 @@ const positionForm = reactive({ contestId: '', title: '', educationLevel: '', ar
 const savingPosition = ref(false)
 const positionMessage = ref('')
 const positionError = ref('')
+
+interface QuestionRow {
+  id: string; notice_id: string; subject_id: string; topic_id: string | null
+  statement: string; explanation: string; source_label: string | null; source_url: string | null
+  source_year: number | null; status: 'draft' | 'published' | 'archived'
+}
+interface QuestionOption { id: string; question_id: string; option_label: string; content: string; position: number }
+const { data: questionsData, error: questionsError, refresh: refreshQuestions } = await useFetch<{ questions: QuestionRow[] }>('/api/admin/questions')
+const { data: topicsData } = await useFetch<{ topics: Array<{ id: string; subject_id: string; parent_topic_id: string | null; name: string }> }>('/api/admin/topics')
+const questionForm = reactive({ noticeId: '', subjectId: '', topicId: '', statement: '', explanation: '', sourceLabel: '', sourceUrl: '', sourceYear: '' })
+const questionOptions = ref([{ label: 'A', content: '' }, { label: 'B', content: '' }, { label: 'C', content: '' }, { label: 'D', content: '' }])
+const questionCorrectOption = ref('')
+const editingQuestionId = ref('')
+const savingQuestion = ref(false)
+const savingQuestionOptions = ref(false)
+const questionMessage = ref('')
+const questionError = ref('')
+const loadingQuestionEditor = ref(false)
+const questionTopics = computed(() => topicsData.value?.topics.filter(topic => topic.subject_id === questionForm.subjectId) ?? [])
+const noticeSubjectIds = ref<string[]>([])
+const questionNotice = computed(() => noticesData.value?.notices.find(notice => notice.id === questionForm.noticeId) ?? null)
+const questionContest = computed(() => contestsData.value?.contests.find(contest => contest.id === questionNotice.value?.contest_id) ?? null)
+const selectedQuestion = computed(() => questionsData.value?.questions.find(question => question.id === editingQuestionId.value) ?? null)
+const publicationChecks = computed(() => [
+  { label: 'Concurso publicado', passed: questionContest.value?.status === 'published' },
+  { label: 'Edital publicado', passed: questionNotice.value?.status === 'published' },
+  { label: 'Disciplina vinculada ao edital', passed: noticeSubjectIds.value.includes(questionForm.subjectId) },
+  { label: 'Pelo menos duas alternativas preenchidas', passed: questionOptions.value.length >= 2 && questionOptions.value.every(option => option.content.trim().length > 0) },
+  { label: 'Gabarito definido', passed: Boolean(questionCorrectOption.value && questionOptions.value.some(option => option.label === questionCorrectOption.value)) },
+])
+const canPublishQuestion = computed(() => publicationChecks.value.every(check => check.passed))
+watch(() => questionForm.noticeId, async (noticeId) => {
+  noticeSubjectIds.value = []
+  if (!noticeId) return
+  try {
+    const result = await $fetch<{ assignments: Array<{ subject_id: string }> }>('/api/admin/notices/' + noticeId + '/subjects')
+    noticeSubjectIds.value = result.assignments.map(item => item.subject_id)
+  } catch { noticeSubjectIds.value = [] }
+})
+function resetQuestionForm() {
+  editingQuestionId.value = ''; questionForm.noticeId = ''; questionForm.subjectId = ''; questionForm.topicId = ''
+  questionForm.statement = ''; questionForm.explanation = ''; questionForm.sourceLabel = ''; questionForm.sourceUrl = ''; questionForm.sourceYear = ''
+  questionCorrectOption.value = ''
+  noticeSubjectIds.value = []
+  questionOptions.value = [{ label: 'A', content: '' }, { label: 'B', content: '' }, { label: 'C', content: '' }, { label: 'D', content: '' }]
+}
+async function editQuestion(question: QuestionRow) {
+  loadingQuestionEditor.value = true; questionError.value = ''
+  try {
+    const result = await $fetch<{ question: QuestionRow; options: QuestionOption[]; answer: { correct_option_id: string } | null }>('/api/admin/questions/' + question.id)
+    editingQuestionId.value = result.question.id; questionForm.noticeId = result.question.notice_id; questionForm.subjectId = result.question.subject_id
+    questionForm.topicId = result.question.topic_id ?? ''; questionForm.statement = result.question.statement; questionForm.explanation = result.question.explanation
+    questionForm.sourceLabel = result.question.source_label ?? ''; questionForm.sourceUrl = result.question.source_url ?? ''; questionForm.sourceYear = result.question.source_year?.toString() ?? ''
+    questionOptions.value = result.options.map(option => ({ label: option.option_label, content: option.content }))
+    questionCorrectOption.value = result.answer?.correct_option_id ? (result.options.find(o => o.id === result.answer?.correct_option_id)?.option_label ?? '') : ''
+  } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível carregar a questão.' }
+  finally { loadingQuestionEditor.value = false }
+}
+function addQuestionOption() {
+  if (questionOptions.value.length >= 10) return
+  questionOptions.value.push({ label: String.fromCharCode(65 + questionOptions.value.length), content: '' })
+}
+function removeQuestionOption(index: number) {
+  if (questionOptions.value.length <= 2) return
+  questionOptions.value.splice(index, 1)
+  questionOptions.value.forEach((option, position) => { option.label = String.fromCharCode(65 + position) })
+  questionCorrectOption.value = ''
+}
+async function saveQuestion() {
+  savingQuestion.value = true; questionMessage.value = ''; questionError.value = ''
+  try {
+    if (!editingQuestionId.value) {
+      const result = await $fetch<{ question: QuestionRow }>('/api/admin/questions', { method: 'POST', body: questionForm })
+      editingQuestionId.value = result.question.id
+      questionMessage.value = 'Questão criada como rascunho. Agora salve as alternativas e o gabarito.'
+    } else {
+      await $fetch('/api/admin/questions/' + editingQuestionId.value, { method: 'PATCH', body: questionForm })
+      questionMessage.value = 'Questão atualizada.'
+    }
+    await refreshQuestions()
+  } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível salvar a questão.' }
+  finally { savingQuestion.value = false }
+}
+async function saveQuestionOptions() {
+  if (!editingQuestionId.value) return
+  savingQuestionOptions.value = true; questionMessage.value = ''; questionError.value = ''
+  try {
+    const result = await $fetch<{ options: QuestionOption[] }>('/api/admin/questions/' + editingQuestionId.value + '/options', {
+      method: 'PUT',
+      body: { options: questionOptions.value.map((option, position) => ({ label: option.label, content: option.content, position: position + 1 })) },
+    })
+    questionOptions.value = result.options.map(option => ({ label: option.option_label, content: option.content }))
+    questionMessage.value = 'Alternativas salvas.'
+  } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível salvar as alternativas.' }
+  finally { savingQuestionOptions.value = false }
+}
+async function saveQuestionAnswer() {
+  if (!editingQuestionId.value || !questionCorrectOption.value) return
+  questionError.value = ''; questionMessage.value = ''
+  try {
+    const result = await $fetch<{ options: QuestionOption[] }>('/api/admin/questions/' + editingQuestionId.value + '/options', { method: 'PUT', body: { options: questionOptions.value.map((option, position) => ({ label: option.label, content: option.content, position: position + 1 })) } })
+    const selected = result.options.find(option => option.option_label === questionCorrectOption.value)
+    if (!selected) throw new Error('Salve uma alternativa válida antes de definir o gabarito.')
+    await $fetch('/api/admin/questions/' + editingQuestionId.value + '/answer', { method: 'PUT', body: { optionId: selected.id } })
+    questionMessage.value = 'Gabarito salvo.'
+  } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível salvar o gabarito.' }
+}
+async function changeQuestionStatus(question: QuestionRow, status: QuestionRow['status']) {
+  questionError.value = ''; questionMessage.value = ''
+  try {
+    await $fetch('/api/admin/questions/' + question.id, { method: 'PATCH', body: { status } })
+    questionMessage.value = status === 'published' ? 'Questão publicada.' : 'Status da questão atualizado.'
+    await refreshQuestions()
+  } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível atualizar a questão.' }
+}
+
 const positionAssignmentForm = reactive({ noticeId: '', positionIds: [] as string[] })
 const savingPositionAssignment = ref(false)
 const positionAssignmentMessage = ref('')
@@ -441,6 +557,53 @@ const label = (table: string) => ({
           <p v-if="assignmentError" class="admin-error" role="alert">{{ assignmentError }}</p>
         </section>
 
+
+        <section class="study-section student-empty">
+          <p class="auth-eyebrow">BANCO DE QUESTÕES</p>
+          <h2>{{ editingQuestionId ? 'Editar questão' : 'Nova questão' }}</h2>
+          <form class="contest-form" @submit.prevent="saveQuestion">
+            <label>Edital<select v-model="questionForm.noticeId" required><option value="" disabled>Selecione um edital</option><option v-for="notice in noticesData?.notices || []" :key="notice.id" :value="notice.id">{{ notice.title }}</option></select></label>
+            <label>Disciplina<select v-model="questionForm.subjectId" required @change="questionForm.topicId = ''"><option value="" disabled>Selecione uma disciplina</option><option v-for="subject in subjectsData?.subjects || []" :key="subject.id" :value="subject.id">{{ subject.name }}</option></select></label>
+            <label>Assunto/subassunto<select v-model="questionForm.topicId" :disabled="!questionForm.subjectId"><option value="">Sem assunto específico</option><option v-for="topic in questionTopics" :key="topic.id" :value="topic.id">{{ topic.parent_topic_id ? '↳ ' : '' }}{{ topic.name }}</option></select></label>
+            <label>Ano da fonte<input v-model="questionForm.sourceYear" inputmode="numeric" maxlength="4" placeholder="2026"></label>
+            <label class="form-wide">Enunciado<textarea v-model="questionForm.statement" required minlength="10" maxlength="20000" rows="7" placeholder="Digite o enunciado da questão..."></textarea></label>
+            <label>Fonte<input v-model="questionForm.sourceLabel" maxlength="200" placeholder="Prova oficial, banca, legislação..."></label>
+            <label>URL da fonte<input v-model="questionForm.sourceUrl" type="url" maxlength="2048" placeholder="https://..."></label>
+            <label class="form-wide">Explicação/comentário<textarea v-model="questionForm.explanation" maxlength="12000" rows="5" placeholder="Explique o raciocínio da resposta..."></textarea></label>
+            <div class="form-wide admin-actions"><button class="study-secondary-button" type="submit" :disabled="savingQuestion">{{ savingQuestion ? 'Salvando…' : editingQuestionId ? 'Atualizar questão' : 'Criar questão' }}</button><button v-if="editingQuestionId" class="study-secondary-button" type="button" @click="resetQuestionForm">Nova questão</button></div>
+          </form>
+          <p v-if="loadingQuestionEditor" class="study-muted">Carregando editor…</p>
+          <p v-if="questionMessage" class="admin-success" role="status">{{ questionMessage }}</p>
+          <p v-if="questionError" class="admin-error" role="alert">{{ questionError }}</p>
+          <div v-if="editingQuestionId" class="question-editor-options">
+            <h3>Alternativas e gabarito</h3>
+            <article v-for="(option, index) in questionOptions" :key="index" class="question-option-editor">
+              <input v-model="option.label" maxlength="4" aria-label="Rótulo da alternativa">
+              <textarea v-model="option.content" rows="3" maxlength="5000" :placeholder="'Alternativa ' + option.label"></textarea>
+              <button v-if="questionOptions.length > 2" class="study-secondary-button" type="button" @click="removeQuestionOption(index)">Remover</button>
+            </article>
+            <div class="admin-actions"><button v-if="questionOptions.length < 10" class="study-secondary-button" type="button" @click="addQuestionOption">Adicionar alternativa</button><button class="study-secondary-button" type="button" :disabled="savingQuestionOptions" @click="saveQuestionOptions">{{ savingQuestionOptions ? 'Salvando…' : 'Salvar alternativas' }}</button></div>
+            <label class="form-wide">Gabarito<select v-model="questionCorrectOption"><option value="">Selecione a alternativa correta</option><option v-for="option in questionOptions" :key="option.label" :value="option.label">Alternativa {{ option.label }}</option></select></label>
+            <button class="study-secondary-button" type="button" :disabled="!questionCorrectOption" @click="saveQuestionAnswer">Salvar gabarito</button>
+            <div class="publication-checklist">
+              <h4>Checklist de publicação</h4>
+              <ul><li v-for="check in publicationChecks" :key="check.label" :class="{ 'check-passed': check.passed }"><span>{{ check.passed ? '✓' : '○' }}</span>{{ check.label }}</li></ul>
+              <p class="study-muted">A validação final também é aplicada pelo banco de dados.</p>
+              <button v-if="selectedQuestion && selectedQuestion.status !== 'published'" class="study-secondary-button" type="button" :disabled="!canPublishQuestion" @click="changeQuestionStatus(selectedQuestion, 'published')">Publicar questão</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section">
+          <h2>Questões cadastradas</h2>
+          <p v-if="questionsError" class="admin-error" role="alert">Não foi possível carregar as questões.</p>
+          <div v-else-if="!questionsData?.questions.length" class="student-empty"><p>Nenhuma questão cadastrada.</p></div>
+          <article v-for="question in questionsData?.questions || []" :key="question.id" class="admin-contest-row">
+            <div><strong>{{ question.statement.slice(0, 150) }}{{ question.statement.length > 150 ? '…' : '' }}</strong><p class="study-muted">{{ contestTitle(noticesData?.notices.find(notice => notice.id === question.notice_id)?.contest_id || '') }} · {{ subjectsData?.subjects.find(subject => subject.id === question.subject_id)?.name || 'Disciplina não encontrada' }}</p><span class="admin-status">{{ question.status === 'published' ? 'Publicado' : question.status === 'archived' ? 'Arquivado' : 'Rascunho' }}</span></div>
+            <div class="admin-actions"><button class="study-secondary-button" @click="editQuestion(question)">Editar</button><button v-if="question.status !== 'archived'" class="study-secondary-button" @click="changeQuestionStatus(question, 'archived')">Arquivar</button><button v-if="question.status === 'archived'" class="study-secondary-button" @click="changeQuestionStatus(question, 'draft')">Reabrir</button></div>
+          </article>
+        </section>
+
         <section class="study-section">
           <h2>Histórico editorial recente</h2>
           <div v-if="!data.recentChanges.length" class="student-empty">
@@ -471,6 +634,7 @@ const label = (table: string) => ({
 .contest-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
 .contest-form select { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; color: var(--color-text); background: var(--color-bg); font: inherit; }
 .contest-form label { display: grid; gap: 7px; color: var(--color-muted); font-size: 12px; }
+.contest-form textarea { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; color: var(--color-text); background: var(--color-bg); font: inherit; resize: vertical; }
 .contest-form input { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; color: var(--color-text); background: var(--color-bg); font: inherit; }
 .contest-form button { justify-self: start; }
 .form-wide { grid-column: 1 / -1; }
@@ -481,6 +645,14 @@ const label = (table: string) => ({
 .admin-contest-row p { margin: 6px 0; font-size: 12px; }
 .admin-status { color: var(--color-primary); font-size: 11px; }
 .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.question-editor-options { display: grid; gap: 14px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
+.question-option-editor { display: grid; grid-template-columns: 55px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
+.question-option-editor input, .question-option-editor textarea { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; color: var(--color-text); background: var(--color-bg); font: inherit; }
+.publication-checklist { display: grid; gap: 10px; padding: 16px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
+.publication-checklist h4, .publication-checklist p { margin: 0; }
+.publication-checklist ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.publication-checklist li { display: flex; gap: 9px; color: var(--color-muted); font-size: 13px; }
+.publication-checklist li.check-passed { color: var(--color-primary); }
 .admin-success { color: var(--color-primary); }
 .admin-error { color: #ffb6b6; }
 .admin-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 28px; }
@@ -500,5 +672,5 @@ const label = (table: string) => ({
 .study-state { margin-top: 24px; padding: 18px; border-radius: 12px; }
 .study-error { border: 1px solid rgba(255,120,120,.25); color: #ffb6b6; }
 .study-secondary-button { margin-right: 12px; padding: 9px 13px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; color: inherit; background: transparent; }
-@media (max-width: 640px) { .student-header { align-items: flex-start; gap: 12px; } .contest-form { grid-template-columns: 1fr; } .admin-contest-row { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 640px) { .question-option-editor { grid-template-columns: 1fr; } .student-header { align-items: flex-start; gap: 12px; } .contest-form { grid-template-columns: 1fr; } .admin-contest-row { align-items: flex-start; flex-direction: column; } }
 </style>

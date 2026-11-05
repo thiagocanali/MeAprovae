@@ -370,3 +370,16 @@ A evolução editorial seguinte adiciona o nível de **cargo** de forma explíci
 
 ### Validação pendente
 A migração 0009, RLS e transações ainda precisam ser executadas em Supabase real. O novo branch também precisa de typecheck, testes unitários e build confirmados no GitHub Actions.
+
+
+## Atualização — editor inicial de questões
+O backend agora cobre o primeiro fluxo editorial de questões: enunciado, explicação, fonte, disciplina, assunto, ciclo editorial, alternativas e gabarito.
+
+A autorização continua centralizada em `requirePlatformEditor`; alternativas são substituídas atomicamente por RPC e a integridade final de publicação permanece no banco.
+
+Ainda falta uma interface administrativa dedicada para editar questões e uma validação contra Supabase real.
+
+## Atualização — interface do editor de questões
+A interface administrativa agora fecha o primeiro fluxo visual de autoria: seleção de edital/disciplina/assunto, enunciado, fonte, explicação, alternativas, gabarito e status editorial. O frontend não contém conteúdo de prova inventado.
+
+O checklist visual de publicação foi adicionado ao editor. A interface só habilita a publicação quando concurso, edital, disciplina, alternativas e gabarito atendem aos critérios; o banco mantém a validação autoritativa. A resposta da RPC de alternativas foi alinhada ao contrato snake_case da API.

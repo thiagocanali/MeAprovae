@@ -1,5 +1,7 @@
 <script setup lang="ts">
-definePageMeta({ layout: false, middleware: 'auth' })
+import authMiddleware from '~/middleware/auth'
+
+definePageMeta({ layout: false, middleware: authMiddleware })
 useSeoMeta({ title: 'Definir nova senha | Me Aprovaê' })
 
 const password = ref('')
