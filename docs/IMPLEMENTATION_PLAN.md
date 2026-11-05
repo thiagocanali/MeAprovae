@@ -122,7 +122,7 @@ Na Fase 3, o cadastro e a associação de cargos agora estão preparados:
 - [x] Validar no banco que cargo e edital pertencem ao mesmo concurso.
 - [ ] Associar assuntos/subassuntos às disciplinas e questões.
 - [ ] CRUD editorial de questões, alternativas e gabaritos.
-- [ ] Aplicar migrações 0001–0009 e validar RLS/transações no Supabase real.
+- [ ] Aplicar migrações 0001–0010 e validar RLS/transações no Supabase real.
 
 A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Disciplina → Assunto/Subassunto → Questão → Alternativas → Gabarito**.
 
