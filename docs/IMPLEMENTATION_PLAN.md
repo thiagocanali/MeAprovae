@@ -142,3 +142,15 @@ A hierarquia editorial planejada fica: **Concurso → Edital → Cargo + Discipl
 
 - [x] Checklist visual de publicação com validação de concurso, edital, disciplina, alternativas e gabarito.
 - [x] Contrato de retorno da RPC alinhado com a API editorial.
+
+## Atualização de estado — 2026-11-05 (após PR #10)
+
+- [x] PR #10 integrado à `main`: editor administrativo de questões, alternativas, gabarito e checklist de publicação.
+- [x] CI da branch do PR #10: typecheck, testes unitários e build de produção concluídos com sucesso.
+- [x] Deployment de produção do merge commit `cd1f6393394c8b8875660daf765bb66c8e82904b`: `READY`.
+- [ ] Provisionar/configurar Supabase e variáveis de ambiente; a Vercel retornou zero variáveis configuradas na verificação de 2026-11-05.
+- [ ] Aplicar migrações 0001–0011 e validar RLS, triggers e RPCs com contas de estudante/editor.
+- [ ] Corrigir/validar substituição atômica de alternativas preservando o gabarito pela migração 0011 antes de ativar o editor com dados reais.
+- [ ] Validar fluxo autenticado completo em produção/preview após configuração do backend.
+
+O estado `READY` da Vercel confirma somente que o artefato foi construído e publicado. Não é evidência de autenticação ou persistência operacional sem variáveis e banco configurados.
