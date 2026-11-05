@@ -208,3 +208,8 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Criada API para substituir alternativas e definir o gabarito.
 - A edição de alternativas usa RPC transacional `set_question_options`, com lock da questão e bloqueio para questões publicadas.
 - A estrutura existente de banco continua exigindo edital/disciplina válidos e, para publicação, alternativas suficientes e gabarito.
+
+### 2026-11-05 — Interface do editor de questões
+- O painel `/admin` agora cria e edita questões, alternativas e gabarito usando as APIs editoriais.
+- O editor filtra assuntos/subassuntos pela disciplina selecionada e permite até 10 alternativas.
+- Questões existentes podem ser abertas para revisão e passar pelo ciclo rascunho → publicado → arquivado.
