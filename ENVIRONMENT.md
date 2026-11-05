@@ -2,11 +2,11 @@
 
 Este documento lista nomes e finalidades. **Não inclua valores secretos aqui nem no Git.**
 
-## Estado observado em 04/11/2026
+## Estado observado em 05/11/2026
 
 - Projeto Vercel: `meaprovae`.
 - A listagem de variáveis retornou zero variáveis cadastradas e zero variáveis ocultas.
-- `.env.example` atualmente contém apenas `DATABASE_URL` e `NODE_ENV`.
+- `.env.example` contém `DATABASE_URL`, `NODE_ENV`, `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY`. Os dois últimos correspondem ao `runtimeConfig` do Nuxt e ao cliente SSR.
 - Não há credenciais de banco, auth, e-mail ou IA configuradas na Vercel.
 
 ## Variáveis previstas
@@ -22,7 +22,7 @@ Este documento lista nomes e finalidades. **Não inclua valores secretos aqui ne
 | `AI_GATEWAY_API_KEY` | Quando tutor IA for implementado | Segredo server-side | Preview/Production |
 | `AI_MODEL` | Quando tutor IA for implementado | Configuração não secreta | Todos |
 
-As variáveis Supabase, Resend e AI Gateway são candidatas condicionais, não integrações já contratadas ou implementadas. Não adicionar chaves até a decisão técnica e o provisionamento.
+As variáveis Supabase são necessárias para ativar o código de autenticação já implementado. Resend e AI Gateway continuam candidatos condicionais, não integrações contratadas ou implementadas. `DATABASE_URL` ainda não é consumida pelo runtime atual; só deve ser configurada quando houver uma integração PostgreSQL direta que a utilize.
 
 ## Configuração local
 
