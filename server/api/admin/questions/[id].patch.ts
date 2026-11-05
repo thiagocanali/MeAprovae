@@ -2,7 +2,7 @@ import { createError, getRouterParam, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
 import { isUuid } from '../../../../shared/domain/common/uuid'
 
-interface Body { subjectId?: unknown; topicId?: unknown; statement?: unknown; explanation?: unknown; sourceLabel?: unknown; sourceUrl?: unknown; sourceYear?: unknown; status?: unknown }
+interface Body { noticeId?: unknown; subjectId?: unknown; topicId?: unknown; statement?: unknown; explanation?: unknown; sourceLabel?: unknown; sourceUrl?: unknown; sourceYear?: unknown; status?: unknown }
 const text=(value:unknown)=>typeof value==='string'?value.trim():''
 
 export default defineEventHandler(async (event) => {
@@ -12,6 +12,10 @@ export default defineEventHandler(async (event) => {
   const body = (await readBody<Body>(event)) ?? {}
   const updates: Record<string, unknown> = {}
 
+  if (body.noticeId !== undefined) {
+    if (!isUuid(text(body.noticeId))) throw createError({ statusCode: 400, statusMessage: 'Edital inválido.' })
+    updates.notice_id = text(body.noticeId)
+  }
   if (body.subjectId !== undefined) {
     if (!isUuid(text(body.subjectId))) throw createError({ statusCode: 400, statusMessage: 'Disciplina inválida.' })
     updates.subject_id = text(body.subjectId)
