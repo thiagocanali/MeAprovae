@@ -578,18 +578,19 @@ const label = (table: string) => ({
           <div v-if="editingQuestionId" class="question-editor-options">
             <h3>Alternativas e gabarito</h3>
             <article v-for="(option, index) in questionOptions" :key="index" class="question-option-editor">
-              <input v-model="option.label" maxlength="4" aria-label="Rótulo da alternativa">
-              <textarea v-model="option.content" rows="3" maxlength="5000" :placeholder="'Alternativa ' + option.label"></textarea>
-              <button v-if="questionOptions.length > 2" class="study-secondary-button" type="button" @click="removeQuestionOption(index)">Remover</button>
+              <input v-model="option.label" maxlength="4" aria-label="Rótulo da alternativa" :disabled="selectedQuestion?.status === 'published'">
+              <textarea v-model="option.content" rows="3" maxlength="5000" :placeholder="'Alternativa ' + option.label" :disabled="selectedQuestion?.status === 'published'"></textarea>
+              <button v-if="questionOptions.length > 2" class="study-secondary-button" type="button" :disabled="selectedQuestion?.status === 'published'" @click="removeQuestionOption(index)">Remover</button>
             </article>
-            <div class="admin-actions"><button v-if="questionOptions.length < 10" class="study-secondary-button" type="button" @click="addQuestionOption">Adicionar alternativa</button><button class="study-secondary-button" type="button" :disabled="savingQuestionOptions" @click="saveQuestionOptions">{{ savingQuestionOptions ? 'Salvando…' : 'Salvar alternativas' }}</button></div>
-            <label class="form-wide">Gabarito<select v-model="questionCorrectOption"><option value="">Selecione a alternativa correta</option><option v-for="option in questionOptions" :key="option.label" :value="option.label">Alternativa {{ option.label }}</option></select></label>
-            <button class="study-secondary-button" type="button" :disabled="!questionCorrectOption" @click="saveQuestionAnswer">Salvar gabarito</button>
+            <div class="admin-actions"><button v-if="questionOptions.length < 10" class="study-secondary-button" type="button" :disabled="selectedQuestion?.status === 'published'" @click="addQuestionOption">Adicionar alternativa</button><button class="study-secondary-button" type="button" :disabled="savingQuestionOptions || selectedQuestion?.status === 'published'" @click="saveQuestionOptions">{{ savingQuestionOptions ? 'Salvando…' : 'Salvar alternativas' }}</button></div>
+            <label class="form-wide">Gabarito<select v-model="questionCorrectOption" :disabled="selectedQuestion?.status === 'published'"><option value="">Selecione a alternativa correta</option><option v-for="option in questionOptions" :key="option.label" :value="option.label">Alternativa {{ option.label }}</option></select></label>
+            <button class="study-secondary-button" type="button" :disabled="!questionCorrectOption || selectedQuestion?.status === 'published'" @click="saveQuestionAnswer">Salvar gabarito</button>
             <div class="publication-checklist">
               <h4>Checklist de publicação</h4>
               <ul><li v-for="check in publicationChecks" :key="check.label" :class="{ 'check-passed': check.passed }"><span>{{ check.passed ? '✓' : '○' }}</span>{{ check.label }}</li></ul>
               <p class="study-muted">A validação final também é aplicada pelo banco de dados.</p>
-              <button v-if="selectedQuestion && selectedQuestion.status !== 'published'" class="study-secondary-button" type="button" :disabled="!canPublishQuestion" @click="changeQuestionStatus(selectedQuestion, 'published')">Publicar questão</button>
+              <button v-if="selectedQuestion && selectedQuestion.status === 'published'" class="study-secondary-button" type="button" @click="changeQuestionStatus(selectedQuestion, 'draft')">Despublicar para edição</button>
+              <button v-else-if="selectedQuestion && selectedQuestion.status !== 'published'" class="study-secondary-button" type="button" :disabled="!canPublishQuestion" @click="changeQuestionStatus(selectedQuestion, 'published')">Publicar questão</button>
             </div>
           </div>
         </section>
@@ -620,11 +621,6 @@ const label = (table: string) => ({
           </ol>
         </section>
 
-        <section class="study-section student-empty">
-          <p class="auth-eyebrow">PRÓXIMA ENTREGA</p>
-          <h2>Editor de conteúdo</h2>
-          <p>O controle de acesso e a auditoria estão preparados. Os formulários de criação, edição e publicação serão adicionados sobre essas permissões, sem permitir publicação de questões incompletas.</p>
-        </section>
       </template>
     </section>
   </main>
