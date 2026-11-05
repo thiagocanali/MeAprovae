@@ -3,13 +3,18 @@
 -- belong to a specific notice, preserving the contest relationship with a composite FK.
 
 create table if not exists public.study_notice_positions (
-  notice_id uuid not null references public.study_notices(id) on delete cascade,
+  notice_id uuid not null,
+  contest_id uuid not null,
   position_id uuid not null,
   position integer not null default 0 check (position >= 0),
   primary key (notice_id, position_id),
+  constraint study_notice_positions_notice_fk
+    foreign key (contest_id, notice_id)
+    references public.study_notices(contest_id, id)
+    on delete cascade,
   constraint study_notice_positions_position_fk
-    foreign key (notice_id, position_id)
-    references public.study_positions(notice_id, id)
+    foreign key (contest_id, position_id)
+    references public.study_positions(contest_id, id)
 );
 
 create index if not exists study_notice_positions_notice_position_idx
@@ -96,8 +101,8 @@ begin
   delete from public.study_notice_positions
   where notice_id = p_notice_id;
 
-  insert into public.study_notice_positions (notice_id, position_id, position)
-  select p_notice_id, requested.position_id, (requested.ordinality - 1)::integer
+  insert into public.study_notice_positions (notice_id, contest_id, position_id, position)
+  select p_notice_id, v_notice.contest_id, requested.position_id, (requested.ordinality - 1)::integer
   from unnest(p_position_ids) with ordinality as requested(position_id, ordinality);
 
   return jsonb_build_object(
