@@ -381,3 +381,5 @@ Ainda falta uma interface administrativa dedicada para editar questões e uma va
 
 ## Atualização — interface do editor de questões
 A interface administrativa agora fecha o primeiro fluxo visual de autoria: seleção de edital/disciplina/assunto, enunciado, fonte, explicação, alternativas, gabarito e status editorial. O frontend não contém conteúdo de prova inventado.
+
+O checklist visual de publicação foi adicionado ao editor. A interface só habilita a publicação quando concurso, edital, disciplina, alternativas e gabarito atendem aos critérios; o banco mantém a validação autoritativa. A resposta da RPC de alternativas foi alinhada ao contrato snake_case da API.
