@@ -332,3 +332,20 @@ Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o regist
 - PR #7 está em draft e contém migração 0007 para reforçar integridade de publicação e serializar alterações concorrentes de objetivos.
 - GitHub Actions run #169 passou (instalação, typecheck, 28 testes e build) no commit de código f93026925213fe47015ecb2dcdea9963515f9b6e. A validação posterior das atualizações documentais está em execução no run #170.
 - O banco Supabase continua sem provisionamento confirmado; migrações e políticas ainda não foram executadas em ambiente real.
+
+
+## Gestão de editais — 04/11/2026
+- PR #8 adiciona listagem, cadastro como rascunho e atualização/publicação/arquivamento de editais.
+- Cada edital exige vínculo com concurso; formulário registra versão, data de publicação e URL da fonte oficial.
+- Validações HTTP server-side e constraints/RLS/triggers no banco; as rotas usam requirePlatformEditor.
+- A interface está no painel /admin. Não há ainda CRUD completo de disciplinas/vínculos, cargos, questões, alternativas e gabaritos.
+- CI run #173 foi iniciado para o commit 0a8980eaf95d7a8bed400c0a13ea288a1f058bcc; resultado ainda não confirmado.
+- Sem Supabase real, as migrações e o ciclo editorial permanecem preparados em código, não validados em runtime.
+
+
+## Disciplinas e vínculos de edital — 04/11/2026
+- O painel administrativo passou a cadastrar disciplinas e associá-las a editais em rascunho/arquivados.
+- A migração 0008 adiciona RPC `set_notice_subjects`, com validação de papel editorial, lock do edital e substituição transacional da lista de disciplinas.
+- Editais publicados não podem ter sua estrutura de disciplinas alterada; é necessário despublicá-los primeiro, respeitando também as regras de questões publicadas.
+- As rotas usam `requirePlatformEditor`; a RPC também valida o papel no banco. O histórico editorial existente registra as mutações da tabela de vínculo.
+- A entrega está em código na branch do PR #8. A execução da migração, testes RLS/transacionais e operação real dependem de Supabase provisionado.
