@@ -61,10 +61,31 @@ const questionMessage = ref('')
 const questionError = ref('')
 const loadingQuestionEditor = ref(false)
 const questionTopics = computed(() => topicsData.value?.topics.filter(topic => topic.subject_id === questionForm.subjectId) ?? [])
+const noticeSubjectIds = ref<string[]>([])
+const questionNotice = computed(() => noticesData.value?.notices.find(notice => notice.id === questionForm.noticeId) ?? null)
+const questionContest = computed(() => contestsData.value?.contests.find(contest => contest.id === questionNotice.value?.contest_id) ?? null)
+const selectedQuestion = computed(() => questionsData.value?.questions.find(question => question.id === editingQuestionId.value) ?? null)
+const publicationChecks = computed(() => [
+  { label: 'Concurso publicado', passed: questionContest.value?.status === 'published' },
+  { label: 'Edital publicado', passed: questionNotice.value?.status === 'published' },
+  { label: 'Disciplina vinculada ao edital', passed: noticeSubjectIds.value.includes(questionForm.subjectId) },
+  { label: 'Pelo menos duas alternativas preenchidas', passed: questionOptions.value.length >= 2 && questionOptions.value.every(option => option.content.trim().length > 0) },
+  { label: 'Gabarito definido', passed: Boolean(questionCorrectOption.value && questionOptions.value.some(option => option.label === questionCorrectOption.value)) },
+])
+const canPublishQuestion = computed(() => publicationChecks.value.every(check => check.passed))
+watch(() => questionForm.noticeId, async (noticeId) => {
+  noticeSubjectIds.value = []
+  if (!noticeId) return
+  try {
+    const result = await $fetch<{ assignments: Array<{ subject_id: string }> }>('/api/admin/notices/' + noticeId + '/subjects')
+    noticeSubjectIds.value = result.assignments.map(item => item.subject_id)
+  } catch { noticeSubjectIds.value = [] }
+})
 function resetQuestionForm() {
   editingQuestionId.value = ''; questionForm.noticeId = ''; questionForm.subjectId = ''; questionForm.topicId = ''
   questionForm.statement = ''; questionForm.explanation = ''; questionForm.sourceLabel = ''; questionForm.sourceUrl = ''; questionForm.sourceYear = ''
   questionCorrectOption.value = ''
+  noticeSubjectIds.value = []
   questionOptions.value = [{ label: 'A', content: '' }, { label: 'B', content: '' }, { label: 'C', content: '' }, { label: 'D', content: '' }]
 }
 async function editQuestion(question: QuestionRow) {
@@ -564,6 +585,12 @@ const label = (table: string) => ({
             <div class="admin-actions"><button v-if="questionOptions.length < 10" class="study-secondary-button" type="button" @click="addQuestionOption">Adicionar alternativa</button><button class="study-secondary-button" type="button" :disabled="savingQuestionOptions" @click="saveQuestionOptions">{{ savingQuestionOptions ? 'Salvando…' : 'Salvar alternativas' }}</button></div>
             <label class="form-wide">Gabarito<select v-model="questionCorrectOption"><option value="">Selecione a alternativa correta</option><option v-for="option in questionOptions" :key="option.label" :value="option.label">Alternativa {{ option.label }}</option></select></label>
             <button class="study-secondary-button" type="button" :disabled="!questionCorrectOption" @click="saveQuestionAnswer">Salvar gabarito</button>
+            <div class="publication-checklist">
+              <h4>Checklist de publicação</h4>
+              <ul><li v-for="check in publicationChecks" :key="check.label" :class="{ 'check-passed': check.passed }"><span>{{ check.passed ? '✓' : '○' }}</span>{{ check.label }}</li></ul>
+              <p class="study-muted">A validação final também é aplicada pelo banco de dados.</p>
+              <button v-if="selectedQuestion && selectedQuestion.status !== 'published'" class="study-secondary-button" type="button" :disabled="!canPublishQuestion" @click="changeQuestionStatus(selectedQuestion, 'published')">Publicar questão</button>
+            </div>
           </div>
         </section>
 
@@ -573,7 +600,7 @@ const label = (table: string) => ({
           <div v-else-if="!questionsData?.questions.length" class="student-empty"><p>Nenhuma questão cadastrada.</p></div>
           <article v-for="question in questionsData?.questions || []" :key="question.id" class="admin-contest-row">
             <div><strong>{{ question.statement.slice(0, 150) }}{{ question.statement.length > 150 ? '…' : '' }}</strong><p class="study-muted">{{ contestTitle(noticesData?.notices.find(notice => notice.id === question.notice_id)?.contest_id || '') }} · {{ subjectsData?.subjects.find(subject => subject.id === question.subject_id)?.name || 'Disciplina não encontrada' }}</p><span class="admin-status">{{ question.status === 'published' ? 'Publicado' : question.status === 'archived' ? 'Arquivado' : 'Rascunho' }}</span></div>
-            <div class="admin-actions"><button class="study-secondary-button" @click="editQuestion(question)">Editar</button><button v-if="question.status !== 'published'" class="study-secondary-button" @click="changeQuestionStatus(question, 'published')">Publicar</button><button v-if="question.status !== 'archived'" class="study-secondary-button" @click="changeQuestionStatus(question, 'archived')">Arquivar</button><button v-if="question.status === 'archived'" class="study-secondary-button" @click="changeQuestionStatus(question, 'draft')">Reabrir</button></div>
+            <div class="admin-actions"><button class="study-secondary-button" @click="editQuestion(question)">Editar</button><button v-if="question.status !== 'archived'" class="study-secondary-button" @click="changeQuestionStatus(question, 'archived')">Arquivar</button><button v-if="question.status === 'archived'" class="study-secondary-button" @click="changeQuestionStatus(question, 'draft')">Reabrir</button></div>
           </article>
         </section>
 
@@ -621,6 +648,11 @@ const label = (table: string) => ({
 .question-editor-options { display: grid; gap: 14px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
 .question-option-editor { display: grid; grid-template-columns: 55px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
 .question-option-editor input, .question-option-editor textarea { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; color: var(--color-text); background: var(--color-bg); font: inherit; }
+.publication-checklist { display: grid; gap: 10px; padding: 16px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
+.publication-checklist h4, .publication-checklist p { margin: 0; }
+.publication-checklist ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.publication-checklist li { display: flex; gap: 9px; color: var(--color-muted); font-size: 13px; }
+.publication-checklist li.check-passed { color: var(--color-primary); }
 .admin-success { color: var(--color-primary); }
 .admin-error { color: #ffb6b6; }
 .admin-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 28px; }
