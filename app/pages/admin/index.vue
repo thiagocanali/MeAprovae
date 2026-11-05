@@ -621,7 +621,7 @@ const label = (table: string) => ({
 .question-editor-options { display: grid; gap: 14px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
 .question-option-editor { display: grid; grid-template-columns: 55px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
 .question-option-editor input, .question-option-editor textarea { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; color: var(--color-text); background: var(--color-bg); font: inherit; }
-.admin-success { color: var(--color-primary);
+.admin-success { color: var(--color-primary); }
 .admin-error { color: #ffb6b6; }
 .admin-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 28px; }
 .admin-metrics .study-card { display: grid; gap: 9px; width: auto; transform: none; }
