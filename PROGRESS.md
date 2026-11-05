@@ -233,3 +233,12 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Migração 0011, correção do PATCH de edital e ação de despublicação segura foram integradas.
 - Deployment Preview recusado pela Vercel por limite diário de deployments do plano (`api-deployments-free-per-day`); não houve Preview novo para validar.
 - A migração 0011 ainda não foi aplicada em banco real. Supabase/variáveis continuam sendo o bloqueio P0.
+
+
+## 2026-11-05 — proteção do histórico de questões (em revisão)
+
+- Auditoria estática das migrações identificou que `question_attempts` mantém FK para as alternativas respondidas; substituir alternativas apagando as antigas pode falhar após existirem tentativas.
+- Criada a migração `0012_lock_question_history.sql`: bloqueia mudanças no conteúdo estrutural de questões com tentativas e bloqueia inserção/edição/exclusão de alternativas e gabaritos após o primeiro registro de resposta.
+- Transições de status editorial continuam permitidas. Para corrigir questão respondida, a regra passa a ser criar uma nova questão/versão.
+- Branch: `fix/lock-question-history`. Migração ainda não aplicada nem testada em PostgreSQL/Supabase real.
+- CI e revisão SQL ainda pendentes; não considerar a proteção operacional até aplicar a migração 0012.

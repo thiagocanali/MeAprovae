@@ -15,9 +15,8 @@ Este documento lista nomes e finalidades. **Não inclua valores secretos aqui ne
 |---|---|---|---|
 | `DATABASE_URL` | Banco PostgreSQL habilitado | Apenas servidor; segredo | Development, Preview, Production |
 | `NODE_ENV` | Gerenciada pelo runtime | Não é segredo | Gerenciada pela plataforma |
-| `SUPABASE_URL` | Se Supabase for aprovado | Pode ser pública, mas validada | Todos |
-| `SUPABASE_ANON_KEY` | Se Supabase Auth/cliente for aprovado | Chave pública com RLS obrigatório | Todos |
-| `SUPABASE_SERVICE_ROLE_KEY` | Somente operações administrativas server-side que realmente precisem | **Segredo crítico; nunca usar no cliente** | Apenas ambientes necessários |
+| `NUXT_SUPABASE_URL` | Supabase Auth e acesso ao backend habilitados | Runtime config server-side; URL não é segredo | Development, Preview, Production |
+| `NUXT_SUPABASE_ANON_KEY` | Supabase Auth e acesso ao backend habilitados | Chave publicável; RLS obrigatório | Development, Preview, Production |
 | `RESEND_API_KEY` | Se Resend for escolhido para e-mail transacional | Segredo server-side | Todos os ambientes usados |
 | `AI_GATEWAY_API_KEY` | Quando tutor IA for implementado | Segredo server-side | Preview/Production |
 | `AI_MODEL` | Quando tutor IA for implementado | Configuração não secreta | Todos |
@@ -156,3 +155,12 @@ O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9
 - A migração 0011 agora preserva o gabarito durante a substituição de alternativas. Ela está versionada no repositório, mas ainda não foi aplicada/validada em Supabase.
 - A Vercel recusou o deployment Preview do PR #11 por limite diário de deployments do plano (`api-deployments-free-per-day`); aguardar a janela de 24 horas ou resolver o limite antes de tentar novo deployment.
 - A consulta anterior de variáveis Vercel retornou zero variáveis configuradas. Não há conexão Supabase disponível nesta sessão. Configuração do backend e testes reais permanecem bloqueadores P0.
+
+
+## Migração 0012 — proteção do histórico de questões
+
+Aplique `supabase/migrations/0012_lock_question_history.sql` depois da 0011. Quando uma questão já possui tentativas, a migração bloqueia alterações em enunciado, explicação, fonte, vínculos, alternativas e gabarito. Mudanças apenas de status editorial continuam permitidas. Para corrigir conteúdo que já recebeu respostas, crie uma nova questão/versão em vez de reescrever o histórico.
+
+A migração foi preparada após auditoria estática: a FK de `question_attempts` referencia as alternativas, portanto a substituição integral das alternativas pode falhar quando já há tentativas. A proteção é uma regra conservadora de integridade; ainda precisa ser aplicada e testada em Supabase real.
+
+A sequência de banco passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0006 → 0007 → 0008 → 0009 → 0010 → 0011 → 0012.

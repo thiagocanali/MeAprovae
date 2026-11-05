@@ -412,3 +412,15 @@ A Vercel recusou o Preview do PR #11 por limite diário do plano (`api-deploymen
 
 ### Bloqueio de backend
 A verificação anterior retornou zero variáveis de ambiente na Vercel e não há conexão Supabase nesta sessão. A migração 0011 está apenas versionada. Ainda faltam provisionamento/configuração, aplicação ordenada das migrações 0001–0011 e testes reais de RLS/RPC/autenticação.
+
+
+## Auditoria SQL — histórico de tentativas (2026-11-05)
+
+### Achado
+A tabela `question_attempts` possui FK composta para `study_question_options(question_id, id)` sem ação de exclusão em cascata. A migração 0011 substitui alternativas removendo os registros anteriores; em questões que já receberam tentativas, a FK impede a exclusão. Além da falha de edição, permitir alterações no enunciado/gabarito após respostas poderia comprometer a interpretação histórica.
+
+### Mitigação proposta
+A migração 0012 adiciona triggers server-side que tornam imutáveis, após a primeira tentativa, os campos editoriais da questão, as alternativas e o gabarito. Mudanças de status continuam permitidas para o ciclo editorial. Correções futuras devem criar uma nova versão/questão, preservando o registro original.
+
+### Limites da auditoria
+A revisão foi estática, baseada no SQL versionado. A migração 0012 está em branch e não foi aplicada. Não houve execução PostgreSQL, teste de concorrência, teste de RLS ou validação com tentativas reais. A proteção só passa a valer depois da aplicação ordenada das migrações 0001–0012 e testes em ambiente Supabase.
