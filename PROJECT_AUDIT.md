@@ -378,3 +378,6 @@ O backend agora cobre o primeiro fluxo editorial de questões: enunciado, explic
 A autorização continua centralizada em `requirePlatformEditor`; alternativas são substituídas atomicamente por RPC e a integridade final de publicação permanece no banco.
 
 Ainda falta uma interface administrativa dedicada para editar questões e uma validação contra Supabase real.
+
+## Atualização — interface do editor de questões
+A interface administrativa agora fecha o primeiro fluxo visual de autoria: seleção de edital/disciplina/assunto, enunciado, fonte, explicação, alternativas, gabarito e status editorial. O frontend não contém conteúdo de prova inventado.
