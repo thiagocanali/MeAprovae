@@ -192,3 +192,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Migração `0008_notice_subject_assignment.sql`: bloqueio de alteração quando o edital está publicado, validação de papel editorial, lock da linha do edital e substituição atômica dos vínculos.
 - Painel `/admin` com cadastro de disciplinas e associação múltipla a editais.
 - Código preparado na branch do PR #8; CI e validação SQL em Supabase real ainda pendentes.
+
+
+### 2026-11-05 — Assuntos e subassuntos
+- APIs administrativas protegidas para listar e cadastrar assuntos vinculados a disciplinas.
+- Cadastro permite assunto principal ou subassunto, validando que o assunto pai pertence à mesma disciplina.
+- Painel `/admin` passou a oferecer criação de assuntos/subassuntos sem inserir conteúdo fictício.
+- A hierarquia usa `study_topics` existente; edição/remoção e associação às questões ficam para a próxima etapa editorial.
