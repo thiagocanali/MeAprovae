@@ -213,3 +213,7 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - O painel `/admin` agora cria e edita questões, alternativas e gabarito usando as APIs editoriais.
 - O editor filtra assuntos/subassuntos pela disciplina selecionada e permite até 10 alternativas.
 - Questões existentes podem ser abertas para revisão e passar pelo ciclo rascunho → publicado → arquivado.
+
+- Checklist visual de publicação adicionado: concurso e edital publicados, disciplina vinculada, alternativas preenchidas e gabarito definido. O banco continua como validação final.
+- Corrigido o retorno da RPC de alternativas para usar nomes de campos consistentes com a API (`question_id`, `option_label`).
+- Corrigido bloco CSS que fazia o build de produção falhar.
