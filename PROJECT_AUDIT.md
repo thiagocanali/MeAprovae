@@ -349,3 +349,10 @@ Consulte PROGRESS.md, ENVIRONMENT.md e docs/IMPLEMENTATION_PLAN.md para o regist
 - Editais publicados não podem ter sua estrutura de disciplinas alterada; é necessário despublicá-los primeiro, respeitando também as regras de questões publicadas.
 - As rotas usam `requirePlatformEditor`; a RPC também valida o papel no banco. O histórico editorial existente registra as mutações da tabela de vínculo.
 - A entrega está em código na branch do PR #8. A execução da migração, testes RLS/transacionais e operação real dependem de Supabase provisionado.
+
+
+## Taxonomia de conteúdo — 05/11/2026
+- A gestão editorial agora cobre disciplinas e a criação inicial de assuntos/subassuntos.
+- A API valida a disciplina e, quando informado, o assunto pai; não permite pai de outra disciplina.
+- A tabela existente `study_topics` mantém a integridade por `subject_id`, `parent_topic_id` e unicidade por nível.
+- Ainda não foram adicionados dados reais de concursos, assuntos ou questões.
