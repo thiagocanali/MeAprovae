@@ -225,3 +225,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Deployment de produção associado ao merge commit está `READY` e aponta para `https://meaprovae.vercel.app`.
 - A verificação atual da Vercel retornou zero variáveis de ambiente e zero variáveis ocultas. Portanto, o deploy não comprova autenticação nem persistência Supabase funcionais.
 - Próximo bloqueio P0: provisionar/configurar Supabase, adicionar as variáveis públicas SSR necessárias, aplicar migrações 0001–0011 e validar RLS/RPCs com duas contas.
+
+## 2026-11-05 — PR #11 integrado
+
+- PR #11 (`fix: preservar gabarito ao substituir alternativas`) foi mesclado à `main` no commit `1fd30bf049c547213f528edbb5153ce11f194ae1`.
+- CI run `42034208681`: instalação, typecheck, testes unitários e build de produção passaram.
+- Migração 0011, correção do PATCH de edital e ação de despublicação segura foram integradas.
+- Deployment Preview recusado pela Vercel por limite diário de deployments do plano (`api-deployments-free-per-day`); não houve Preview novo para validar.
+- A migração 0011 ainda não foi aplicada em banco real. Supabase/variáveis continuam sendo o bloqueio P0.
