@@ -178,3 +178,16 @@ O CI aprovado comprova typecheck/testes/build. Não comprova a execução das mi
 - [ ] Definir fluxo editorial de versionamento para corrigir questões já respondidas.
 
 A migração 0012 está na branch `fix/lock-question-history`; ainda não foi integrada à `main` nem aplicada a banco real.
+
+
+## Atualização pós PR #12 — 2026-11-05
+
+- [x] Integrar proteção do histórico de questões pela migração 0012; PR #12 mesclado no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
+- [x] CI do PR #12 aprovado em typecheck, testes unitários e build de produção.
+- [x] Check `Supabase Preview` associado ao commit integrado concluído com sucesso.
+- [ ] Confirmar no dashboard Supabase a branch/ambiente alvo e a aplicação efetiva das migrações 0001–0012.
+- [ ] Configurar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em Development, Preview e Production na Vercel.
+- [ ] Validar RLS, RPCs, idempotência, concorrência e fluxos de estudante/editor em banco real.
+- [ ] Revalidar deployment Vercel após liberação do limite diário; o deploy do commit integrado foi recusado por `api-deployments-free-per-day`.
+
+O check Supabase Preview verde não deve ser interpretado como teste completo do runtime de produção. A Vercel ainda não possui variáveis configuradas na consulta realizada em 2026-11-05.
