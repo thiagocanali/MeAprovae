@@ -44,7 +44,18 @@ export default defineEventHandler(async (event) => {
   }
   if(!Object.keys(updates).length && explanation===undefined) throw createError({statusCode:400,statusMessage:'Nenhuma alteração informada.'})
 
-  let questionData
+  let questionData: {
+    id: string
+    notice_id: string
+    subject_id: string
+    topic_id: string | null
+    statement: string
+    source_label: string | null
+    source_url: string | null
+    source_year: number | null
+    status: string
+    created_at: string
+  } | null = null
   if (Object.keys(updates).length) {
     const { data, error } = await supabase.from('study_questions').update(updates).eq('id',id)
       .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at').maybeSingle()
