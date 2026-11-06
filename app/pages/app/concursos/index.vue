@@ -21,7 +21,7 @@ const { data, pending, error, refresh } = await useFetch<{ contests: Contest[] }
   <main class="study-page">
     <header class="study-header">
       <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
+      <nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/provas">Simulados</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
     </header>
     <section class="study-content">
       <p class="auth-eyebrow">SEU OBJETIVO</p>
