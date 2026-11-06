@@ -19,7 +19,7 @@ interface SubjectPerformance {
   correctAnswers: number
   accuracy: number
 }
-const { data: dashboardData, error: dashboardError, refresh: refreshDashboard } = await useFetch<{ dashboard: DashboardData; performanceBySubject: SubjectPerformance[] }>('/api/study/dashboard')
+const { data: dashboardData, error: dashboardError, pending: dashboardPending, refresh: refreshDashboard } = await useFetch<{ dashboard: DashboardData; performanceBySubject: SubjectPerformance[] }>('/api/study/dashboard')
 const pending = ref(false)
 const errorMessage = ref('')
 
@@ -54,12 +54,15 @@ async function logout() {
       <h1>Seu próximo passo começa aqui.</h1>
       <p v-if="data?.user?.email" class="auth-description">Sessão autenticada: {{ data.user.email }}</p>
       <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
-      <div v-if="dashboardData?.dashboard" class="study-stats">
+      <div v-if="dashboardPending" class="study-state" role="status" aria-live="polite">
+        Carregando seus indicadores...
+      </div>
+      <div v-else-if="dashboardData?.dashboard" class="study-stats">
         <article class="study-card"><span class="study-muted">Questões respondidas</span><strong>{{ dashboardData.dashboard.questionsAnswered }}</strong></article>
         <article class="study-card"><span class="study-muted">Acertos</span><strong>{{ dashboardData.dashboard.correctAnswers }}</strong></article>
         <article class="study-card"><span class="study-muted">Taxa de acerto</span><strong>{{ dashboardData.dashboard.accuracy }}%</strong></article>
       </div>
-      <div v-if="dashboardError" class="study-state study-error" role="alert">
+      <div v-if="dashboardError && !dashboardPending" class="study-state study-error" role="alert">
         Não foi possível carregar seus indicadores. <button class="study-secondary-button" @click="refreshDashboard()">Tentar novamente</button>
       </div>
       <div v-if="dashboardData?.dashboard.activeGoal" class="study-card">

@@ -6,14 +6,16 @@ export default defineEventHandler(async (event) => {
   if (!user) throw createError({ statusCode: 401, statusMessage: 'Entre para consultar seu painel.' })
 
   const supabase = createSupabaseServerClient(event)
-  const [summary, performance] = await Promise.all([
-    supabase.rpc('get_student_dashboard'),
-    supabase.rpc('get_student_subject_performance'),
-  ])
+  const summary = await supabase.rpc('get_student_dashboard')
 
-  if (summary.error || performance.error) {
+  if (summary.error || !summary.data) {
     throw createError({ statusCode: 503, statusMessage: 'Não foi possível calcular seu painel.' })
   }
 
-  return { dashboard: summary.data, performanceBySubject: performance.data }
+  const performance = await supabase.rpc('get_student_subject_performance')
+
+  return {
+    dashboard: summary.data,
+    performanceBySubject: performance.error || !Array.isArray(performance.data) ? [] : performance.data,
+  }
 })

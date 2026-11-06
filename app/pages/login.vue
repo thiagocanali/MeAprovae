@@ -39,7 +39,7 @@ async function submit() {
         <div class="auth-password-field">
           <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" required maxlength="72">
           <button class="auth-password-toggle" type="button" :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'" @click="showPassword = !showPassword">
-            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path v-if="showPassword" d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 4.2A10.8 10.8 0 0 1 12 4c5.2 0 9 4 10 8a11.6 11.6 0 0 1-3.1 5.2M6.2 6.2A11.7 11.7 0 0 0 2 12c1 4 4.8 8 10 8 1.4 0 2.7-.3 3.9-.8"/><path v-else d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
           </button>
         </div>
         <p v-if="errorMessage" class="auth-error" role="alert" aria-live="polite">{{ errorMessage }}</p>
