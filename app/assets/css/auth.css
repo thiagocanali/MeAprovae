@@ -9,11 +9,10 @@
 .auth-form input { width: 100%; min-height: 46px; padding: 0 13px; border: 1px solid rgba(255,255,255,.15); border-radius: 9px; outline: none; background: #101827; color: var(--color-text); font: inherit; }
 .auth-form input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(155,227,189,.12); }
 .auth-password-field { position: relative; display: flex; align-items: center; }
-.auth-password-field input { padding-right: 48px; }
-.auth-password-toggle { position: absolute; right: 12px; display: grid; place-items: center; width: 24px; height: 24px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; color: var(--color-muted); cursor: pointer; }
-.auth-password-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
-.auth-password-toggle:hover { color: var(--color-text); }
-.auth-password-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.auth-password-field input { padding-right: 44px; }
+.auth-password-toggle { position: absolute; right: 14px; display: grid; place-items: center; width: 18px; height: 18px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--color-muted); cursor: pointer; appearance: none; box-shadow: none; }
+.auth-password-toggle svg { display: block; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.auth-password-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 .auth-form > button, .logout-button { min-height: 46px; margin-top: 12px; padding: 0 18px; border: 0; border-radius: 9px; background: var(--color-primary); color: #10251b; font: inherit; font-weight: 700; cursor: pointer; }
 .auth-form > button:disabled, .logout-button:disabled { cursor: wait; opacity: .65; }
 .auth-error { color: #ff9b9b; font-size: 12px; }
