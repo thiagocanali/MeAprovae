@@ -467,5 +467,5 @@ Os endpoints de administração foram adaptados para a nova tabela. O script sup
 - O embaralhamento original via `sort(() => Math.random() - 0.5)` era enviesado; substituído por Fisher–Yates para as questões e alternativas, com teste determinístico.
 - O resultado do simulado usava respondidas como denominador, inflando nota após expiração; agora usa o total e informa não respondidas. Revisão mostra resposta do aluno e alternativa correta.
 - Limites conhecidos: simulador em modo estudo, sem sessão persistida/retomada; cada tentativa é persistida, mas a seleção das questões vem do limite de 20 itens mais recentes da API antes do embaralhamento. Portanto, não representa amostra aleatória de todo o banco e não é uma prova oficial.
-- Typecheck local, 34 testes unitários e build passaram. CI e Preview passaram para o commit `b5ffc9e`; a alteração posterior para Fisher–Yates depende de novo CI/deploy.
+- Typecheck local, 34 testes unitários e build passaram no HEAD `4297646`. CI e Preview passaram para `b5ffc9e`; os checks do HEAD final estão pendentes.
 - GET público de `/api/health` respondeu HTTP 200; GET sem sessão a `/api/study/questions` respondeu HTTP 401 como esperado. Nenhum login, conta de estudante/editor, leitura de dados, banco, conteúdo ou deploy novo foi validado.

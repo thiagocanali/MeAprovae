@@ -13,7 +13,7 @@ Este documento lista nomes e finalidades. **Não inclua valores secretos aqui ne
 - No PR #21, CI e Preview Vercel passaram para `b5ffc9e`; o check Supabase Preview está neutro. O HEAD local posterior com Fisher–Yates ainda precisa ser enviado e validado.
 - Uma requisição GET a `/api/health` respondeu HTTP 200 em 06/11/2026. Isso valida apenas a disponibilidade desse endpoint, não Auth, banco, RLS ou fluxos autenticados.
 - Uma requisição GET sem sessão a `/api/study/questions` respondeu HTTP 401 com a mensagem de autenticação esperada, em vez de falhar na configuração do cliente. Isso não valida login, dados, policies RLS ou submissão autenticada.
-- A branch do PR #21 contém a migração 0013 por partir do `main` atual. CI e Preview do commit `b5ffc9e` passaram; a alteração subsequente do embaralhamento ainda precisa de push e CI/deploy próprios.
+- A branch do PR #21 contém a migração 0013 por partir do `main` atual. O HEAD `4297646` foi enviado após os checks verdes de `b5ffc9e`; CI e Preview do HEAD final estão pendentes.
 
 ## Variáveis previstas
 
@@ -161,7 +161,7 @@ O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9
 - PR #20 foi integrado; PR #21 contém o simulador e deriva de `main`. Typecheck, 34 testes e build passaram localmente após mudanças ainda não enviadas ao remoto.
 - O health check público retornou HTTP 200. Login, submissão real, RLS, idempotência no PostgreSQL e conteúdo não foram validados.
 - A API de questões, chamada sem sessão, retornou HTTP 401. O teste confirma somente a negação anônima observada; não houve login nem acesso a dados do Supabase.
-- O Preview Vercel do PR #21 foi concluído para `b5ffc9e`; isso não é produção. O HEAD local posterior ainda não foi enviado. Não afirmar publicação da versão final.
+- O Preview Vercel do PR #21 concluiu para `b5ffc9e`; isso não é produção. O HEAD `4297646` aguarda novo Preview. Não afirmar publicação em produção.
 
 ## Atualização após PR #11 — 2026-11-05
 
