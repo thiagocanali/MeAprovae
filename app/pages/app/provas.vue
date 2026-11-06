@@ -2,6 +2,7 @@
 import authMiddleware from '~/middleware/auth'
 import { createAttemptIdempotencyKeys } from '~~/shared/domain/questions/attempt-idempotency'
 import { calculateExamScore } from '~~/shared/domain/questions/exam-results'
+import { shuffleItems } from '~~/shared/domain/questions/shuffle'
 
 definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Simulados | Me Aprovaê' })
@@ -115,12 +116,11 @@ async function startExam() {
       return
     }
 
-    questions.value = available
-      .sort(() => Math.random() - 0.5)
+    questions.value = shuffleItems(available)
       .slice(0, questionCount.value)
       .map((question) => ({
         ...question,
-        options: [...question.options].sort(() => Math.random() - 0.5),
+        options: shuffleItems(question.options),
       }))
 
     currentIndex.value = 0

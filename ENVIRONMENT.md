@@ -10,10 +10,10 @@ Este documento lista nomes e finalidades. **Não inclua valores secretos aqui ne
 - Também existem variáveis de integração PostgreSQL e chaves privilegiadas Supabase. O código da aplicação não referencia `SUPABASE_SERVICE_ROLE_KEY` nem `SUPABASE_SECRET_KEY`; revisar sua necessidade e manter qualquer credencial privilegiada exclusivamente server-side.
 - Não há conexão SQL/Supabase disponível nesta sessão para confirmar o histórico de migrações, aplicar SQL ou testar RLS/RPCs.
 - O PR #20 está integrado em `main`; sua migração 0013 está versionada, mas aplicação e validação no banco continuam não confirmadas.
-- No PR #21, CI estava verde no HEAD remoto anterior às alterações locais; o check Vercel informa bloqueio por rate limit e o check Supabase Preview está neutro.
+- No PR #21, CI e Preview Vercel passaram para `b5ffc9e`; o check Supabase Preview está neutro. O HEAD local posterior com Fisher–Yates ainda precisa ser enviado e validado.
 - Uma requisição GET a `/api/health` respondeu HTTP 200 em 06/11/2026. Isso valida apenas a disponibilidade desse endpoint, não Auth, banco, RLS ou fluxos autenticados.
 - Uma requisição GET sem sessão a `/api/study/questions` respondeu HTTP 401 com a mensagem de autenticação esperada, em vez de falhar na configuração do cliente. Isso não valida login, dados, policies RLS ou submissão autenticada.
-- A branch do PR #21 contém a migração 0013 por partir do `main` atual; as correções locais do PR ainda precisam de push e CI remoto.
+- A branch do PR #21 contém a migração 0013 por partir do `main` atual. CI e Preview do commit `b5ffc9e` passaram; a alteração subsequente do embaralhamento ainda precisa de push e CI/deploy próprios.
 
 ## Variáveis previstas
 
@@ -158,10 +158,10 @@ O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9
 
 - A configuração Vercel descrita no início deste documento agora registra `SUPABASE_URL` e `SUPABASE_ANON_KEY` nos ambientes Development, Preview e Production. A presença das variáveis não comprova conectividade ou schema compatível.
 - As migrations versionadas chegam a 0013. Nenhuma execução foi confirmada nesta sessão; conferir o ledger antes de aplicar qualquer sequência, pois o estado do banco permanece desconhecido.
-- PR #20 foi integrado; PR #21 contém o simulador e deriva de `main`. Typecheck, 32 testes e build passaram localmente após mudanças ainda não enviadas ao remoto.
+- PR #20 foi integrado; PR #21 contém o simulador e deriva de `main`. Typecheck, 34 testes e build passaram localmente após mudanças ainda não enviadas ao remoto.
 - O health check público retornou HTTP 200. Login, submissão real, RLS, idempotência no PostgreSQL e conteúdo não foram validados.
 - A API de questões, chamada sem sessão, retornou HTTP 401. O teste confirma somente a negação anônima observada; não houve login nem acesso a dados do Supabase.
-- Os checks Vercel dos PRs estão bloqueados por rate limit. Não afirmar que o HEAD atual foi publicado.
+- O Preview Vercel do PR #21 foi concluído para `b5ffc9e`; isso não é produção. O HEAD local posterior ainda não foi enviado. Não afirmar publicação da versão final.
 
 ## Atualização após PR #11 — 2026-11-05
 
