@@ -440,3 +440,21 @@ A revisão foi estática, baseada no SQL versionado. A migração 0012 está em 
 - Aplicar e testar a sequência em um ambiente de desenvolvimento antes de produção.
 - Testar concorrência entre envio de resposta e alteração editorial; testar bloqueio de alterações após primeira tentativa; verificar idempotência e isolamento por usuário.
 - Configurar variáveis públicas Supabase no Vercel e validar cadastro/login/fluxos de estudo com contas separadas.
+
+## Achado de segurança — privilégios de questões e explicações (2026-11-06)
+
+**Severidade: alta — revisão estática do SQL.**
+
+A migração 0002 concedia leitura somente de colunas públicas em study_questions, omitindo explanation. Porém, 0006_editorial_admin_and_audit.sql posteriormente concedeu SELECT em nível de tabela para authenticated. O grant amplo prevalece sobre a restrição pretendida por coluna e, junto à policy de leitura de questões publicadas, poderia permitir que qualquer usuário autenticado consultasse explicações antes de responder.
+
+A correção proposta na migração 0013:
+- move explicações para study_question_editorial_details, com RLS restrita a editores;
+- revoga o grant amplo de leitura/escrita em study_questions e restaura privilégios por coluna;
+- preserva as explicações já cadastradas;
+- atualiza submit_question_attempt para retornar a explicação somente no fluxo de resposta;
+- bloqueia edição da explicação depois da primeira tentativa;
+- concede privilégios DML em platform_admins, respeitando as policies owner-only de 0006.
+
+Os endpoints de administração foram adaptados para a nova tabela. O script supabase/diagnostics/phase-2-read-only-audit.sql permite levantar o estado real do banco sem executar alterações.
+
+**Status:** correção preparada em fix/admin-role-table-grants, pendente de CI, revisão e aplicação controlada no Supabase. Não declarar a vulnerabilidade corrigida em produção até confirmar a aplicação da migração e testar com uma conta estudante e uma conta editorial.
