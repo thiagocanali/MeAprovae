@@ -4,8 +4,9 @@ import { createError, parseCookies, setCookie, type H3Event } from 'h3'
 
 export function createSupabaseServerClient(event: H3Event) {
   const config = useRuntimeConfig(event)
-  const url = config.supabaseUrl
-  const anonKey = config.supabaseAnonKey
+  const environment = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
+  const url = config.supabaseUrl || environment.SUPABASE_URL
+  const anonKey = config.supabaseAnonKey || environment.SUPABASE_ANON_KEY
 
   if (typeof url !== 'string' || !url || typeof anonKey !== 'string' || !anonKey) {
     throw createError({
