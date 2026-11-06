@@ -73,6 +73,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 ## Fase 7 — simulados
 - [x] PR #21 implementa seleção de concurso, 10/20 questões publicadas, embaralhamento, timer, modo estudo, correção, resultado e revisão local da sessão.
 - [x] Corrigir localmente idempotência de retry, nota com questões não respondidas e apresentação da resposta escolhida/correta; typecheck, testes e build passaram.
+- [x] Validar timer com testes de contagem, finalização em zero, reinício sem intervalo duplicado e cancelamento no teardown.
 - [ ] Obter CI atualizado e integrar o PR; Vercel permanece bloqueada por rate limit.
 - [ ] Validar quantidade, filtro, timer e fluxo de resposta com conteúdo real no Supabase.
 - [ ] Persistir sessões/retomada e resultados agregados se o produto exigir continuidade após atualizar ou sair.

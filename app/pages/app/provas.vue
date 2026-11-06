@@ -2,6 +2,7 @@
 import authMiddleware from '~/middleware/auth'
 import { createAttemptIdempotencyKeys } from '~~/shared/domain/questions/attempt-idempotency'
 import { calculateExamScore } from '~~/shared/domain/questions/exam-results'
+import { createExamTimer } from '~~/shared/domain/questions/exam-timer'
 import { shuffleItems } from '~~/shared/domain/questions/shuffle'
 
 definePageMeta({ middleware: authMiddleware })
@@ -60,8 +61,11 @@ const errorMessage = ref('')
 const started = ref(false)
 const finished = ref(false)
 const remainingSeconds = ref(0)
-let timer: ReturnType<typeof setInterval> | null = null
 const attemptKeys = createAttemptIdempotencyKeys()
+const examTimer = createExamTimer(
+  (seconds) => { remainingSeconds.value = seconds },
+  finishExam,
+)
 
 const currentQuestion = computed(() => questions.value[currentIndex.value] ?? null)
 const answeredCount = computed(() => answers.value.length)
@@ -81,10 +85,7 @@ const timeLabel = computed(() => {
 })
 
 function stopTimer() {
-  if (timer) {
-    clearInterval(timer)
-    timer = null
-  }
+  examTimer.stop()
 }
 
 function finishExam() {
@@ -95,12 +96,7 @@ function finishExam() {
 }
 
 function startTimer(seconds: number) {
-  stopTimer()
-  remainingSeconds.value = seconds
-  timer = setInterval(() => {
-    remainingSeconds.value -= 1
-    if (remainingSeconds.value <= 0) finishExam()
-  }, 1000)
+  examTimer.start(seconds)
 }
 
 async function startExam() {

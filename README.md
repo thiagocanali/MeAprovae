@@ -50,7 +50,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 
 ## Status atual
 
-**Fase:** núcleo de estudo em validação. `main` inclui o PR #20, com a migração 0013 para proteger explicações e corrigir grants editoriais. O PR #21 atualiza simulados na branch `feat/user-exam-simulado`; a auditoria local corrigiu idempotência de retries, nota/revisão e embaralhamento enviesado. No HEAD `4297646`, typecheck, 34 testes unitários e build passaram localmente. Isso não valida migrations, RLS ou RPCs no Supabase: não houve conexão ao banco. Em produção, `/api/health` respondeu HTTP 200 e a API de questões respondeu HTTP 401 sem sessão, como esperado; login e fluxo do estudante seguem sem validação real. CI e Preview do HEAD final estão pendentes. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
+**Fase:** núcleo de estudo em validação. `main` inclui o PR #20, com a migração 0013 para proteger explicações e corrigir grants editoriais. O PR #21 atualiza simulados na branch `feat/user-exam-simulado`; a auditoria local corrigiu idempotência de retries, nota/revisão e embaralhamento enviesado, e adicionou testes para o timer. Typecheck, 37 testes unitários e build passaram localmente. Isso não valida migrations, RLS ou RPCs no Supabase: não houve conexão ao banco. Em produção, `/api/health` respondeu HTTP 200 e a API de questões respondeu HTTP 401 sem sessão, como esperado; login e fluxo do estudante seguem sem validação real. O CI anterior passou; o timer ainda precisa de CI e Preview. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
