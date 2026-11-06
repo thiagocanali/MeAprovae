@@ -14,7 +14,10 @@ useSeoMeta({
         <span class="brand-mark">M</span>
         <span>Me Aprovaê</span>
       </NuxtLink>
-      <span class="topbar-note">EM CONSTRUÇÃO</span>
+      <nav class="topbar-actions" aria-label="Acesso à plataforma">
+        <NuxtLink class="topbar-login" to="/login">Entrar</NuxtLink>
+        <NuxtLink class="topbar-signup" to="/cadastro">Criar conta</NuxtLink>
+      </nav>
     </header>
 
     <section class="hero" aria-labelledby="hero-title">
@@ -26,12 +29,10 @@ useSeoMeta({
           e enxergar sua evolução com clareza.
         </p>
         <div class="hero-actions">
-          <a class="primary-action" href="#proposta">Conheça a proposta <span aria-hidden="true">↗</span></a>
-          <a class="secondary-action" href="https://github.com/thiagocanali/MeAprovae" target="_blank" rel="noreferrer">
-            Acompanhe o projeto
-          </a>
+          <NuxtLink class="primary-action" to="/cadastro">Começar agora <span aria-hidden="true">↗</span></NuxtLink>
+          <a class="secondary-action" href="#proposta">Conheça a proposta</a>
         </div>
-        <p class="status-note">Estamos construindo a primeira versão. Ainda não há cadastro ou dados de estudo disponíveis.</p>
+        <p class="status-note">Crie sua conta para definir um objetivo de estudo e acompanhar sua evolução.</p>
       </div>
 
       <div class="hero-visual" aria-label="Ilustração abstrata de progresso nos estudos">

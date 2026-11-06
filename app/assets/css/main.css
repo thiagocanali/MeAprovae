@@ -30,8 +30,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .topbar { height: 88px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.08); }
 .brand { display: inline-flex; align-items: center; gap: 11px; font-family: var(--font-display); font-size: 18px; font-weight: 800; letter-spacing: -.7px; }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #10251b; background: var(--color-primary); font-size: 19px; }
-.topbar-note, .eyebrow, .mini-label { font-size: 10px; font-weight: 700; letter-spacing: 1.8px; }
-.topbar-note { color: var(--color-primary); border: 1px solid rgba(155,227,189,.25); border-radius: 999px; padding: 8px 12px; }
+.topbar-actions { display: flex; align-items: center; gap: 18px; }
+.topbar-login { color: var(--color-muted); font-size: 13px; font-weight: 600; transition: color .2s; }
+.topbar-login:hover { color: var(--color-text); }
+.topbar-signup { padding: 10px 14px; border: 1px solid rgba(155,227,189,.35); border-radius: 9px; color: var(--color-primary); font-size: 12px; font-weight: 700; transition: background .2s, border-color .2s; }
+.topbar-signup:hover { border-color: var(--color-primary); background: rgba(155,227,189,.08); }
+.eyebrow, .mini-label { font-size: 10px; font-weight: 700; letter-spacing: 1.8px; }
 
 .hero { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 56px; min-height: 610px; padding-block: 74px 88px; }
 .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--color-primary); }
