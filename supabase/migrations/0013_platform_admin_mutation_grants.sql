@@ -208,3 +208,54 @@ revoke all on function public.submit_question_attempt(uuid, uuid, uuid)
   from public, anon;
 grant execute on function public.submit_question_attempt(uuid, uuid, uuid)
   to authenticated;
+
+-- Include protected explanations in the editorial audit trail. The generic
+-- audit trigger uses question_id as the record identifier for this table.
+create or replace function public.capture_editorial_change()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_old jsonb;
+  v_new jsonb;
+  v_record_id text;
+begin
+  if tg_op = 'INSERT' then
+    v_new := to_jsonb(new);
+    v_record_id := coalesce(v_new ->> 'id', v_new ->> 'question_id');
+  elsif tg_op = 'UPDATE' then
+    v_old := to_jsonb(old);
+    v_new := to_jsonb(new);
+    v_record_id := coalesce(
+      v_new ->> 'id', v_new ->> 'question_id',
+      v_old ->> 'id', v_old ->> 'question_id'
+    );
+  else
+    v_old := to_jsonb(old);
+    v_record_id := coalesce(v_old ->> 'id', v_old ->> 'question_id');
+  end if;
+
+  insert into public.editorial_audit_log (
+    actor_id, action, table_name, record_id, old_data, new_data
+  ) values (
+    (select auth.uid()), tg_op, tg_table_name, v_record_id, v_old, v_new
+  );
+
+  if tg_op = 'DELETE' then
+    return old;
+  end if;
+  return new;
+end;
+$$;
+
+revoke all on function public.capture_editorial_change()
+  from public, anon, authenticated;
+
+drop trigger if exists editorial_audit_question_editorial_details
+  on public.study_question_editorial_details;
+create trigger editorial_audit_question_editorial_details
+  after insert or update or delete
+  on public.study_question_editorial_details
+  for each row execute function public.capture_editorial_change();
