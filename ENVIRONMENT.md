@@ -175,3 +175,13 @@ A sequência de banco passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0
 - A consulta de variáveis da Vercel retornou zero variáveis cadastradas e zero ocultas. Cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente Nuxt necessário.
 - O deployment Vercel do commit integrado foi recusado por limite diário de deployments. O último deployment READY observado é anterior às alterações dos PRs #11 e #12.
 - A sequência de migrações versionadas chega a 0012. Aplicação/validação real, testes de RLS/RPC e teste autenticado continuam pendentes.
+
+## Auditoria de segurança editorial — 2026-11-06
+
+- A revisão estática identificou que a migração 0006 concedeu privilégio de SELECT em nível de tabela para authenticated em study_questions. Esse grant ampliou o acesso além do grant seguro por coluna da migração 0002 e poderia expor explanation de questões publicadas antes da resposta.
+- A migração 0013 move a explicação para study_question_editorial_details, protegida por RLS para editores, preserva os dados existentes, retira o SELECT amplo e mantém somente as colunas públicas da questão disponíveis aos estudantes.
+- A RPC submit_question_attempt passa a devolver a explicação protegida somente após uma tentativa válida. O bloqueio de alterações após respostas também se aplica à explicação.
+- A migração 0013 concede INSERT, UPDATE e DELETE em platform_admins à role authenticated; as políticas RLS de 0006 continuam restringindo essas operações a owners.
+- Os endpoints editoriais foram adaptados para ler/gravar explicações na tabela protegida.
+- Foi adicionado supabase/diagnostics/phase-2-read-only-audit.sql, que consulta catálogo, RLS, políticas, funções, grants, triggers e histórico de migrações sem alterar dados.
+- Importante: essas mudanças estão em revisão no PR da branch fix/admin-role-table-grants. Não aplicar a migração 0013 em produção antes da aprovação do CI e da conferência do estado real das migrações 0001–0012.
