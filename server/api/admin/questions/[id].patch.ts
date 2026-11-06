@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
   if (!isUuid(id)) throw createError({ statusCode: 400, statusMessage: 'Questão inválida.' })
   const body = (await readBody<Body>(event)) ?? {}
   const updates: Record<string, unknown> = {}
+  let explanation: string | undefined
 
   if (body.noticeId !== undefined) {
     if (!isUuid(text(body.noticeId))) throw createError({ statusCode: 400, statusMessage: 'Edital inválido.' })
@@ -28,7 +29,7 @@ export default defineEventHandler(async (event) => {
     const value=text(body.statement); if(value.length<10||value.length>20000) throw createError({statusCode:400,statusMessage:'Enunciado inválido.'}); updates.statement=value
   }
   if (body.explanation !== undefined) {
-    const value=text(body.explanation); if(value.length>12000) throw createError({statusCode:400,statusMessage:'Explicação muito longa.'}); updates.explanation=value
+    explanation=text(body.explanation); if(explanation.length>12000) throw createError({statusCode:400,statusMessage:'Explicação muito longa.'})
   }
   if (body.sourceLabel !== undefined) updates.source_label=text(body.sourceLabel)||null
   if (body.sourceUrl !== undefined) {
@@ -41,13 +42,32 @@ export default defineEventHandler(async (event) => {
   if (body.status !== undefined) {
     if(body.status!=='draft'&&body.status!=='published'&&body.status!=='archived') throw createError({statusCode:400,statusMessage:'Status editorial inválido.'}); updates.status=body.status
   }
-  if(!Object.keys(updates).length) throw createError({statusCode:400,statusMessage:'Nenhuma alteração informada.'})
+  if(!Object.keys(updates).length && explanation===undefined) throw createError({statusCode:400,statusMessage:'Nenhuma alteração informada.'})
 
-  const { data, error } = await supabase.from('study_questions').update(updates).eq('id',id)
-    .select('id, notice_id, subject_id, topic_id, statement, explanation, source_label, source_url, source_year, status, created_at').maybeSingle()
-  if(error?.code==='23514') throw createError({statusCode:409,statusMessage:'A regra de publicação impede esta alteração.'})
-  if(error?.code==='23522'||error?.code==='23503') throw createError({statusCode:400,statusMessage:'Disciplina ou assunto incompatível com a questão.'})
-  if(error) throw createError({statusCode:503,statusMessage:'Não foi possível atualizar a questão.'})
-  if(!data) throw createError({statusCode:404,statusMessage:'Questão não encontrada.'})
-  return { question:data }
+  let questionData
+  if (Object.keys(updates).length) {
+    const { data, error } = await supabase.from('study_questions').update(updates).eq('id',id)
+      .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at').maybeSingle()
+    if(error?.code==='23514') throw createError({statusCode:409,statusMessage:'A regra de publicação ou o histórico de respostas impede esta alteração.'})
+    if(error?.code==='23522'||error?.code==='23503') throw createError({statusCode:400,statusMessage:'Disciplina ou assunto incompatível com a questão.'})
+    if(error) throw createError({statusCode:503,statusMessage:'Não foi possível atualizar a questão.'})
+    if(!data) throw createError({statusCode:404,statusMessage:'Questão não encontrada.'})
+    questionData=data
+  } else {
+    const { data, error } = await supabase.from('study_questions')
+      .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at')
+      .eq('id',id).maybeSingle()
+    if(error) throw createError({statusCode:503,statusMessage:'Não foi possível carregar a questão.'})
+    if(!data) throw createError({statusCode:404,statusMessage:'Questão não encontrada.'})
+    questionData=data
+  }
+
+  if (explanation !== undefined) {
+    const { error } = await supabase.from('study_question_editorial_details')
+      .upsert({ question_id: id, explanation }, { onConflict: 'question_id' })
+    if(error?.code==='23514') throw createError({statusCode:409,statusMessage:'O histórico de respostas impede a alteração da explicação.'})
+    if(error) throw createError({statusCode:503,statusMessage:'Não foi possível atualizar a explicação editorial.'})
+  }
+
+  return { question: { ...questionData, ...(explanation === undefined ? {} : { explanation }) } }
 })
