@@ -59,6 +59,11 @@ as $$
 declare
   v_question_id uuid;
 begin
+  if tg_op = 'UPDATE' and new.question_id is distinct from old.question_id then
+    raise exception using errcode = '23514',
+      message = 'Question ownership of editorial details cannot be changed';
+  end if;
+
   if tg_op = 'DELETE' then
     v_question_id := old.question_id;
   else
