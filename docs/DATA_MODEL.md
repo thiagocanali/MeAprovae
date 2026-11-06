@@ -211,3 +211,7 @@ A migração `0005_subject_performance_and_wrong_questions.sql` implementa:
 - APIs e telas para desempenho por disciplina e revisão de questões erradas.
 
 A migração ainda não foi aplicada a um banco real; a classificação permanece parcial.
+
+## Explicações editoriais protegidas
+
+A partir da migração 0013, o texto de explicação não deve ser lido diretamente de study_questions. Ele é armazenado em study_question_editorial_details, com RLS limitada a usuários que possuem papel editorial. O estudante recebe a explicação pelo retorno de submit_question_attempt somente depois de enviar uma alternativa válida. A estrutura da questão e sua explicação ficam imutáveis após a primeira tentativa, preservando o histórico.
