@@ -10,7 +10,8 @@
 .auth-form input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(155,227,189,.12); }
 .auth-password-field { position: relative; display: flex; align-items: center; }
 .auth-password-field input { padding-right: 76px; }
-.auth-password-toggle { position: absolute; right: 8px; min-height: 30px; margin: 0; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--color-primary); font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.auth-password-toggle { position: absolute; right: 6px; display: grid; place-items: center; width: 38px; height: 38px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--color-primary); cursor: pointer; }
+.auth-password-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 .auth-password-toggle:hover { background: rgba(155,227,189,.1); }
 .auth-password-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .auth-form button, .logout-button { min-height: 46px; margin-top: 12px; padding: 0 18px; border: 0; border-radius: 9px; background: var(--color-primary); color: #10251b; font: inherit; font-weight: 700; cursor: pointer; }
