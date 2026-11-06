@@ -2,12 +2,14 @@
 
 Este documento lista nomes e finalidades. **Não inclua valores secretos aqui nem no Git.**
 
-## Estado observado em 05/11/2026
+## Estado observado em 06/11/2026
 
-- Projeto Vercel: `meaprovae`.
-- A listagem de variáveis retornou zero variáveis cadastradas e zero variáveis ocultas.
-- `.env.example` contém `DATABASE_URL`, `NODE_ENV`, `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY`. Os dois últimos correspondem ao `runtimeConfig` do Nuxt e ao cliente SSR.
-- Não há credenciais de banco, auth, e-mail ou IA configuradas na Vercel.
+- Projeto Vercel: `meaprovae` (`prj_aNTfVXzzPf8g0ONlkEVhMp709aAz`).
+- A listagem atual da Vercel encontrou variáveis Supabase/PostgreSQL nos ambientes Development, Preview e Production. Os valores não foram descriptografados nem copiados.
+- O runtime Nuxt lê `SUPABASE_URL` e `SUPABASE_ANON_KEY` em `nuxt.config.ts` e `server/utils/supabase.ts`; esses nomes estão presentes na configuração da Vercel e agora também no `.env.example`.
+- Também existem variáveis de integração PostgreSQL e chaves privilegiadas Supabase. O código da aplicação não referencia `SUPABASE_SERVICE_ROLE_KEY` nem `SUPABASE_SECRET_KEY`; revisar sua necessidade e manter qualquer credencial privilegiada exclusivamente server-side.
+- Não há conexão SQL/Supabase disponível nesta sessão para confirmar o histórico de migrações, aplicar SQL ou testar RLS/RPCs.
+- O check `Supabase Preview` anterior foi ignorado porque a criação de branches Preview está desabilitada; ele não valida migrações nem schema.
 
 ## Variáveis previstas
 
@@ -15,8 +17,8 @@ Este documento lista nomes e finalidades. **Não inclua valores secretos aqui ne
 |---|---|---|---|
 | `DATABASE_URL` | Banco PostgreSQL habilitado | Apenas servidor; segredo | Development, Preview, Production |
 | `NODE_ENV` | Gerenciada pelo runtime | Não é segredo | Gerenciada pela plataforma |
-| `NUXT_SUPABASE_URL` | Supabase Auth e acesso ao backend habilitados | Runtime config server-side; URL não é segredo | Development, Preview, Production |
-| `NUXT_SUPABASE_ANON_KEY` | Supabase Auth e acesso ao backend habilitados | Chave publicável; RLS obrigatório | Development, Preview, Production |
+| `SUPABASE_URL` | Supabase Auth e acesso ao backend habilitados | Runtime config server-side; URL não é segredo | Development, Preview, Production |
+| `SUPABASE_ANON_KEY` | Supabase Auth e acesso ao backend habilitados | Chave publicável; RLS obrigatório | Development, Preview, Production |
 | `RESEND_API_KEY` | Se Resend for escolhido para e-mail transacional | Segredo server-side | Todos os ambientes usados |
 | `AI_GATEWAY_API_KEY` | Quando tutor IA for implementado | Segredo server-side | Preview/Production |
 | `AI_MODEL` | Quando tutor IA for implementado | Configuração não secreta | Todos |
@@ -44,8 +46,8 @@ Configure os valores em Project → Settings → Environment Variables, separand
 ## Supabase Auth — implementação preparada
 
 O código usa `@supabase/ssr` com cookies no servidor. Configure:
-- `NUXT_SUPABASE_URL`: Project URL do projeto Supabase do Me Aprovaê.
-- `NUXT_SUPABASE_ANON_KEY`: chave publicável/anon do projeto (nunca service role).
+- `SUPABASE_URL`: Project URL do projeto Supabase do Me Aprovaê.
+- `SUPABASE_ANON_KEY`: chave publicável/anon do projeto (nunca service role).
 
 O valor deve ser adicionado em Development, Preview e Production conforme cada ambiente. A chave privilegiada `service_role` não é necessária para o fluxo de autenticação e não deve ser colocada nesta aplicação.
 
@@ -145,7 +147,7 @@ O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9
 - O deployment de produção do commit `cd1f6393394c8b8875660daf765bb66c8e82904b` está em estado `READY`; isso confirma o build/publicação, não a operação autenticada com banco.
 - A consulta atual de variáveis da Vercel retornou zero variáveis configuradas e zero variáveis ocultas.
 - Não há conexão Supabase disponível nesta sessão para confirmar projeto, aplicar SQL ou testar RLS/RPCs.
-- As migrações versionadas chegam a `0011_preserve_question_answer_key_on_option_replace.sql`. A aplicação real depende de provisionar/configurar Supabase, cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente e aplicar 0001–0011 na ordem.
+- As migrações versionadas chegam a `0011_preserve_question_answer_key_on_option_replace.sql`. A aplicação real depende de provisionar/configurar Supabase, cadastrar `SUPABASE_URL` e `SUPABASE_ANON_KEY` em cada ambiente e aplicar 0001–0011 na ordem.
 - Até essa configuração e validação real, não considerar cadastro, login, painel administrativo, catálogo ou tentativas como funcionais em produção.
 
 ## Atualização após PR #11 — 2026-11-05
@@ -169,7 +171,7 @@ A sequência de banco passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0
 ## Atualização pós PR #12 — 2026-11-05
 
 - PR #12 integrado à `main` no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
-- O check `Supabase Preview` associado ao commit integrado concluiu com sucesso e aponta para o projeto Supabase `htukocebmvczejxexsab`. Confirmar no dashboard se a branch preview foi criada e se as migrações foram aplicadas; não assumir que o banco de produção foi alterado.
+- O check `Supabase Preview` associado ao commit integrado foi **ignorado (`skipped`)** porque a criação de branches Preview está desabilitada. Portanto, ele não validou a conexão, o projeto nem a aplicação de migrações. O projeto de referência identificado anteriormente é `htukocebmvczejxexsab`, mas o estado real do banco ainda precisa ser confirmado diretamente no Supabase.
 - A consulta de variáveis da Vercel retornou zero variáveis cadastradas e zero ocultas. Cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente Nuxt necessário.
 - O deployment Vercel do commit integrado foi recusado por limite diário de deployments. O último deployment READY observado é anterior às alterações dos PRs #11 e #12.
 - A sequência de migrações versionadas chega a 0012. Aplicação/validação real, testes de RLS/RPC e teste autenticado continuam pendentes.

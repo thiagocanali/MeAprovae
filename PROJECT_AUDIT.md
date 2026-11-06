@@ -430,7 +430,7 @@ A revisão foi estática, baseada no SQL versionado. A migração 0012 está em 
 
 - PR #12 foi integrado à `main` no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
 - CI do HEAD do PR: instalação, typecheck, testes unitários e build de produção aprovados.
-- O check `Supabase Preview` associado ao commit integrado concluiu com sucesso. A integração está conectada ao projeto Supabase identificado no check, mas o resultado isolado não demonstra que as 12 migrações estejam aplicadas no banco de produção nem substitui testes de autenticação, RLS e RPCs.
+- O check `Supabase Preview` associado ao commit integrado foi **ignorado (`skipped`)** porque a criação de branches Preview está desabilitada. Não há evidência desse check de conexão ativa ou aplicação de migrações; as 12 migrações seguem sem validação direta no banco.
 - O check de deployment da Vercel falhou por limite diário de deployments do plano. O último deployment READY consultado permanece no commit anterior ao PR #11/#12; não declarar o código atual publicado em produção.
 - A consulta de variáveis Vercel retornou zero variáveis cadastradas e zero ocultas. Portanto, o runtime da aplicação continua sem configuração Supabase confirmada.
 - A migração 0012 foi integrada, mas não foi executada manualmente nem validada por conexão SQL nesta sessão. A auditoria de SQL permanece estática.
