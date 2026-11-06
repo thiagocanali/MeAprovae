@@ -1,5 +1,6 @@
 import { createError, getQuery } from 'h3'
 import { createSupabaseServerClient, getAuthenticatedUser } from '../../utils/supabase'
+import { logSupabaseError } from '../../utils/supabase-diagnostics'
 import { isUuid } from '../../../shared/domain/common/uuid'
 
 export default defineEventHandler(async (event) => {
@@ -28,7 +29,10 @@ export default defineEventHandler(async (event) => {
       .eq('contest_id', contestId)
       .eq('status', 'published')
 
-    if (noticeError) throw createError({ statusCode: 503, statusMessage: 'Não foi possível consultar o edital.' })
+    if (noticeError) {
+      logSupabaseError('study.questions.notice_lookup', noticeError)
+      throw createError({ statusCode: 503, statusMessage: 'Não foi possível consultar o edital.' })
+    }
     noticeIds = (notices ?? []).map((notice) => notice.id)
     if (noticeIds.length === 0) return { questions: [] }
   }
@@ -46,7 +50,10 @@ export default defineEventHandler(async (event) => {
   if (noticeIds) request = request.in('notice_id', noticeIds)
 
   const { data, error } = await request
-  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível carregar as questões.' })
+  if (error) {
+    logSupabaseError('study.questions.list', error)
+    throw createError({ statusCode: 503, statusMessage: 'Não foi possível carregar as questões.' })
+  }
 
   const questions = (data ?? []).map((question) => ({
     ...question,

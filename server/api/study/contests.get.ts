@@ -1,5 +1,6 @@
 import { createError } from 'h3'
 import { createSupabaseServerClient, getAuthenticatedUser } from '../../utils/supabase'
+import { logSupabaseError } from '../../utils/supabase-diagnostics'
 
 export default defineEventHandler(async (event) => {
   const user = await getAuthenticatedUser(event)
@@ -13,6 +14,7 @@ export default defineEventHandler(async (event) => {
     .order('published_at', { ascending: false })
 
   if (error) {
+    logSupabaseError('study.contests.list', error)
     throw createError({ statusCode: 503, statusMessage: 'Não foi possível carregar os concursos.' })
   }
 
