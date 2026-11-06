@@ -248,7 +248,7 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 
 - PR #12 (`fix: proteger histórico de questões respondidas`) foi mesclado à `main` via squash no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
 - O CI do HEAD do PR passou em instalação, typecheck, testes unitários e build de produção antes do merge.
-- O check `Supabase Preview` associado ao commit integrado concluiu com sucesso. Isso confirma o resultado positivo do check da integração Supabase, mas não comprova por si só que as migrações foram aplicadas ao banco de produção nem que autenticação/RLS/RPCs foram testadas com usuários reais.
+- O check `Supabase Preview` associado ao commit integrado foi **ignorado (`skipped`)** porque a criação de branches Preview está desabilitada. Ele não confirma conexão nem execução de migrações; aplicação do schema e testes reais continuam pendentes.
 - A migração 0012 agora está na `main`; sua aplicação e validação funcional continuam pendentes.
 - A Vercel recusou o deployment do commit integrado por limite diário do plano (`api-deployments-free-per-day`). O deployment de produção READY ainda observado corresponde ao commit anterior `cd1f6393394c8b8875660daf765bb66c8e82904b`.
 - A consulta de variáveis Vercel retornou zero variáveis configuradas e zero variáveis ocultas. Configurar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` continua necessário para a aplicação Nuxt usar o Supabase em cada ambiente.
