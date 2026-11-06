@@ -253,3 +253,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - A Vercel recusou o deployment do commit integrado por limite diário do plano (`api-deployments-free-per-day`). O deployment de produção READY ainda observado corresponde ao commit anterior `cd1f6393394c8b8875660daf765bb66c8e82904b`.
 - A consulta de variáveis Vercel retornou zero variáveis configuradas e zero variáveis ocultas. Configurar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` continua necessário para a aplicação Nuxt usar o Supabase em cada ambiente.
 - Próximos passos: confirmar no dashboard Supabase o estado do projeto/branch preview e das migrações; configurar variáveis Vercel; aplicar/validar 0001–0012 no ambiente correto; testar RLS/RPCs com contas estudante e editor.
+
+### 2026-11-06 — auditoria de privilégios e proteção de gabarito
+- Encontrada falha de privilégio na migração 0006: authenticated recebeu SELECT em nível de tabela em study_questions, tornando ineficaz a intenção de expor apenas colunas públicas definida em 0002. Isso poderia revelar explicações antes da resposta.
+- Preparada migração 0013 para separar explicações em study_question_editorial_details, aplicar RLS exclusiva de editores, preservar explicações existentes e retornar feedback via RPC de submissão.
+- Endpoints de administração de questões adaptados para a nova tabela protegida.
+- Corrigida também a falta de grants DML em platform_admins; as policies de owner de 0006 permanecem como barreira.
+- Criado script SQL de diagnóstico somente leitura em supabase/diagnostics/phase-2-read-only-audit.sql.
+- Alterações em revisão na branch fix/admin-role-table-grants; ainda não aplicadas ao Supabase real.
