@@ -43,7 +43,8 @@ interface AnsweredQuestion {
 const { data: contestsData, pending: contestsPending, error: contestsError } =
   await useFetch<{ contests: Contest[] }>('/api/study/contests')
 
-const selectedContestId = ref('')
+const route = useRoute()
+const selectedContestId = ref(String(route.query.contestId || ''))
 const questionCount = ref(10)
 const questions = ref<Question[]>([])
 const currentIndex = ref(0)
