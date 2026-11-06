@@ -31,6 +31,7 @@ with expected(table_name) as (
     ('study_questions'),
     ('study_question_options'),
     ('study_question_answer_keys'),
+    ('study_question_editorial_details'),
     ('student_contests'),
     ('question_attempts'),
     ('study_positions'),
@@ -78,7 +79,8 @@ where n.nspname = 'public'
     'submit_question_attempt',
     'set_notice_subjects',
     'set_notice_positions',
-    'set_question_options'
+    'set_question_options',
+    'guard_attempted_question_editorial_details'
   )
 order by p.proname, arguments;
 
