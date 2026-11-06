@@ -1,5 +1,6 @@
 import { createError } from 'h3'
 import { createSupabaseServerClient, getAuthenticatedUser } from '../../utils/supabase'
+import { logSupabaseError } from '../../utils/supabase-diagnostics'
 
 export default defineEventHandler(async (event) => {
   const user = await getAuthenticatedUser(event)
@@ -12,6 +13,9 @@ export default defineEventHandler(async (event) => {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
-  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível carregar suas questões favoritas.' })
+  if (error) {
+    logSupabaseError('study.favorites.list', error)
+    throw createError({ statusCode: 503, statusMessage: 'Não foi possível carregar suas questões favoritas.' })
+  }
   return { favorites: data ?? [] }
 })
