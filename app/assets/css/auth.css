@@ -14,13 +14,18 @@
 .auth-success { color: var(--color-primary); font-size: 12px; line-height: 1.6; }
 .auth-switch { margin-top: 24px; color: var(--color-muted); font-size: 12px; }
 .auth-switch a { color: var(--color-primary); font-weight: 700; }
-.student-header { display: flex; align-items: center; justify-content: space-between; width: min(100%, 1100px); margin: 0 auto; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.student-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: min(100%, 1100px); margin: 0 auto; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.student-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.student-nav a { color: var(--color-muted); font-size: 12px; font-weight: 600; }
+.student-nav a:hover, .student-nav a.router-link-active { color: var(--color-primary); }
+.student-nav a:focus-visible, .logout-button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 .student-welcome { width: min(100%, 900px); margin: 9vh auto; }
 .student-empty { margin-top: 42px; padding: 30px; border: 1px solid rgba(255,255,255,.1); border-radius: 16px; background: var(--color-surface); }
 .student-empty h2 { margin-top: 0; font-family: var(--font-display); }
 .student-empty p { max-width: 650px; color: var(--color-muted); font-size: 14px; line-height: 1.8; }
 .student-empty span { display: inline-block; margin-top: 14px; color: var(--color-primary); font-size: 11px; font-weight: 700; }
-@media (max-width: 520px) { .auth-page, .student-home { padding: 20px 16px; } .auth-panel { margin-top: 5vh; padding: 25px 20px; } .student-empty { padding: 22px; } }
+@media (max-width: 720px) { .student-header { align-items: flex-start; flex-wrap: wrap; } .student-nav { order: 3; justify-content: flex-start; width: 100%; } }
+@media (max-width: 520px) { .auth-page, .student-home { padding: 20px 16px; } .auth-panel { margin-top: 5vh; padding: 25px 20px; } .student-empty { padding: 22px; } .student-nav { gap: 12px; } }
 
 
 /* Study workspace */
