@@ -169,7 +169,7 @@ A sequência de banco passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0
 ## Atualização pós PR #12 — 2026-11-05
 
 - PR #12 integrado à `main` no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
-- O check `Supabase Preview` associado ao commit integrado concluiu com sucesso e aponta para o projeto Supabase `htukocebmvczejxexsab`. Confirmar no dashboard se a branch preview foi criada e se as migrações foram aplicadas; não assumir que o banco de produção foi alterado.
+- O check `Supabase Preview` associado ao commit integrado foi **ignorado (`skipped`)** porque a criação de branches Preview está desabilitada. Portanto, ele não validou a conexão, o projeto nem a aplicação de migrações. O projeto de referência identificado anteriormente é `htukocebmvczejxexsab`, mas o estado real do banco ainda precisa ser confirmado diretamente no Supabase.
 - A consulta de variáveis da Vercel retornou zero variáveis cadastradas e zero ocultas. Cadastrar `NUXT_SUPABASE_URL` e `NUXT_SUPABASE_ANON_KEY` em cada ambiente Nuxt necessário.
 - O deployment Vercel do commit integrado foi recusado por limite diário de deployments. O último deployment READY observado é anterior às alterações dos PRs #11 e #12.
 - A sequência de migrações versionadas chega a 0012. Aplicação/validação real, testes de RLS/RPC e teste autenticado continuam pendentes.
