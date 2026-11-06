@@ -1,10 +1,12 @@
+const environment = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-04',
   devtools: { enabled: false },
   css: ['~/assets/css/main.css', '~/assets/css/auth.css'],
   runtimeConfig: {
-    supabaseUrl: '',
-    supabaseAnonKey: '',
+    supabaseUrl: environment.SUPABASE_URL ?? '',
+    supabaseAnonKey: environment.SUPABASE_ANON_KEY ?? '',
   },
   typescript: {
     strict: true,
