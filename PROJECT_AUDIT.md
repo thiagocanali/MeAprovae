@@ -457,4 +457,14 @@ A correção proposta na migração 0013:
 
 Os endpoints de administração foram adaptados para a nova tabela. O script supabase/diagnostics/phase-2-read-only-audit.sql permite levantar o estado real do banco sem executar alterações.
 
-**Status:** correção preparada em fix/admin-role-table-grants, pendente de CI, revisão e aplicação controlada no Supabase. Não declarar a vulnerabilidade corrigida em produção até confirmar a aplicação da migração e testar com uma conta estudante e uma conta editorial.
+**Status atualizado em 2026-11-06:** PR #20 integrado em `main` no merge commit `821a9f5`; CI do PR passou. A migration 0013 não foi confirmada como aplicada. A correção está validada no código e por CI, não no banco ou em produção. O status Vercel indicou rate limit, e o Supabase Preview permaneceu neutro.
+
+## Auditoria do simulador e do fluxo de tentativa — 2026-11-06
+
+- O PR #21 parte do `main` que já contém a migration 0013; a consulta de questões retorna apenas enunciado, fonte e alternativas, e o gabarito/explicação só chega pela RPC após submissão válida. Segurança efetiva depende de a migration estar aplicada.
+- A RPC `submit_question_attempt` verifica usuário autenticado, questão e edital/concurso publicados, alternativa pertencente à questão, grava tentativa e usa `UNIQUE (user_id, idempotency_key)`. Reutilizar a chave com payload diferente gera erro. Esta revisão do SQL é estática, sem execução PostgreSQL.
+- O PR #21 gerava um UUID novo a cada tentativa no simulado; em erro de rede, retry podia criar segunda tentativa. A chave agora é reutilizada para a mesma questão/alternativa nos dois fluxos de resposta. Testes unitários verificam retry, mudança de seleção e chave após confirmação.
+- O resultado do simulado usava respondidas como denominador, inflando nota após expiração; agora usa o total e informa não respondidas. Revisão mostra resposta do aluno e alternativa correta.
+- Limites conhecidos: simulador em modo estudo, sem sessão persistida/retomada; cada tentativa é persistida, mas a seleção das questões vem do limite de 20 itens mais recentes da API antes do embaralhamento. Portanto, não representa amostra aleatória de todo o banco e não é uma prova oficial.
+- Typecheck local, 32 testes unitários e build passaram. O CI do PR #21 existente foi aprovado antes destas correções; novo CI depende de push. O check Vercel informa rate limit.
+- GET público de `/api/health` respondeu HTTP 200; GET sem sessão a `/api/study/questions` respondeu HTTP 401 como esperado. Nenhum login, conta de estudante/editor, leitura de dados, banco, conteúdo ou deploy novo foi validado.

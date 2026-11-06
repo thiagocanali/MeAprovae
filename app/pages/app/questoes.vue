@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
+import { createAttemptIdempotencyKeys } from '~~/shared/domain/questions/attempt-idempotency'
 
 definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Resolver questões | Me Aprovaê' })
@@ -33,7 +34,7 @@ const selectedOptionId = ref('')
 const result = ref<AttemptResult | null>(null)
 const submitPending = ref(false)
 const submitError = ref('')
-const idempotencyKey = ref('')
+const attemptKeys = createAttemptIdempotencyKeys()
 const currentQuestion = computed(() => data.value?.questions[currentIndex.value] ?? null)
 const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
 const favoritePending = ref(false)
@@ -57,17 +58,19 @@ async function submitAnswer() {
   if (!currentQuestion.value || !selectedOptionId.value || submitPending.value || result.value) return
   submitPending.value = true
   submitError.value = ''
-  if (!idempotencyKey.value) idempotencyKey.value = crypto.randomUUID()
+  const questionId = currentQuestion.value.id
+  const optionId = selectedOptionId.value
   try {
     const response = await $fetch<{ result: AttemptResult }>('/api/study/attempts', {
       method: 'POST',
       body: {
-        questionId: currentQuestion.value.id,
-        optionId: selectedOptionId.value,
-        idempotencyKey: idempotencyKey.value,
+        questionId,
+        optionId,
+        idempotencyKey: attemptKeys.forSubmission(questionId, optionId),
       },
     })
     result.value = response.result
+    attemptKeys.clear(questionId, optionId)
   } catch {
     submitError.value = 'Não foi possível registrar sua resposta. Sua seleção foi mantida; tente novamente.'
   } finally {
@@ -81,7 +84,6 @@ function nextQuestion() {
   selectedOptionId.value = ''
   result.value = null
   submitError.value = ''
-  idempotencyKey.value = ''
 }
 </script>
 

@@ -9,7 +9,11 @@ Este documento lista nomes e finalidades. **Não inclua valores secretos aqui ne
 - O runtime Nuxt lê `SUPABASE_URL` e `SUPABASE_ANON_KEY` em `nuxt.config.ts` e `server/utils/supabase.ts`; esses nomes estão presentes na configuração da Vercel e agora também no `.env.example`.
 - Também existem variáveis de integração PostgreSQL e chaves privilegiadas Supabase. O código da aplicação não referencia `SUPABASE_SERVICE_ROLE_KEY` nem `SUPABASE_SECRET_KEY`; revisar sua necessidade e manter qualquer credencial privilegiada exclusivamente server-side.
 - Não há conexão SQL/Supabase disponível nesta sessão para confirmar o histórico de migrações, aplicar SQL ou testar RLS/RPCs.
-- O check `Supabase Preview` anterior foi ignorado porque a criação de branches Preview está desabilitada; ele não valida migrações nem schema.
+- O PR #20 está integrado em `main`; sua migração 0013 está versionada, mas aplicação e validação no banco continuam não confirmadas.
+- No PR #21, CI estava verde no HEAD remoto anterior às alterações locais; o check Vercel informa bloqueio por rate limit e o check Supabase Preview está neutro.
+- Uma requisição GET a `/api/health` respondeu HTTP 200 em 06/11/2026. Isso valida apenas a disponibilidade desse endpoint, não Auth, banco, RLS ou fluxos autenticados.
+- Uma requisição GET sem sessão a `/api/study/questions` respondeu HTTP 401 com a mensagem de autenticação esperada, em vez de falhar na configuração do cliente. Isso não valida login, dados, policies RLS ou submissão autenticada.
+- A branch do PR #21 contém a migração 0013 por partir do `main` atual; as correções locais do PR ainda precisam de push e CI remoto.
 
 ## Variáveis previstas
 
@@ -72,12 +76,12 @@ A segunda migração cria conteúdo editorial, RLS e a função RPC `submit_ques
 Não conceda a estudantes permissões para inserir/alterar gabaritos. Não crie questões com fonte/banca fictícia. Antes de produção, teste leitura anônima/autenticada do catálogo, tentativa sem sessão, tentativa com opção de outra questão, repetição da mesma chave e isolamento entre duas contas.
 
 
-## Situação atual do deploy e typecheck
-A Vercel registrou falha de typecheck no deployment da integração inicial por `middleware: 'auth'` como string em `definePageMeta`. O PR #5 troca por import da função de middleware tipada. A tentativa de Preview do PR #5 está bloqueada por `build-rate-limit`; aguardar quota/limite ser liberado e validar o build antes de mesclar.
+## Situação atual do deploy e validação
+O endpoint público `/api/health` respondeu HTTP 200 em 06/11/2026. O status Vercel dos PRs #20 e #21, consultado nesta auditoria, informa rate limit de deployments; não há deployment novo do HEAD atualizado para validar. O CI do PR #21 estava verde antes das correções locais, que passaram localmente em typecheck, testes e build, mas ainda aguardam push/CI remoto.
 
 
-## Hotfix de typecheck
-O PR #6 foi mesclado em `main` após CI verde (typecheck, testes e build). A Vercel ainda não apresentou deployment novo após o merge; o último deployment consultado continua em estado ERROR. Validar deployment READY e HTTP antes de declarar o domínio de produção saudável.
+## PR #20 — proteção editorial
+O PR #20 foi integrado ao `main`. A migração 0013 separa explicações em `study_question_editorial_details`, restringe acesso editorial por RLS, remove grants amplos em `study_questions` e retorna explicação apenas pela RPC de submissão válida. Esta é uma revisão estática do SQL versionado: não confirma que a migração foi executada, que a tabela está protegida no projeto ativo ou que o vazamento foi testado via Supabase.
 
 
 ## Migração de objetivos e dashboard
@@ -149,6 +153,15 @@ O GitHub Actions run #169 passou no commit f93026925213fe47015ecb2dcdea9963515f9
 - Não há conexão Supabase disponível nesta sessão para confirmar projeto, aplicar SQL ou testar RLS/RPCs.
 - As migrações versionadas chegam a `0011_preserve_question_answer_key_on_option_replace.sql`. A aplicação real depende de provisionar/configurar Supabase, cadastrar `SUPABASE_URL` e `SUPABASE_ANON_KEY` em cada ambiente e aplicar 0001–0011 na ordem.
 - Até essa configuração e validação real, não considerar cadastro, login, painel administrativo, catálogo ou tentativas como funcionais em produção.
+
+## Atualização — 2026-11-06
+
+- A configuração Vercel descrita no início deste documento agora registra `SUPABASE_URL` e `SUPABASE_ANON_KEY` nos ambientes Development, Preview e Production. A presença das variáveis não comprova conectividade ou schema compatível.
+- As migrations versionadas chegam a 0013. Nenhuma execução foi confirmada nesta sessão; conferir o ledger antes de aplicar qualquer sequência, pois o estado do banco permanece desconhecido.
+- PR #20 foi integrado; PR #21 contém o simulador e deriva de `main`. Typecheck, 32 testes e build passaram localmente após mudanças ainda não enviadas ao remoto.
+- O health check público retornou HTTP 200. Login, submissão real, RLS, idempotência no PostgreSQL e conteúdo não foram validados.
+- A API de questões, chamada sem sessão, retornou HTTP 401. O teste confirma somente a negação anônima observada; não houve login nem acesso a dados do Supabase.
+- Os checks Vercel dos PRs estão bloqueados por rate limit. Não afirmar que o HEAD atual foi publicado.
 
 ## Atualização após PR #11 — 2026-11-05
 

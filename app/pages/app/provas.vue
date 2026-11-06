@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
+import { createAttemptIdempotencyKeys } from '~~/shared/domain/questions/attempt-idempotency'
+import { calculateExamScore } from '~~/shared/domain/questions/exam-results'
 
 definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Simulados | Me Aprovaê' })
@@ -58,11 +60,18 @@ const started = ref(false)
 const finished = ref(false)
 const remainingSeconds = ref(0)
 let timer: ReturnType<typeof setInterval> | null = null
+const attemptKeys = createAttemptIdempotencyKeys()
 
 const currentQuestion = computed(() => questions.value[currentIndex.value] ?? null)
 const answeredCount = computed(() => answers.value.length)
 const correctCount = computed(() => answers.value.filter((answer) => answer.result.isCorrect).length)
-const score = computed(() => answeredCount.value ? Math.round((correctCount.value / answeredCount.value) * 100) : 0)
+const unansweredCount = computed(() => questions.value.length - answeredCount.value)
+const score = computed(() => calculateExamScore(correctCount.value, questions.value.length))
+const reviewedAnswers = computed(() => answers.value.map((answer) => ({
+  ...answer,
+  selectedOption: answer.question.options.find((option) => option.id === answer.selectedOptionId),
+  correctOption: answer.question.options.find((option) => option.id === answer.result.correctOptionId),
+})))
 const progress = computed(() => questions.value.length ? Math.round(((currentIndex.value + 1) / questions.value.length) * 100) : 0)
 const timeLabel = computed(() => {
   const minutes = Math.floor(remainingSeconds.value / 60)
@@ -132,18 +141,21 @@ async function submitAnswer() {
   if (!currentQuestion.value || !selectedOptionId.value || submitPending.value || currentResult.value) return
   submitPending.value = true
   errorMessage.value = ''
+  const questionId = currentQuestion.value.id
+  const optionId = selectedOptionId.value
 
   try {
     const result = await $fetch<{ result: AttemptResult }>('/api/study/attempts', {
       method: 'POST',
       body: {
-        questionId: currentQuestion.value.id,
-        optionId: selectedOptionId.value,
-        idempotencyKey: crypto.randomUUID(),
+        questionId,
+        optionId,
+        idempotencyKey: attemptKeys.forSubmission(questionId, optionId),
       },
     })
 
     currentResult.value = result.result
+    attemptKeys.clear(questionId, optionId)
     answers.value.push({
       question: currentQuestion.value,
       selectedOptionId: selectedOptionId.value,
@@ -201,7 +213,7 @@ onBeforeUnmount(stopTimer)
         <p class="auth-eyebrow">SIMULADOS</p>
         <h1>Faça uma prova</h1>
         <p class="auth-description">
-          Simule uma prova com questões reais do banco. Cada resposta é registrada no seu histórico.
+          Modo estudo: veja a correção após cada resposta. As tentativas são registradas no histórico.
         </p>
 
         <form class="study-form study-exam-form" @submit.prevent="startExam">
@@ -315,7 +327,9 @@ onBeforeUnmount(stopTimer)
       <template v-else-if="finished">
         <p class="auth-eyebrow">RESULTADO</p>
         <h1>Simulado concluído</h1>
-        <p class="auth-description">Você respondeu {{ answeredCount }} de {{ questions.length }} questões.</p>
+        <p class="auth-description">
+          Você respondeu {{ answeredCount }} de {{ questions.length }} questões; {{ unansweredCount }} não respondida(s).
+        </p>
 
         <div class="study-stats">
           <article class="study-card">
@@ -334,7 +348,7 @@ onBeforeUnmount(stopTimer)
 
         <section class="study-section">
           <h2>Revisão</h2>
-          <article v-for="(answer, index) in answers" :key="answer.question.id" class="study-card study-exam-review">
+          <article v-for="(answer, index) in reviewedAnswers" :key="answer.question.id" class="study-card study-exam-review">
             <div>
               <span class="study-muted">Questão {{ index + 1 }}</span>
               <strong :class="answer.result.isCorrect ? 'study-review-correct' : 'study-review-wrong'">
@@ -342,6 +356,8 @@ onBeforeUnmount(stopTimer)
               </strong>
             </div>
             <p>{{ answer.question.statement }}</p>
+            <p v-if="answer.selectedOption"><strong>Sua resposta:</strong> {{ answer.selectedOption.option_label }} — {{ answer.selectedOption.content }}</p>
+            <p v-if="answer.correctOption"><strong>Resposta correta:</strong> {{ answer.correctOption.option_label }} — {{ answer.correctOption.content }}</p>
             <p v-if="answer.result.explanation" class="study-muted">{{ answer.result.explanation }}</p>
           </article>
         </section>

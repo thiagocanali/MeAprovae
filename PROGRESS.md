@@ -261,3 +261,14 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Corrigida também a falta de grants DML em platform_admins; as policies de owner de 0006 permanecem como barreira.
 - Criado script SQL de diagnóstico somente leitura em supabase/diagnostics/phase-2-read-only-audit.sql.
 - Alterações em revisão na branch fix/admin-role-table-grants; ainda não aplicadas ao Supabase real.
+
+### 2026-11-06 — auditoria do PR #20 e simulados no PR #21
+- **PR #20:** integrado em `main` no merge commit `821a9f5`. A migração 0013 e as alterações de isolamento de explicação estão no branch principal. Auditoria desta sessão foi estática; aplicação da migration e teste de vazamento no Supabase continuam não validados.
+- **PR #21:** branch `feat/user-exam-simulado` parte do `main` atual e inclui a migração 0013. A auditoria identificou que retries no simulado geravam uma nova chave de idempotência e que a nota ignorava questões não respondidas após o timer; a revisão também não mostrava a resposta escolhida nem a correta.
+- **Correções locais:** chave de idempotência estável por questão/alternativa nos fluxos de questões e simulados; nota calculada sobre o total; resumo de questões não respondidas; revisão com resposta marcada e gabarito; interface identifica explicitamente o simulador como modo estudo.
+- **Validação local:** `nuxt typecheck` passou; Vitest passou com 32 testes em 5 arquivos; `nuxt build` passou. Foram observados avisos de import dinâmico e tempo de callbacks Vite, sem falha.
+- **Produção:** GET `/api/health` respondeu HTTP 200. Isso não valida autenticação, Supabase, RLS, conteúdo ou o fluxo de estudo. Os checks Vercel dos PRs #20/#21 indicam rate limit; nenhum deploy novo foi confirmado.
+- **API protegida em produção:** GET sem sessão a `/api/study/questions` respondeu HTTP 401 com a mensagem esperada. Login, sessão autenticada, leitura de dados e submissão não foram testados.
+- **Banco/segurança:** migrations 0001–0013 estão versionadas, mas aplicação/ledger, grants efetivos, RLS, RPC e isolamento entre estudante/editor não foram validados em banco real. Nenhum conteúdo real foi confirmado.
+- **Git:** alterações do PR #21 ainda locais, sem commit/push no momento deste registro. O `package-lock.json` preexistente e outros arquivos não rastreados não foram incluídos.
+- **Próximo bloqueio:** enviar as correções ao PR #21, obter CI remoto e executar a auditoria SQL/testes de perfis quando houver acesso não privilegiado apropriado ao Supabase; não solicitar service role.
