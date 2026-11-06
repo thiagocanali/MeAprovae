@@ -215,3 +215,9 @@ A migração ainda não foi aplicada a um banco real; a classificação permanec
 ## Explicações editoriais protegidas
 
 A partir da migração 0013, o texto de explicação não deve ser lido diretamente de study_questions. Ele é armazenado em study_question_editorial_details, com RLS limitada a usuários que possuem papel editorial. O estudante recebe a explicação pelo retorno de submit_question_attempt somente depois de enviar uma alternativa válida. A estrutura da questão e sua explicação ficam imutáveis após a primeira tentativa, preservando o histórico.
+
+## Simulados — estado atual
+
+O MVP do PR #21 não cria uma tabela de sessão de simulado. Cada resposta é gravada como tentativa independente em `question_attempts`; o resultado agregado, a ordem das questões e as respostas ainda não submetidas existem somente no estado da página. Atualizar/fechar a página perde a sessão e não há retomada. O modo atual é estudo, com correção imediata, não modo prova.
+
+A API de questões limita cada busca a 20 itens. O simulado embaralha esse conjunto e seleciona 10 ou 20; portanto, com mais de 20 questões disponíveis, não amostra o banco inteiro. O resultado usa o total selecionado como denominador e mostra itens não respondidos após encerramento. Essas correções passaram em validação local; persistência de sessões, RLS/RPC e dados reais não foram validados no Supabase.

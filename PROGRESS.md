@@ -261,3 +261,16 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - Corrigida também a falta de grants DML em platform_admins; as policies de owner de 0006 permanecem como barreira.
 - Criado script SQL de diagnóstico somente leitura em supabase/diagnostics/phase-2-read-only-audit.sql.
 - Alterações em revisão na branch fix/admin-role-table-grants; ainda não aplicadas ao Supabase real.
+
+### 2026-11-06 — auditoria do PR #20 e simulados no PR #21
+- **PR #20:** integrado em `main` no merge commit `821a9f5`. A migração 0013 e as alterações de isolamento de explicação estão no branch principal. Auditoria desta sessão foi estática; aplicação da migration e teste de vazamento no Supabase continuam não validados.
+- **PR #21:** branch `feat/user-exam-simulado` parte do `main` atual e inclui a migração 0013. A auditoria identificou que retries no simulado geravam uma nova chave de idempotência e que a nota ignorava questões não respondidas após o timer; a revisão também não mostrava a resposta escolhida nem a correta.
+- **Correções locais:** chave de idempotência estável por questão/alternativa nos fluxos de questões e simulados; nota calculada sobre o total; resumo de questões não respondidas; revisão com resposta marcada e gabarito; interface identifica explicitamente o simulador como modo estudo.
+- **Embaralhamento:** substituído `sort(() => Math.random() - 0.5)` por Fisher–Yates para questões e alternativas; teste determinístico cobre preservação dos itens e da lista de entrada.
+- **Timer:** extraído para lógica testável; cobertura de contagem, expiração em zero, reinício sem intervalos duplicados e cancelamento no teardown.
+- **Validação local:** `nuxt typecheck` passou; Vitest passou com 37 testes em 7 arquivos; `nuxt build` passou. Foram observados avisos de import dinâmico e tempo de callbacks Vite, sem falha.
+- **Produção/Preview:** GET `/api/health` respondeu HTTP 200. O Preview do PR #21 em `b5ffc9e` concluiu; não é produção e não valida autenticação, Supabase, RLS, conteúdo ou fluxo de estudo. O HEAD local posterior ainda não tem deploy.
+- **API protegida em produção:** GET sem sessão a `/api/study/questions` respondeu HTTP 401 com a mensagem esperada. Login, sessão autenticada, leitura de dados e submissão não foram testados.
+- **Banco/segurança:** migrations 0001–0013 estão versionadas, mas aplicação/ledger, grants efetivos, RLS, RPC e isolamento entre estudante/editor não foram validados em banco real. Nenhum conteúdo real foi confirmado.
+- **Git/CI:** commits `b5ffc9e`, `4297646`, `aee125a` e `1a2f790` foram enviados ao PR #21. CI e Vercel Preview passaram para `1a2f790`; o Preview não é produção. O `package-lock.json` preexistente não foi incluído.
+- **Próximo bloqueio:** obter CI/deploy do HEAD final e executar auditoria SQL/testes de perfis quando houver acesso não privilegiado apropriado ao Supabase; não solicitar service role.

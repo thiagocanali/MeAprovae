@@ -103,3 +103,14 @@
 .study-performance-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .study-performance-row p { margin: 5px 0 0; }
 .study-performance-row > strong { color: #8ee6ba; font-size: 1.25rem; }
+
+.study-exam-form { max-width: 720px; }
+.study-exam-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.study-exam-timer { min-width: 112px; padding: 12px 16px; border: 1px solid rgba(142,230,186,.35); border-radius: 12px; color: #8ee6ba; background: rgba(142,230,186,.08); font-variant-numeric: tabular-nums; font-weight: 800; text-align: center; }
+.study-exam-timer.is-warning { border-color: rgba(241,139,139,.45); color: #ff9b9b; background: rgba(241,139,139,.08); }
+.study-exam-review { display: grid; gap: 10px; }
+.study-exam-review > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.study-exam-review p { margin: 0; line-height: 1.65; }
+.study-review-correct { color: #61d49a; }
+.study-review-wrong { color: #f18b8b; }
+@media (max-width: 600px) { .study-exam-top { flex-direction: column; } .study-exam-timer { width: 100%; } }

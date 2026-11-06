@@ -50,7 +50,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 
 ## Status atual
 
-**Fase:** núcleo de estudos e administração editorial em desenvolvimento na branch `feat/study-question-engine` (PR #5 integrado; PR #7 em draft). O código inclui cadastro/login/recuperação, catálogo, questões, tentativas, objetivos, dashboard, favoritos, revisão de erros e RBAC editorial com auditoria. O CI passou no núcleo de estudo até o run #155, na camada administrativa no run #168 e nas proteções de ciclo editorial no run #169. Supabase não foi provisionado nem as migrações 0001–0006 aplicadas; não há conteúdo editorial real, primeiro owner ou deployment atualizado confirmado. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
+**Fase:** núcleo de estudo em validação. `main` inclui o PR #20, com a migração 0013 para proteger explicações e corrigir grants editoriais. O PR #21 atualiza simulados na branch `feat/user-exam-simulado`; a auditoria local corrigiu idempotência de retries, nota/revisão e embaralhamento enviesado, e adicionou testes para o timer. O commit `1a2f790` passou CI e Vercel Preview; localmente passaram typecheck, 37 testes unitários e build. Isso não valida migrations, RLS ou RPCs no Supabase: não houve conexão ao banco. Em produção, `/api/health` respondeu HTTP 200 e a API de questões respondeu HTTP 401 sem sessão, como esperado; login e fluxo do estudante seguem sem validação real. Preview não equivale a produção. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
@@ -58,10 +58,10 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 
 ## Próximos passos
 
-1. Provisionar o projeto Supabase e configurar as variáveis de ambiente.
-2. Aplicar migrações 0001–0007 na ordem e atribuir manualmente o primeiro owner.
-3. Validar autenticação, RLS, CRUD editorial e tentativas com contas isoladas.
-4. Completar formulários de CRUD/publicação e validar CI/Preview antes de integrar o PR #5.
+1. Confirmar o ledger e aplicar, em ambiente controlado, as migrações 0001–0013.
+2. Executar os testes de vazamento e isolamento com perfis de estudante e editor.
+3. Validar conteúdo publicado e o fluxo ponta a ponta de questões/simulado.
+4. Aguardar CI do HEAD atualizado e liberação do deployment Vercel antes de atualizar produção.
 
 ---
 

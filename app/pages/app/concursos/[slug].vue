@@ -65,7 +65,7 @@ async function toggleFollow() {
           <button class="study-primary-button" :disabled="actionPending" @click="toggleFollow">
             {{ actionPending ? 'Salvando…' : followed ? 'Deixar de acompanhar' : 'Acompanhar concurso' }}
           </button>
-          <NuxtLink class="study-secondary-button" to="/app/questoes">Resolver questões</NuxtLink>
+          <NuxtLink class="study-secondary-button" :to="{ path: '/app/provas', query: { contestId: data.contest.id } }">Fazer simulado</NuxtLink><NuxtLink class="study-secondary-button" to="/app/questoes">Resolver questões</NuxtLink>
         </div>
         <p v-if="actionError" class="auth-error" role="alert">{{ actionError }}</p>
         <section class="study-section">
