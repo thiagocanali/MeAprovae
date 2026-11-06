@@ -74,9 +74,11 @@ begin
     select 1 from public.question_attempts a
     where a.question_id = v_question_id
   ) then
-    if tg_op = 'INSERT'
-      or tg_op = 'DELETE'
-      or new.explanation is distinct from old.explanation then
+    if tg_op = 'INSERT' or tg_op = 'DELETE' then
+      raise exception using
+        errcode = '23514',
+        message = 'This question has answer history; its explanation is immutable';
+    elsif new.explanation is distinct from old.explanation then
       raise exception using
         errcode = '23514',
         message = 'This question has answer history; its explanation is immutable';
