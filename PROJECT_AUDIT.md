@@ -468,5 +468,5 @@ Os endpoints de administração foram adaptados para a nova tabela. O script sup
 - O timer foi extraído para uma função testável; os testes cobrem contagem, zero, reinício sem duplicar intervalos e cancelamento no teardown.
 - O resultado do simulado usava respondidas como denominador, inflando nota após expiração; agora usa o total e informa não respondidas. Revisão mostra resposta do aluno e alternativa correta.
 - Limites conhecidos: simulador em modo estudo, sem sessão persistida/retomada; cada tentativa é persistida, mas a seleção das questões vem do limite de 20 itens mais recentes da API antes do embaralhamento. Portanto, não representa amostra aleatória de todo o banco e não é uma prova oficial.
-- Typecheck local, 37 testes unitários e build passaram. CI passou para `aee125a`, anterior à extração testável do timer; CI/Preview do patch atual ainda dependem do push.
+- Typecheck local, 37 testes unitários e build passaram. CI e Vercel Preview passaram para `1a2f790`; isso não valida banco, RLS, conteúdo nem fluxo autenticado em produção.
 - GET público de `/api/health` respondeu HTTP 200; GET sem sessão a `/api/study/questions` respondeu HTTP 401 como esperado. Nenhum login, conta de estudante/editor, leitura de dados, banco, conteúdo ou deploy novo foi validado.

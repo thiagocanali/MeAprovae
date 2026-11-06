@@ -272,5 +272,5 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Produção/Preview:** GET `/api/health` respondeu HTTP 200. O Preview do PR #21 em `b5ffc9e` concluiu; não é produção e não valida autenticação, Supabase, RLS, conteúdo ou fluxo de estudo. O HEAD local posterior ainda não tem deploy.
 - **API protegida em produção:** GET sem sessão a `/api/study/questions` respondeu HTTP 401 com a mensagem esperada. Login, sessão autenticada, leitura de dados e submissão não foram testados.
 - **Banco/segurança:** migrations 0001–0013 estão versionadas, mas aplicação/ledger, grants efetivos, RLS, RPC e isolamento entre estudante/editor não foram validados em banco real. Nenhum conteúdo real foi confirmado.
-- **Git/CI:** commits `b5ffc9e`, `4297646` e `aee125a` foram enviados ao PR #21; CI passou em `aee125a`. O patch atual do timer ainda precisa de push e checks próprios. O `package-lock.json` preexistente não foi incluído.
+- **Git/CI:** commits `b5ffc9e`, `4297646`, `aee125a` e `1a2f790` foram enviados ao PR #21. CI e Vercel Preview passaram para `1a2f790`; o Preview não é produção. O `package-lock.json` preexistente não foi incluído.
 - **Próximo bloqueio:** obter CI/deploy do HEAD final e executar auditoria SQL/testes de perfis quando houver acesso não privilegiado apropriado ao Supabase; não solicitar service role.
