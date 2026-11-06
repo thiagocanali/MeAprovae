@@ -5,6 +5,7 @@ useSeoMeta({ title: 'Entrar | Me Aprovaê' })
 const email = ref('')
 const password = ref('')
 const pending = ref(false)
+const showPassword = ref(false)
 const errorMessage = ref('')
 
 async function submit() {
@@ -35,9 +36,14 @@ async function submit() {
         <label for="email">E-mail</label>
         <input id="email" v-model="email" type="email" autocomplete="email" required maxlength="254">
         <label for="password">Senha</label>
-        <input id="password" v-model="password" type="password" autocomplete="current-password" required maxlength="72">
-        <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
-        <button type="submit" :disabled="pending">{{ pending ? 'Entrando…' : 'Entrar' }}</button>
+        <div class="auth-password-field">
+          <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" required maxlength="72">
+          <button class="auth-password-toggle" type="button" :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'" @click="showPassword = !showPassword">
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+        <p v-if="errorMessage" class="auth-error" role="alert" aria-live="polite">{{ errorMessage }}</p>
+        <button type="submit" :disabled="pending" :aria-busy="pending">{{ pending ? 'Entrando…' : 'Entrar' }}</button>
       </form>
       <p class="auth-switch"><NuxtLink to="/esqueci-senha">Esqueci minha senha</NuxtLink></p>
       <p class="auth-switch">Ainda não tem conta? <NuxtLink to="/cadastro">Criar conta</NuxtLink></p>
