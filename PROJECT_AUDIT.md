@@ -424,3 +424,19 @@ A migração 0012 adiciona triggers server-side que tornam imutáveis, após a p
 
 ### Limites da auditoria
 A revisão foi estática, baseada no SQL versionado. A migração 0012 está em branch e não foi aplicada. Não houve execução PostgreSQL, teste de concorrência, teste de RLS ou validação com tentativas reais. A proteção só passa a valer depois da aplicação ordenada das migrações 0001–0012 e testes em ambiente Supabase.
+
+
+## Reauditoria após PR #12 — 2026-11-05
+
+- PR #12 foi integrado à `main` no commit `c83d8657df1225acb43dcbbd692c341ec462cacc`.
+- CI do HEAD do PR: instalação, typecheck, testes unitários e build de produção aprovados.
+- O check `Supabase Preview` associado ao commit integrado concluiu com sucesso. A integração está conectada ao projeto Supabase identificado no check, mas o resultado isolado não demonstra que as 12 migrações estejam aplicadas no banco de produção nem substitui testes de autenticação, RLS e RPCs.
+- O check de deployment da Vercel falhou por limite diário de deployments do plano. O último deployment READY consultado permanece no commit anterior ao PR #11/#12; não declarar o código atual publicado em produção.
+- A consulta de variáveis Vercel retornou zero variáveis cadastradas e zero ocultas. Portanto, o runtime da aplicação continua sem configuração Supabase confirmada.
+- A migração 0012 foi integrada, mas não foi executada manualmente nem validada por conexão SQL nesta sessão. A auditoria de SQL permanece estática.
+
+### Riscos e próximos testes
+- Verificar no dashboard Supabase se a integração criou uma branch preview e se as migrações 0001–0012 foram aplicadas nela.
+- Aplicar e testar a sequência em um ambiente de desenvolvimento antes de produção.
+- Testar concorrência entre envio de resposta e alteração editorial; testar bloqueio de alterações após primeira tentativa; verificar idempotência e isolamento por usuário.
+- Configurar variáveis públicas Supabase no Vercel e validar cadastro/login/fluxos de estudo com contas separadas.
