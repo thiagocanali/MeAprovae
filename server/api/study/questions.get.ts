@@ -2,6 +2,7 @@ import { createError, getQuery } from 'h3'
 import { createSupabaseServerClient, getAuthenticatedUser } from '../../utils/supabase'
 import { logSupabaseError } from '../../utils/supabase-diagnostics'
 import { isUuid } from '../../../shared/domain/common/uuid'
+import { isQuestionDifficulty } from '../../../shared/domain/questions/difficulty'
 import { parseQuestionPagination } from '../../../shared/domain/questions/pagination'
 
 export default defineEventHandler(async (event) => {
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Paginação inválida. Use página positiva e até 100 questões por página.' })
   }
 
-  if (difficulty !== undefined && !['easy', 'medium', 'hard'].includes(String(difficulty))) {
+  if (difficulty !== undefined && !isQuestionDifficulty(difficulty)) {
     throw createError({ statusCode: 400, statusMessage: 'Filtro difficulty inválido.' })
   }
 
