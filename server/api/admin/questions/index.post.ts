@@ -1,6 +1,7 @@
 import { createError, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
 import { isUuid } from '../../../../shared/domain/common/uuid'
+import { isQuestionDifficulty } from '../../../../shared/domain/questions/difficulty'
 
 interface Body {
   noticeId?: unknown
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event) => {
   const sourceYear = body.sourceYear === null || body.sourceYear === undefined || body.sourceYear === '' ? null : Number(body.sourceYear)
 
   if (!isUuid(noticeId) || !isUuid(subjectId)) throw createError({ statusCode: 400, statusMessage: 'Edital e disciplina são obrigatórios.' })
-  if (!['easy', 'medium', 'hard'].includes(difficulty)) throw createError({ statusCode: 400, statusMessage: 'Dificuldade inválida.' })
+  if (!isQuestionDifficulty(difficulty)) throw createError({ statusCode: 400, statusMessage: 'Dificuldade inválida.' })
   if (topicId && !isUuid(topicId)) throw createError({ statusCode: 400, statusMessage: 'Assunto inválido.' })
   if (statement.length < 10 || statement.length > 20000) throw createError({ statusCode: 400, statusMessage: 'O enunciado deve ter entre 10 e 20000 caracteres.' })
   if (explanation.length > 12000) throw createError({ statusCode: 400, statusMessage: 'A explicação pode ter no máximo 12000 caracteres.' })
