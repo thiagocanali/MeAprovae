@@ -7,14 +7,15 @@ update public.study_questions q
 set explanation = format(
   'A alternativa %s é a correta. Ela corresponde ao conceito cobrado em "%s": %s. As demais alternativas não atendem ao enunciado ou apresentam conceitos incompatíveis com o tema.',
   co.option_label,
-  coalesce(t.name, 'conteúdo da questão'),
+  coalesce(
+    (select t.name from public.study_topics t where t.id = q.topic_id),
+    'conteúdo da questão'
+  ),
   co.content
 )
 from public.study_question_answer_keys ak
 join public.study_question_options co
   on co.id = ak.correct_option_id
-left join public.study_topics t
-  on t.id = q.topic_id
 where ak.question_id = q.id
   and q.status = 'published'
   and (q.explanation is null or btrim(q.explanation) = '');
