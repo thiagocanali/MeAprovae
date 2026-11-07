@@ -26,6 +26,7 @@ interface Question {
   statement: string
   source_label: string | null
   source_year: number | null
+  source_url: string | null
   options: QuestionOption[]
 }
 
@@ -272,8 +273,8 @@ onBeforeUnmount(stopTimer)
         </div>
 
         <article class="study-question-card">
-          <p v-if="currentQuestion.source_label || currentQuestion.source_year" class="study-muted">
-            {{ currentQuestion.source_label || 'Fonte não identificada' }}<span v-if="currentQuestion.source_year"> · {{ currentQuestion.source_year }}</span>
+          <p v-if="currentQuestion.source_label || currentQuestion.source_year || currentQuestion.source_url" class="study-muted">
+            {{ currentQuestion.source_label || 'Fonte não identificada' }}<span v-if="currentQuestion.source_year"> · {{ currentQuestion.source_year }}</span><span v-if="currentQuestion.source_url"> · <a :href="currentQuestion.source_url" target="_blank" rel="noopener noreferrer">Consultar referência oficial</a></span>
           </p>
           <h2>{{ currentQuestion.statement }}</h2>
 
