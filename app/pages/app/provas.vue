@@ -104,7 +104,9 @@ async function startExam() {
   errorMessage.value = ''
   try {
     const query = selectedContestId.value ? { contestId: selectedContestId.value } : {}
-    const response = await $fetch<{ questions: Question[] }>('/api/study/questions', { query })
+    const response = await $fetch<{ questions: Question[]; total: number }>('/api/study/questions', {
+      query: { ...query, pageSize: 100 },
+    })
     const available = [...response.questions]
 
     if (available.length < questionCount.value) {
