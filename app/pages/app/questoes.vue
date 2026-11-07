@@ -27,7 +27,13 @@ const route = useRoute()
 const query = computed(() => ({
   ...(route.query.contestId ? { contestId: String(route.query.contestId) } : {}),
   ...(route.query.questionId ? { questionId: String(route.query.questionId) } : {}),
+  ...(selectedSubjectId.value ? { subjectId: selectedSubjectId.value } : {}),
+  ...(selectedTopicId.value ? { topicId: selectedTopicId.value } : {}),
 }))
+const selectedSubjectId = ref(typeof route.query.subjectId === 'string' ? route.query.subjectId : '')
+const selectedTopicId = ref(typeof route.query.topicId === 'string' ? route.query.topicId : '')
+const { data: catalogData, error: catalogError } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
+const availableTopics = computed(() => catalogData.value?.topics.filter(topic => topic.subject_id === selectedSubjectId.value) ?? [])
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>('/api/study/questions', { query })
 const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
@@ -151,6 +157,22 @@ async function nextQuestion() {
         <NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink>
       </div>
       <template v-else>
+        <div class="study-filters" aria-label="Filtros de questões">
+          <label>Disciplina
+            <select v-model="selectedSubjectId" @change="selectedTopicId = ''">
+              <option value="">Todas as disciplinas</option>
+              <option v-for="subject in catalogData?.subjects ?? []" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
+            </select>
+          </label>
+          <label>Assunto
+            <select v-model="selectedTopicId" :disabled="!selectedSubjectId || availableTopics.length === 0">
+              <option value="">Todos os assuntos</option>
+              <option v-for="topic in availableTopics" :key="topic.id" :value="topic.id">{{ topic.name }}</option>
+            </select>
+          </label>
+          <button v-if="selectedSubjectId || selectedTopicId" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''">Limpar filtros</button>
+          <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
+        </div>
         <div class="study-progress-line">
           <span>Questão {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
           <span>{{ Math.round(((currentIndex + 1) / (totalQuestions || 1)) * 100) }}%</span>
