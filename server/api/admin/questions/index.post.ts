@@ -1,11 +1,13 @@
 import { createError, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
 import { isUuid } from '../../../../shared/domain/common/uuid'
+import { isQuestionDifficulty } from '../../../../shared/domain/questions/difficulty'
 
 interface Body {
   noticeId?: unknown
   subjectId?: unknown
   topicId?: unknown
+  difficulty?: unknown
   statement?: unknown
   explanation?: unknown
   sourceLabel?: unknown
@@ -21,6 +23,7 @@ export default defineEventHandler(async (event) => {
   const noticeId = text(body.noticeId)
   const subjectId = text(body.subjectId)
   const topicId = text(body.topicId)
+  const difficulty = body.difficulty === undefined ? 'medium' : text(body.difficulty)
   const statement = text(body.statement)
   const explanation = text(body.explanation)
   const sourceLabel = text(body.sourceLabel)
@@ -28,6 +31,7 @@ export default defineEventHandler(async (event) => {
   const sourceYear = body.sourceYear === null || body.sourceYear === undefined || body.sourceYear === '' ? null : Number(body.sourceYear)
 
   if (!isUuid(noticeId) || !isUuid(subjectId)) throw createError({ statusCode: 400, statusMessage: 'Edital e disciplina são obrigatórios.' })
+  if (!isQuestionDifficulty(difficulty)) throw createError({ statusCode: 400, statusMessage: 'Dificuldade inválida.' })
   if (topicId && !isUuid(topicId)) throw createError({ statusCode: 400, statusMessage: 'Assunto inválido.' })
   if (statement.length < 10 || statement.length > 20000) throw createError({ statusCode: 400, statusMessage: 'O enunciado deve ter entre 10 e 20000 caracteres.' })
   if (explanation.length > 12000) throw createError({ statusCode: 400, statusMessage: 'A explicação pode ter no máximo 12000 caracteres.' })
@@ -38,12 +42,13 @@ export default defineEventHandler(async (event) => {
     notice_id: noticeId,
     subject_id: subjectId,
     topic_id: topicId || null,
+    difficulty,
     statement,
     source_label: sourceLabel || null,
     source_url: sourceUrl || null,
     source_year: sourceYear,
     status: 'draft',
-  }).select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at').single()
+  }).select('id, notice_id, subject_id, topic_id, difficulty, statement, source_label, source_url, source_year, status, created_at').single()
 
   if (error?.code === '23522') throw createError({ statusCode: 400, statusMessage: 'Assunto ou edital incompatível.' })
   if (error?.code === '23503') throw createError({ statusCode: 400, statusMessage: 'Edital, disciplina ou assunto não encontrado.' })

@@ -9,6 +9,7 @@ interface QuestionOption { id: string; option_label: string; content: string; po
 interface Question {
   id: string
   statement: string
+  difficulty: 'easy' | 'medium' | 'hard'
   source_label: string | null
   source_year: number | null
   source_url: string | null
@@ -29,9 +30,11 @@ const query = computed(() => ({
   ...(route.query.questionId ? { questionId: String(route.query.questionId) } : {}),
   ...(selectedSubjectId.value ? { subjectId: selectedSubjectId.value } : {}),
   ...(selectedTopicId.value ? { topicId: selectedTopicId.value } : {}),
+  ...(selectedDifficulty.value ? { difficulty: selectedDifficulty.value } : {}),
 }))
 const selectedSubjectId = ref(typeof route.query.subjectId === 'string' ? route.query.subjectId : '')
 const selectedTopicId = ref(typeof route.query.topicId === 'string' ? route.query.topicId : '')
+const selectedDifficulty = ref(typeof route.query.difficulty === 'string' && ['easy', 'medium', 'hard'].includes(route.query.difficulty) ? route.query.difficulty : '')
 const { data: catalogData, error: catalogError } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
 const availableTopics = computed(() => catalogData.value?.topics.filter(topic => topic.subject_id === selectedSubjectId.value) ?? [])
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>('/api/study/questions', { query })
@@ -153,13 +156,21 @@ async function nextQuestion() {
               <option v-for="subject in catalogData?.subjects ?? []" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
             </select>
           </label>
+          <label>Dificuldade
+            <select v-model="selectedDifficulty">
+              <option value="">Todas as dificuldades</option>
+              <option value="easy">Fácil</option>
+              <option value="medium">Média</option>
+              <option value="hard">Difícil</option>
+            </select>
+          </label>
           <label>Assunto
             <select v-model="selectedTopicId" :disabled="!selectedSubjectId || availableTopics.length === 0">
               <option value="">Todos os assuntos</option>
               <option v-for="topic in availableTopics" :key="topic.id" :value="topic.id">{{ topic.name }}</option>
             </select>
           </label>
-          <button v-if="selectedSubjectId || selectedTopicId" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''">Limpar filtros</button>
+          <button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar filtros</button>
           <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
         </div>
       <p v-if="pending" class="study-state">Carregando questões…</p>
@@ -181,6 +192,7 @@ async function nextQuestion() {
           <p v-if="currentQuestion.source_label || currentQuestion.source_year || currentQuestion.source_url" class="study-muted">
             {{ currentQuestion.source_label || 'Fonte não identificada' }}<span v-if="currentQuestion.source_year"> · {{ currentQuestion.source_year }}</span><span v-if="currentQuestion.source_url"> · <a :href="currentQuestion.source_url" target="_blank" rel="noopener noreferrer">Consultar referência oficial</a></span>
           </p>
+          <p class="study-muted">Dificuldade: {{ currentQuestion.difficulty === 'easy' ? 'Fácil' : currentQuestion.difficulty === 'hard' ? 'Difícil' : 'Média' }}</p>
           <h2>{{ currentQuestion.statement }}</h2>
           <button class="study-secondary-button study-favorite-button" :disabled="favoritePending || Boolean(favoritesError)" @click="toggleFavorite">
             {{ favoritePending ? 'Salvando…' : isFavorite ? '★ Remover dos favoritos' : '☆ Salvar nos favoritos' }}
