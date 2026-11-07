@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!isUuid(id)) throw createError({ statusCode: 400, statusMessage: 'Questão inválida.' })
 
   const [question, options, answer, details] = await Promise.all([
-    supabase.from('study_questions').select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at').eq('id', id).maybeSingle(),
+    supabase.from('study_questions').select('id, notice_id, subject_id, topic_id, difficulty, statement, source_label, source_url, source_year, status, created_at').eq('id', id).maybeSingle(),
     supabase.from('study_question_options').select('id, question_id, option_label, content, position').eq('question_id', id).order('position', { ascending: true }),
     supabase.from('study_question_answer_keys').select('question_id, correct_option_id, updated_at').eq('question_id', id).maybeSingle(),
     supabase.from('study_question_editorial_details').select('question_id, explanation').eq('question_id', id).maybeSingle(),
