@@ -42,6 +42,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 | [Aprendizagem](docs/LEARNING_EXPERIENCE.md) | Princípios pedagógicos e revisão |
 | [Gamificação](docs/GAMIFICATION.md) | XP, níveis, conquistas e rankings |
 | [Conteúdo e questões](docs/CONTENT_GOVERNANCE.md) | Curadoria, procedência e qualidade |
+| [Auditoria editorial (07/11/2026)](docs/CONTENT_AUDIT_2026-11-07.md) | Diagnóstico do banco publicado e plano de saneamento |
 | [Tutor IA](docs/AI_TUTOR.md) | Escopo, limites e segurança da IA |
 | [Segurança e LGPD](docs/SECURITY_AND_PRIVACY.md) | Proteção de dados e controles |
 | [Monetização](docs/MONETIZATION.md) | Planos e preparação para assinaturas |
@@ -50,7 +51,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 
 ## Status atual
 
-**Fase:** núcleo de estudo em validação. `main` inclui o PR #20, com a migração 0013 para proteger explicações e corrigir grants editoriais. O PR #21 atualiza simulados na branch `feat/user-exam-simulado`; a auditoria local corrigiu idempotência de retries, nota/revisão e embaralhamento enviesado, e adicionou testes para o timer. O commit `1a2f790` passou CI e Vercel Preview; localmente passaram typecheck, 37 testes unitários e build. Isso não valida migrations, RLS ou RPCs no Supabase: não houve conexão ao banco. Em produção, `/api/health` respondeu HTTP 200 e a API de questões respondeu HTTP 401 sem sessão, como esperado; login e fluxo do estudante seguem sem validação real. Preview não equivale a produção. Consulte [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
+**Fase:** núcleo de estudos em validação integrada. A `main` já contém autenticação Supabase SSR, catálogo, motor de questões e tentativas, progresso, favoritos, revisão e área administrativa, além dos filtros de disciplina/assunto e dificuldade. O banco Supabase possui 60 questões publicadas em 9 disciplinas. A auditoria editorial de 07/11/2026 identificou 60 explicações vazias, 32 questões sem URL de fonte e dificuldade `medium` em todos os registros (valor padrão, ainda não revisado individualmente); consulte [CONTENT_AUDIT_2026-11-07.md](docs/CONTENT_AUDIT_2026-11-07.md). CI e deployments READY comprovam build, mas não substituem validação ponta a ponta autenticada nem revisão pedagógica/jurídica do conteúdo. Consulte também [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
@@ -58,10 +59,10 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 
 ## Próximos passos
 
-1. Confirmar o ledger e aplicar, em ambiente controlado, as migrações 0001–0013.
-2. Executar os testes de vazamento e isolamento com perfis de estudante e editor.
-3. Validar conteúdo publicado e o fluxo ponta a ponta de questões/simulado.
-4. Aguardar CI do HEAD atualizado e liberação do deployment Vercel antes de atualizar produção.
+1. Saneamento editorial individual das 60 questões: gabarito, explicação, procedência, direitos de uso e dificuldade.
+2. Expandir o banco em lotes revisados, sem copiar questões protegidas.
+3. Completar validação ponta a ponta autenticada de cadastro, estudo, tentativas e indicadores.
+4. Manter CI, migrations, RLS e deployments sincronizados antes de cada publicação.
 
 ---
 
