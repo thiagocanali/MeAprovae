@@ -1,5 +1,5 @@
 import { createError } from 'h3'
-import { requirePlatformEditor } from '../../utils/admin'
+import { requirePlatformEditor } from '../../../utils/admin'
 
 export default defineEventHandler(async (event) => {
   const { supabase } = await requirePlatformEditor(event)
