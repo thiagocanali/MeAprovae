@@ -1,6 +1,7 @@
 import { createError, getRouterParam, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
 import { isUuid } from '../../../../shared/domain/common/uuid'
+import { isQuestionDifficulty } from '../../../../shared/domain/questions/difficulty'
 
 interface Body { noticeId?: unknown; subjectId?: unknown; topicId?: unknown; difficulty?: unknown; statement?: unknown; explanation?: unknown; sourceLabel?: unknown; sourceUrl?: unknown; sourceYear?: unknown; status?: unknown }
 const text=(value:unknown)=>typeof value==='string'?value.trim():''
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
   }
   if (body.difficulty !== undefined) {
     const value = text(body.difficulty)
-    if (!['easy', 'medium', 'hard'].includes(value)) throw createError({ statusCode: 400, statusMessage: 'Dificuldade inválida.' })
+    if (!isQuestionDifficulty(value)) throw createError({ statusCode: 400, statusMessage: 'Dificuldade inválida.' })
     updates.difficulty = value
   }
   if (body.statement !== undefined) {
