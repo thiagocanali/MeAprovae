@@ -11,12 +11,17 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const subjectId = query.subjectId
   const topicId = query.topicId
+  const difficulty = query.difficulty
   const contestId = query.contestId
   const questionId = query.questionId
   const pagination = parseQuestionPagination(query.page, query.pageSize)
 
   if (!pagination) {
     throw createError({ statusCode: 400, statusMessage: 'Paginação inválida. Use página positiva e até 100 questões por página.' })
+  }
+
+  if (difficulty !== undefined && !['easy', 'medium', 'hard'].includes(String(difficulty))) {
+    throw createError({ statusCode: 400, statusMessage: 'Filtro difficulty inválido.' })
   }
 
   for (const [field, value] of Object.entries({ subjectId, topicId, contestId, questionId })) {
@@ -53,7 +58,7 @@ export default defineEventHandler(async (event) => {
 
   let request = supabase
     .from('study_questions')
-    .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, study_question_options(id, option_label, content, position)', { count: 'exact' })
+    .select('id, notice_id, subject_id, topic_id, difficulty, statement, source_label, source_url, source_year, study_question_options(id, option_label, content, position)', { count: 'exact' })
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     .order('id', { ascending: false })
@@ -62,6 +67,7 @@ export default defineEventHandler(async (event) => {
   if (questionId) request = request.eq('id', questionId)
   if (subjectId) request = request.eq('subject_id', subjectId)
   if (topicId) request = request.eq('topic_id', topicId)
+  if (difficulty) request = request.eq('difficulty', difficulty)
   if (noticeIds) request = request.in('notice_id', noticeIds)
 
   const { data, error, count } = await request
