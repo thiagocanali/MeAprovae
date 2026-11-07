@@ -146,17 +146,6 @@ async function nextQuestion() {
       <p class="auth-eyebrow">PRÁTICA</p>
       <h1>Banco de questões</h1>
       <p class="auth-description">Responda questões publicadas. Sua tentativa será registrada no seu histórico.</p>
-      <p v-if="pending" class="study-state">Carregando questões…</p>
-      <div v-else-if="error" class="study-state study-error" role="alert">
-        Não foi possível carregar as questões.
-        <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
-      </div>
-      <div v-else-if="!currentQuestion" class="study-empty">
-        <h2>Nenhuma questão disponível ainda.</h2>
-        <p>O banco ainda não possui questões publicadas para este filtro. Questões só aparecerão após cadastro editorial e publicação no banco.</p>
-        <NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink>
-      </div>
-      <template v-else>
         <div class="study-filters" aria-label="Filtros de questões">
           <label>Disciplina
             <select v-model="selectedSubjectId" @change="selectedTopicId = ''">
@@ -173,6 +162,17 @@ async function nextQuestion() {
           <button v-if="selectedSubjectId || selectedTopicId" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''">Limpar filtros</button>
           <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
         </div>
+      <p v-if="pending" class="study-state">Carregando questões…</p>
+      <div v-else-if="error" class="study-state study-error" role="alert">
+        Não foi possível carregar as questões.
+        <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
+      </div>
+      <div v-else-if="!currentQuestion" class="study-empty">
+        <h2>Nenhuma questão disponível ainda.</h2>
+        <p>O banco ainda não possui questões publicadas para este filtro. Questões só aparecerão após cadastro editorial e publicação no banco.</p>
+        <NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink>
+      </div>
+      <template v-else>
         <div class="study-progress-line">
           <span>Questão {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
           <span>{{ Math.round(((currentIndex + 1) / (totalQuestions || 1)) * 100) }}%</span>
@@ -213,3 +213,10 @@ async function nextQuestion() {
     </section>
   </main>
 </template>
+
+<style scoped>
+.study-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 14px; margin: 22px 0; padding: 16px; border: 1px solid var(--color-border, rgba(255,255,255,.12)); border-radius: 12px; }
+.study-filters label { display: grid; gap: 7px; min-width: min(220px, 100%); color: var(--color-muted); font-size: 12px; }
+.study-filters select { min-height: 42px; padding: 9px 12px; border: 1px solid var(--color-border, rgba(255,255,255,.16)); border-radius: 8px; color: var(--color-text); background: var(--color-surface, #172235); }
+.study-filters select:disabled { opacity: .55; }
+</style>
