@@ -27,15 +27,33 @@ const query = computed(() => ({
   ...(route.query.contestId ? { contestId: String(route.query.contestId) } : {}),
   ...(route.query.questionId ? { questionId: String(route.query.questionId) } : {}),
 }))
-const { data, pending, error, refresh } = await useFetch<{ questions: Question[] }>('/api/study/questions', { query })
+const { data, pending, error, refresh } = await useFetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>('/api/study/questions', { query })
 const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
 const selectedOptionId = ref('')
 const result = ref<AttemptResult | null>(null)
+const questions = ref<Question[]>([])
+const page = ref(1)
+const totalQuestions = ref(0)
+const hasMoreQuestions = ref(false)
+const loadingMore = ref(false)
+const loadMoreError = ref('')
+
+watch(data, (response) => {
+  if (!response) return
+  questions.value = response.questions
+  page.value = response.page
+  totalQuestions.value = response.total
+  hasMoreQuestions.value = response.hasMore
+  currentIndex.value = 0
+  selectedOptionId.value = ''
+  result.value = null
+  loadMoreError.value = ''
+}, { immediate: true })
 const submitPending = ref(false)
 const submitError = ref('')
 const attemptKeys = createAttemptIdempotencyKeys()
-const currentQuestion = computed(() => data.value?.questions[currentIndex.value] ?? null)
+const currentQuestion = computed(() => questions.value[currentIndex.value] ?? null)
 const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
 const favoritePending = ref(false)
 const favoriteError = ref('')
@@ -78,8 +96,32 @@ async function submitAnswer() {
   }
 }
 
-function nextQuestion() {
-  if (!data.value || currentIndex.value >= data.value.questions.length - 1) return
+async function loadMoreQuestions() {
+  if (!hasMoreQuestions.value || loadingMore.value) return
+  loadingMore.value = true
+  loadMoreError.value = ''
+  try {
+    const response = await $fetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>(
+      '/api/study/questions',
+      { query: { ...query.value, page: page.value + 1, pageSize: 20 } },
+    )
+    const knownIds = new Set(questions.value.map(question => question.id))
+    questions.value.push(...response.questions.filter(question => !knownIds.has(question.id)))
+    page.value = response.page
+    totalQuestions.value = response.total
+    hasMoreQuestions.value = response.hasMore
+  } catch {
+    loadMoreError.value = 'Não foi possível carregar mais questões. Tente novamente.'
+  } finally {
+    loadingMore.value = false
+  }
+}
+
+async function nextQuestion() {
+  if (currentIndex.value >= questions.value.length - 1 && hasMoreQuestions.value) {
+    await loadMoreQuestions()
+  }
+  if (currentIndex.value >= questions.value.length - 1) return
   currentIndex.value += 1
   selectedOptionId.value = ''
   result.value = null
@@ -109,8 +151,8 @@ function nextQuestion() {
       </div>
       <template v-else>
         <div class="study-progress-line">
-          <span>Questão {{ currentIndex + 1 }} de {{ data?.questions.length }}</span>
-          <span>{{ Math.round(((currentIndex + 1) / (data?.questions.length || 1)) * 100) }}%</span>
+          <span>Questão {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
+          <span>{{ Math.round(((currentIndex + 1) / (totalQuestions || 1)) * 100) }}%</span>
         </div>
         <article class="study-question-card">
           <p v-if="currentQuestion.source_label || currentQuestion.source_year" class="study-muted">
@@ -130,6 +172,7 @@ function nextQuestion() {
             </label>
           </fieldset>
           <p v-if="submitError" class="auth-error" role="alert">{{ submitError }}</p>
+          <p v-if="loadMoreError" class="auth-error" role="alert">{{ loadMoreError }}</p>
           <button v-if="!result" class="study-primary-button" :disabled="!selectedOptionId || submitPending" @click="submitAnswer">
             {{ submitPending ? 'Registrando resposta…' : 'Confirmar resposta' }}
           </button>
@@ -138,8 +181,8 @@ function nextQuestion() {
             <p v-if="result.explanation">{{ result.explanation }}</p>
             <p v-else class="study-muted">O gabarito foi conferido e sua tentativa foi salva. A explicação ainda não foi cadastrada.</p>
             <p v-if="result.wasDuplicate" class="study-muted">Esta resposta já havia sido registrada; nenhuma tentativa duplicada foi criada.</p>
-            <button class="study-primary-button" :disabled="currentIndex >= (data?.questions.length || 0) - 1" @click="nextQuestion">
-              {{ currentIndex >= (data?.questions.length || 0) - 1 ? 'Fim das questões carregadas' : 'Próxima questão' }}
+            <button class="study-primary-button" :disabled="(currentIndex >= questions.length - 1 && !hasMoreQuestions) || loadingMore" @click="nextQuestion">
+              {{ loadingMore ? 'Carregando questões…' : currentIndex >= questions.length - 1 && hasMoreQuestions ? 'Carregar próxima página' : currentIndex >= questions.length - 1 ? 'Fim do banco' : 'Próxima questão' }}
             </button>
           </section>
         </article>
