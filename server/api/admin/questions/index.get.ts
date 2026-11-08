@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (noticeId && !isUuid(noticeId)) throw createError({ statusCode: 400, statusMessage: 'Edital inválido.' })
 
   let request = supabase.from('study_questions')
-    .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at, study_subjects(id, name), study_topics(id, name, parent_topic_id)')
+    .select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, status, created_at, study_subjects(id, name), study_topics(id, name, parent_topic_id)')
     .order('created_at', { ascending: false })
     .limit(200)
   if (noticeId) request = request.eq('notice_id', noticeId)
