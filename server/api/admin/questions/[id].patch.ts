@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
     questionData=data
   } else {
     const { data, error } = await supabase.from('study_questions')
-      .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at')
+      .select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, status, created_at')
       .eq('id',id).maybeSingle()
     if(error) throw createError({statusCode:503,statusMessage:'Não foi possível carregar a questão.'})
     if(!data) throw createError({statusCode:404,statusMessage:'Questão não encontrada.'})
