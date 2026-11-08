@@ -1,5 +1,65 @@
 # PROGRESS.md — execução e entregas
 
+## Estado atual verificado — 08/11/2026
+
+> Esta seção substitui os status históricos abaixo quando houver divergência. Os registros antigos foram preservados como histórico de execução.
+
+### Repositório e entregas integradas
+
+- Repositório: https://github.com/thiagocanali/MeAprovae
+- Branch principal: `main`.
+- Stack: Nuxt 4.6.3, Vue 3, TypeScript, Supabase SSR, Vitest e Vercel.
+- PR #33 (suporte à dificuldade revisada) integrada à `main`, merge commit `453d3af7bd13c7f6234d2f7b6a20c2689c969a46`.
+- PR #34 (sincronização do status no README) integrada à `main`, merge commit `e4024b202856ab0709ad1f8c85d2371481dbc414`.
+- CI do PR #33 foi reportado anteriormente como aprovado em typecheck, testes unitários e build. A falha de Preview Vercel reportada foi por limite externo de deploy.
+- Preview da PR #34 observado como Ready antes do merge.
+- Nenhum teste autenticado ponta a ponta foi executado nesta etapa.
+
+### Estado confirmado do Supabase em 08/11/2026
+
+Consultas somente leitura ao projeto `gbwhjlyxrtncfgpdmluf`:
+
+- Ledger contém `20261107011259 / question_difficulty`.
+- `public.study_questions.difficulty` existe como text, NOT NULL, default `medium`.
+- A coluna `difficulty_reviewed` não existe.
+- O ledger não contém a migration `reviewed_question_difficulty` (0016).
+- O código integrado pela PR #33 consulta/grava uma coluna ainda ausente no banco auditado. Não declarar o suporte à dificuldade revisada operacional até sincronizar schema e validar rotas.
+- A migration 0015 já aplicada não deve ser reaplicada. Conferir o ledger antes de qualquer operação.
+- Criar a migration 0016 com `supabase migration new reviewed_question_difficulty`, conforme orientação do Supabase CLI. Não inventar timestamp nem aplicar SQL manual improvisado.
+- Nenhuma DDL foi aplicada nesta auditoria.
+
+### Conteúdo editorial
+
+- Auditoria estrutural anterior encontrou 60 questões publicadas em 9 disciplinas.
+- 32/60 sem URL de fonte; 28/60 com URL ainda precisam validação.
+- As 60 questões têm dificuldade `medium` por default; não há classificação individual revisada comprovada.
+- Explicações ficam em `study_question_editorial_details`, protegidas por RLS; sua existência não comprova qualidade pedagógica individual.
+- Uma questão tem tentativa registrada (conflito de interesses); não editar seu conteúdo in-place. Criar nova versão preservando histórico.
+- Seguir `docs/CONTENT_GOVERNANCE.md`, `docs/MVP.md` e `docs/CONTENT_REVIEW_2026-11-07.md`. Criar conteúdo original e verificar direitos.
+
+### Segurança observada
+
+- Advisor Supabase de 08/11 sinalizou seis funções `SECURITY DEFINER` executáveis por `authenticated`. As definições consultadas usam `search_path = ''` e funções sensíveis verificam autenticação e/ou papel internamente; revisar grants e superfície de exposição função a função antes de alterar.
+- Advisor também sinalizou Leaked Password Protection desabilitada. Habilitação deve ser feita pelo proprietário no painel Auth do Supabase.
+- Não revogar permissões em lote nem alterar RLS sem testes de regressão.
+- Não consultar nem expor chaves service-role, senhas ou segredos.
+
+### Próximas prioridades
+
+1. Resolver a divergência de schema da migration 0016 com o Supabase CLI e aplicar apenas após revisar o ledger e o SQL gerado.
+2. Validar em Preview/ambiente seguro as rotas de listagem e administração de questões, incluindo comportamento de dificuldade não revisada.
+3. Atualizar documentação de ambiente/migrations após evidência de aplicação e execução.
+4. Revisar as seis funções SECURITY DEFINER e a configuração de proteção de senhas.
+5. Executar revisão editorial individual, referências verificáveis e classificação pedagógica das 60 questões.
+6. Expandir o banco em lotes de questões originais, com gabarito e explicação revisados, procedência e direitos registrados.
+
+---
+
+## Histórico de execução
+
+O conteúdo abaixo registra decisões e entregas anteriores. Datas e estados nele descritos refletem o momento de cada anotação e não devem ser interpretados como status atual quando contradizem a seção acima.
+
+
 ## Estado geral
 
 **Status em 04/11/2026:** núcleo de estudo e painel do estudante preparados em branch; execução real continua bloqueada pelo provisionamento/aplicação do Supabase e pela validação de deploy. Não considerar os fluxos operacionais antes desses testes.
