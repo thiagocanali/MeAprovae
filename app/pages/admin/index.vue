@@ -44,14 +44,14 @@ const positionMessage = ref('')
 const positionError = ref('')
 
 interface QuestionRow {
-  id: string; notice_id: string; subject_id: string; topic_id: string | null
+  id: string; notice_id: string; subject_id: string; topic_id: string | null; difficulty: 'easy' | 'medium' | 'hard'; difficulty_reviewed: boolean
   statement: string; explanation: string; source_label: string | null; source_url: string | null
   source_year: number | null; status: 'draft' | 'published' | 'archived'
 }
 interface QuestionOption { id: string; question_id: string; option_label: string; content: string; position: number }
 const { data: questionsData, error: questionsError, refresh: refreshQuestions } = await useFetch<{ questions: QuestionRow[] }>('/api/admin/questions')
 const { data: topicsData } = await useFetch<{ topics: Array<{ id: string; subject_id: string; parent_topic_id: string | null; name: string }> }>('/api/admin/topics')
-const questionForm = reactive({ noticeId: '', subjectId: '', topicId: '', statement: '', explanation: '', sourceLabel: '', sourceUrl: '', sourceYear: '' })
+const questionForm = reactive({ noticeId: '', subjectId: '', topicId: '', difficulty: 'medium', difficultyReviewed: false, statement: '', explanation: '', sourceLabel: '', sourceUrl: '', sourceYear: '' })
 const questionOptions = ref([{ label: 'A', content: '' }, { label: 'B', content: '' }, { label: 'C', content: '' }, { label: 'D', content: '' }])
 const questionCorrectOption = ref('')
 const editingQuestionId = ref('')
@@ -82,7 +82,7 @@ watch(() => questionForm.noticeId, async (noticeId) => {
   } catch { noticeSubjectIds.value = [] }
 })
 function resetQuestionForm() {
-  editingQuestionId.value = ''; questionForm.noticeId = ''; questionForm.subjectId = ''; questionForm.topicId = ''
+  editingQuestionId.value = ''; questionForm.noticeId = ''; questionForm.subjectId = ''; questionForm.topicId = ''; questionForm.difficulty = 'medium'; questionForm.difficultyReviewed = false
   questionForm.statement = ''; questionForm.explanation = ''; questionForm.sourceLabel = ''; questionForm.sourceUrl = ''; questionForm.sourceYear = ''
   questionCorrectOption.value = ''
   noticeSubjectIds.value = []
@@ -93,7 +93,7 @@ async function editQuestion(question: QuestionRow) {
   try {
     const result = await $fetch<{ question: QuestionRow; options: QuestionOption[]; answer: { correct_option_id: string } | null }>('/api/admin/questions/' + question.id)
     editingQuestionId.value = result.question.id; questionForm.noticeId = result.question.notice_id; questionForm.subjectId = result.question.subject_id
-    questionForm.topicId = result.question.topic_id ?? ''; questionForm.statement = result.question.statement; questionForm.explanation = result.question.explanation
+    questionForm.topicId = result.question.topic_id ?? ''; questionForm.difficulty = result.question.difficulty ?? 'medium'; questionForm.difficultyReviewed = result.question.difficulty_reviewed; questionForm.statement = result.question.statement; questionForm.explanation = result.question.explanation
     questionForm.sourceLabel = result.question.source_label ?? ''; questionForm.sourceUrl = result.question.source_url ?? ''; questionForm.sourceYear = result.question.source_year?.toString() ?? ''
     questionOptions.value = result.options.map(option => ({ label: option.option_label, content: option.content }))
     questionCorrectOption.value = result.answer?.correct_option_id ? (result.options.find(o => o.id === result.answer?.correct_option_id)?.option_label ?? '') : ''
@@ -565,6 +565,8 @@ const label = (table: string) => ({
             <label>Edital<select v-model="questionForm.noticeId" required><option value="" disabled>Selecione um edital</option><option v-for="notice in noticesData?.notices || []" :key="notice.id" :value="notice.id">{{ notice.title }}</option></select></label>
             <label>Disciplina<select v-model="questionForm.subjectId" required @change="questionForm.topicId = ''"><option value="" disabled>Selecione uma disciplina</option><option v-for="subject in subjectsData?.subjects || []" :key="subject.id" :value="subject.id">{{ subject.name }}</option></select></label>
             <label>Assunto/subassunto<select v-model="questionForm.topicId" :disabled="!questionForm.subjectId"><option value="">Sem assunto específico</option><option v-for="topic in questionTopics" :key="topic.id" :value="topic.id">{{ topic.parent_topic_id ? '↳ ' : '' }}{{ topic.name }}</option></select></label>
+            <label>Dificuldade<select v-model="questionForm.difficulty" required><option value="easy">Fácil</option><option value="medium">Média</option><option value="hard">Difícil</option></select></label>
+            <label class="form-wide" style="display:flex;align-items:center;gap:10px"><input v-model="questionForm.difficultyReviewed" type="checkbox"> Classificação de dificuldade revisada; somente classificações revisadas aparecem para estudantes.</label>
             <label>Ano da fonte<input v-model="questionForm.sourceYear" inputmode="numeric" maxlength="4" placeholder="2026"></label>
             <label class="form-wide">Enunciado<textarea v-model="questionForm.statement" required minlength="10" maxlength="20000" rows="7" placeholder="Digite o enunciado da questão..."></textarea></label>
             <label>Fonte<input v-model="questionForm.sourceLabel" maxlength="200" placeholder="Prova oficial, banca, legislação..."></label>
