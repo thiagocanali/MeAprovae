@@ -1,8 +1,9 @@
 import { createError, getRouterParam, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
 import { isUuid } from '../../../../shared/domain/common/uuid'
+import { isQuestionDifficulty } from '../../../../shared/domain/questions/difficulty'
 
-interface Body { noticeId?: unknown; subjectId?: unknown; topicId?: unknown; statement?: unknown; explanation?: unknown; sourceLabel?: unknown; sourceUrl?: unknown; sourceYear?: unknown; status?: unknown }
+interface Body { noticeId?: unknown; subjectId?: unknown; topicId?: unknown; difficulty?: unknown; difficultyReviewed?: unknown; statement?: unknown; explanation?: unknown; sourceLabel?: unknown; sourceUrl?: unknown; sourceYear?: unknown; status?: unknown }
 const text=(value:unknown)=>typeof value==='string'?value.trim():''
 
 export default defineEventHandler(async (event) => {
@@ -24,6 +25,16 @@ export default defineEventHandler(async (event) => {
   if (body.topicId !== undefined) {
     if (body.topicId !== null && !isUuid(text(body.topicId))) throw createError({ statusCode: 400, statusMessage: 'Assunto inválido.' })
     updates.topic_id = body.topicId === null ? null : text(body.topicId)
+  }
+  if (body.difficulty !== undefined) {
+    const value = text(body.difficulty)
+    if (!isQuestionDifficulty(value)) throw createError({ statusCode: 400, statusMessage: 'Dificuldade inválida.' })
+    updates.difficulty = value
+    if (body.difficultyReviewed === undefined) updates.difficulty_reviewed = false
+  }
+  if (body.difficultyReviewed !== undefined) {
+    if (typeof body.difficultyReviewed !== 'boolean') throw createError({ statusCode: 400, statusMessage: 'Status de revisão da dificuldade inválido.' })
+    updates.difficulty_reviewed = body.difficultyReviewed
   }
   if (body.statement !== undefined) {
     const value=text(body.statement); if(value.length<10||value.length>20000) throw createError({statusCode:400,statusMessage:'Enunciado inválido.'}); updates.statement=value
@@ -49,6 +60,8 @@ export default defineEventHandler(async (event) => {
     notice_id: string
     subject_id: string
     topic_id: string | null
+    difficulty: string
+    difficulty_reviewed: boolean
     statement: string
     source_label: string | null
     source_url: string | null
@@ -58,7 +71,7 @@ export default defineEventHandler(async (event) => {
   } | null = null
   if (Object.keys(updates).length) {
     const { data, error } = await supabase.from('study_questions').update(updates).eq('id',id)
-      .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, status, created_at').maybeSingle()
+      .select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, status, created_at').maybeSingle()
     if(error?.code==='23514') throw createError({statusCode:409,statusMessage:'A regra de publicação ou o histórico de respostas impede esta alteração.'})
     if(error?.code==='23522'||error?.code==='23503') throw createError({statusCode:400,statusMessage:'Disciplina ou assunto incompatível com a questão.'})
     if(error) throw createError({statusCode:503,statusMessage:'Não foi possível atualizar a questão.'})
