@@ -8,6 +8,16 @@ Esta é uma **triagem editorial inicial**, não uma certificação jurídica, re
 
 Nenhum dado do banco foi alterado nesta etapa.
 
+## Impacto no histórico de tentativas
+
+Consulta read-only adicional ao histórico confirmou:
+- 60 questões publicadas;
+- 1 tentativa registrada em 1 questão;
+- 59 questões sem tentativas.
+
+A única questão com tentativa é a de conflito de interesses (`e8c3ce3d-9162-433c-a408-a0f2d7d5dadf`). A migration 0012 protege o histórico de questões respondidas contra alterações de conteúdo. Portanto, essa questão **não deve ser editada in-place**: qualquer correção material deverá seguir o fluxo de nova versão/novo item, preservando a questão respondida e seus resultados. As outras 59 não têm tentativas no retrato consultado, mas continuam sujeitas a versionamento, trilha de auditoria e revisão antes de qualquer alteração.
+
+
 ## Resultado por disciplina
 
 | Disciplina | Itens | Resultado preliminar |
