@@ -198,3 +198,12 @@ A sequência de banco passa a ser 0001 → 0002 → 0003 → 0004 → 0005 → 0
 - Os endpoints editoriais foram adaptados para ler/gravar explicações na tabela protegida.
 - Foi adicionado supabase/diagnostics/phase-2-read-only-audit.sql, que consulta catálogo, RLS, políticas, funções, grants, triggers e histórico de migrações sem alterar dados.
 - Importante: essas mudanças estão em revisão no PR da branch fix/admin-role-table-grants. Não aplicar a migração 0013 em produção antes da aprovação do CI e da conferência do estado real das migrações 0001–0012.
+
+## Atualização — sincronização da classificação de dificuldade (07/11/2026)
+
+- A consulta read-only ao ledger do Supabase confirmou a migration `question_difficulty` aplicada sob a versão `20261107011259`.
+- A migration correspondente `0015_question_difficulty.sql` não estava presente na `main`, embora a coluna `study_questions.difficulty` e o índice já existissem no banco. A PR #27 foi integrada à branch `feat/study-question-filters`, não diretamente à `main`; por isso a implementação e a migration não chegaram à branch principal.
+- A integração atual restaura a migration 0015 no repositório e porta os endpoints, a interface administrativa, o filtro do estudante e os testes para uma branch criada a partir da `main` atual.
+- Os 60 registros existentes receberam `medium` como valor padrão; esse valor não é uma avaliação editorial. A migration 0016 adiciona `difficulty_reviewed`, inicialmente falso, e estende a proteção de histórico para impedir alteração da dificuldade/classificação de questões com tentativas.
+- A aplicação só deve exibir ou filtrar níveis de dificuldade explicitamente revisados. Até a migration 0016 ser aplicada, não considerar o novo controle de revisão operacional no banco.
+- Estado desta branch: migration 0015 já aplicada no banco e versionada no repositório; migration 0016 ainda pendente de aprovação, aplicação e validação. Não aplicar novamente 0015 manualmente; conferir o ledger antes de qualquer execução.
