@@ -2,6 +2,7 @@ import { createError, getQuery } from 'h3'
 import { createSupabaseServerClient, getAuthenticatedUser } from '../../utils/supabase'
 import { logSupabaseError } from '../../utils/supabase-diagnostics'
 import { isUuid } from '../../../shared/domain/common/uuid'
+import { isQuestionDifficulty, getReviewedQuestionDifficulty } from '../../../shared/domain/questions/difficulty'
 import { parseQuestionPagination } from '../../../shared/domain/questions/pagination'
 
 export default defineEventHandler(async (event) => {
@@ -11,9 +12,14 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const subjectId = query.subjectId
   const topicId = query.topicId
+  const difficulty = query.difficulty
   const contestId = query.contestId
   const questionId = query.questionId
   const pagination = parseQuestionPagination(query.page, query.pageSize)
+
+  if (difficulty !== undefined && !isQuestionDifficulty(difficulty)) {
+    throw createError({ statusCode: 400, statusMessage: 'Filtro difficulty inválido.' })
+  }
 
   if (!pagination) {
     throw createError({ statusCode: 400, statusMessage: 'Paginação inválida. Use página positiva e até 100 questões por página.' })
@@ -53,7 +59,7 @@ export default defineEventHandler(async (event) => {
 
   let request = supabase
     .from('study_questions')
-    .select('id, notice_id, subject_id, topic_id, statement, source_label, source_url, source_year, study_question_options(id, option_label, content, position)', { count: 'exact' })
+    .select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, study_question_options(id, option_label, content, position)', { count: 'exact' })
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     .order('id', { ascending: false })
@@ -62,6 +68,7 @@ export default defineEventHandler(async (event) => {
   if (questionId) request = request.eq('id', questionId)
   if (subjectId) request = request.eq('subject_id', subjectId)
   if (topicId) request = request.eq('topic_id', topicId)
+  if (difficulty) request = request.eq('difficulty_reviewed', true).eq('difficulty', difficulty)
   if (noticeIds) request = request.in('notice_id', noticeIds)
 
   const { data, error, count } = await request
@@ -72,8 +79,10 @@ export default defineEventHandler(async (event) => {
 
   const questions = (data ?? []).map((question) => ({
     ...question,
+    difficulty: getReviewedQuestionDifficulty(question.difficulty, question.difficulty_reviewed),
     options: [...(question.study_question_options ?? [])].sort((a, b) => a.position - b.position),
     study_question_options: undefined,
+    difficulty_reviewed: undefined,
   }))
 
   const total = count ?? 0
