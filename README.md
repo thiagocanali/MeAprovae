@@ -43,6 +43,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 | [Gamificação](docs/GAMIFICATION.md) | XP, níveis, conquistas e rankings |
 | [Conteúdo e questões](docs/CONTENT_GOVERNANCE.md) | Curadoria, procedência e qualidade |
 | [Auditoria editorial (07/11/2026)](docs/CONTENT_AUDIT_2026-11-07.md) | Diagnóstico estrutural corrigido do banco publicado |
+| [Revisão inicial das 60 questões](docs/CONTENT_REVIEW_2026-11-07.md) | Triagem item a item, problemas prioritários e fontes de referência |
 | [Tutor IA](docs/AI_TUTOR.md) | Escopo, limites e segurança da IA |
 | [Segurança e LGPD](docs/SECURITY_AND_PRIVACY.md) | Proteção de dados e controles |
 | [Monetização](docs/MONETIZATION.md) | Planos e preparação para assinaturas |
@@ -51,7 +52,7 @@ A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS 
 
 ## Status atual
 
-**Fase:** núcleo de estudos em validação integrada. A `main` já contém autenticação Supabase SSR, catálogo, motor de questões e tentativas, progresso, favoritos, revisão e área administrativa, além dos filtros de disciplina/assunto e dificuldade. O banco Supabase possui 60 questões publicadas em 9 disciplinas. A auditoria estrutural confirmou explicações para as 60 questões na tabela editorial protegida, 32 questões sem URL de fonte e dificuldade `medium` em todos os registros (valor padrão, ainda não revisado individualmente); consulte [CONTENT_AUDIT_2026-11-07.md](docs/CONTENT_AUDIT_2026-11-07.md). A existência de explicações e gabaritos associados não substitui revisão pedagógica individual nem verificação de direitos de uso. CI e deployments READY comprovam build, mas não substituem validação ponta a ponta autenticada. Consulte também [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
+**Fase:** núcleo de estudos em validação integrada. A `main` já contém autenticação Supabase SSR, catálogo, motor de questões e tentativas, progresso, favoritos, revisão e área administrativa, além dos filtros de disciplina/assunto e dificuldade. O banco Supabase possui 60 questões publicadas em 9 disciplinas. A auditoria estrutural confirmou explicações para as 60 questões na tabela editorial protegida, 32 questões sem URL de fonte e dificuldade `medium` em todos os registros (valor padrão, ainda não revisado individualmente); consulte [CONTENT_AUDIT_2026-11-07.md](docs/CONTENT_AUDIT_2026-11-07.md). A triagem individual está registrada em [CONTENT_REVIEW_2026-11-07.md](docs/CONTENT_REVIEW_2026-11-07.md): foram identificados ajustes de precisão em itens de LOA/LDO, conflito de interesses e formulação de sequência numérica, além de lacunas de fontes e dificuldade. Nenhuma questão foi alterada no banco. A existência de explicações e gabaritos associados não substitui revisão pedagógica individual nem verificação de direitos de uso. CI e deployments READY comprovam build, mas não substituem validação ponta a ponta autenticada. Consulte também [PROJECT_AUDIT.md](PROJECT_AUDIT.md), [ENVIRONMENT.md](ENVIRONMENT.md) e [PROGRESS.md](PROGRESS.md).
 
 ## Princípio sobre dados demonstrativos
 
@@ -59,11 +60,12 @@ Dados fictícios devem ser identificados como demonstração. Questões criadas 
 
 ## Próximos passos
 
-1. Revisão pedagógica individual das 60 questões e conferência de fontes, direitos de uso e dificuldade.
-2. Completar referências verificáveis para os 32 registros sem URL, quando aplicável.
-3. Expandir o banco em lotes revisados, sem copiar questões protegidas.
-4. Completar validação ponta a ponta autenticada de cadastro, estudo, tentativas e indicadores.
-5. Manter CI, migrations, RLS e deployments sincronizados antes de cada publicação.
+1. Corrigir os itens prioritários da triagem por fluxo editorial versionado, sem sobrescrever questões que já tenham tentativas.
+2. Completar referências verificáveis para os 32 registros sem URL e validar as 28 URLs existentes.
+3. Revisar direitos de uso, autoria, explicações e dificuldade item a item.
+4. Expandir o banco em lotes revisados, sem copiar questões protegidas.
+5. Completar validação ponta a ponta autenticada de cadastro, estudo, tentativas e indicadores.
+6. Manter CI, migrations, RLS e deployments sincronizados antes de cada publicação.
 
 ---
 
