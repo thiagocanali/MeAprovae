@@ -19,7 +19,7 @@ async function openRelease(release: Release) {
 </script>
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><nav><NuxtLink to="/admin">Gestão</NuxtLink><NuxtLink to="/admin/importar">Importar</NuxtLink></nav></header>
+    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><nav><NuxtLink to="/admin/revisao">Fila de revisão</NuxtLink><NuxtLink to="/admin">Gestão</NuxtLink><NuxtLink to="/admin/importar">Importar</NuxtLink></nav></header>
     <section class="study-content">
       <p class="auth-eyebrow">CONTEÚDO ORIGINAL VERSIONADO</p><h1>Acervo em revisão</h1>
       <p class="auth-description">Acompanhe os últimos 50 lotes originais instalados a partir do repositório. Conferência automática de cálculos não substitui revisão editorial de enunciados, explicações, direitos e dificuldade.</p>
@@ -32,6 +32,7 @@ async function openRelease(release: Release) {
         <p>{{ release.questionCount }} questões · {{ release.drafts }} rascunhos · {{ release.published }} publicadas · {{ release.archived }} arquivadas</p>
         <p>{{ release.difficultyPending }} classificações de dificuldade pendentes. A origem registra assistência de IA.</p>
         <details><summary>Procedência do lote</summary><p>Instalado em {{ new Date(release.installedAt).toLocaleString('pt-BR') }}.</p><p class="hash">SHA-256: {{ release.contentHash }}</p><a :href="`https://github.com/thiagocanali/MeAprovae/tree/${release.gitCommit}/content/releases`" target="_blank" rel="noopener noreferrer">Consultar arquivos no commit de origem</a></details>
+        <NuxtLink class="study-link" :to="{ path: '/admin/revisao', query: { releaseId: release.id, status: 'draft' } }">Revisar rascunhos deste lote →</NuxtLink>
         <button class="study-secondary-button" :disabled="loading" @click="openRelease(release)">Ver questões de {{ release.name }}</button>
       </article>
       <section v-if="selected" class="study-section" aria-live="polite">

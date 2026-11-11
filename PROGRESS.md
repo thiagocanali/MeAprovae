@@ -1,5 +1,12 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 11/11/2026 — fila editorial paginada
+
+- /admin/revisao e API editorial com filtros por status, disciplina, lote, dificuldade pendente e trecho literal do enunciado.
+- Contagem exata, ordenação por data/ID, 20 ou 50 itens por página, filtros na URL e abertura direta no editor. Atalho por lote no acervo.
+- Não altera questões nem publica/reclassifica conteúdo; nenhuma migration ou mudança de grants necessária.
+- Regras e limites em docs/EDITORIAL_REVIEW_QUEUE.md. Evidências de CI, navegador e implantação na descrição do PR.
+
 ## Continuação de 11/11/2026 — primeiro lote de expansão original
 
 - Lote matematica-original-001: 100 questões, 20 famílias com 5 variantes, assuntos, alternativas, gabaritos e explicações. Assistência de IA declarada; revisão humana e dificuldade revisada pendentes.
