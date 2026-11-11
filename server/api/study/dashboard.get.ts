@@ -14,8 +14,12 @@ export default defineEventHandler(async (event) => {
 
   const performance = await supabase.rpc('get_student_subject_performance')
 
+  if (performance.error || !Array.isArray(performance.data)) {
+    throw createError({ statusCode: 503, statusMessage: 'Não foi possível calcular o desempenho por disciplina.' })
+  }
+
   return {
     dashboard: summary.data,
-    performanceBySubject: performance.error || !Array.isArray(performance.data) ? [] : performance.data,
+    performanceBySubject: performance.data,
   }
 })
