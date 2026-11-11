@@ -11,7 +11,8 @@
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "content:validate": "node scripts/validate-question-bank.mjs"
   },
   "dependencies": {
     "nuxt": "4.6.3",

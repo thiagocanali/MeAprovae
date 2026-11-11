@@ -1,5 +1,16 @@
 # PROGRESS.md — execução e entregas
 
+## Entrega de 11/11/2026
+
+Atualização mais recente; substitui os itens de divergência de schema registrados em 08/11 abaixo.
+
+- Migration existente 0016 aplicada e verificada no Supabase: ledger `20261111120703 / reviewed_question_difficulty`. Coluna presente; 60 questões publicadas, zero dificuldades revisadas.
+- Página de desempenho, gráfico diário acessível, API privada e testes de agregação adicionados.
+- Validador JSONL para lotes editoriais e plano de importação documentados. Acervo ainda não ampliado; comparação entre perfis ainda pendente.
+- Typecheck e 55 testes passaram; build passou; proteção sem sessão validada em Chromium e API 401.
+- Auditoria e limites: `docs/AUDIT_2026-11-11.md`. Contrato editorial: `docs/CONTENT_IMPORT.md`.
+
+
 ## Estado atual verificado — 08/11/2026
 
 > Esta seção substitui os status históricos abaixo quando houver divergência. Os registros antigos foram preservados como histórico de execução.
