@@ -1,0 +1,881 @@
+{
+  "release": "matematica-original-001",
+  "version": 1,
+  "createdOn": "2026-11-11",
+  "questionCount": 100,
+  "subject": "Raciocínio Lógico e Matemática",
+  "contentSha256": "74cdaf2b809887de0d01cbaba4a7e79a0405be8cf8a0e0428e7cd4d348f468d7",
+  "authoring": "Conteúdo original elaborado por assistente de IA sob solicitação do proprietário do projeto.",
+  "reviewStatus": "pending_human_review",
+  "reviewer": null,
+  "difficultyStatus": "suggested_not_reviewed",
+  "conceptualBasis": "Definições e identidades matemáticas explicitadas nas resoluções; nenhuma questão copiada ou atribuída a prova real.",
+  "verification": "scripts/content/check_math_release.py; cálculos exatos com conferência independente por enumeração ou identidades alternativas.",
+  "checks": [
+    {
+      "externalId": "mat-original-001-percentuais-sucessivos-01",
+      "family": "percentuais-sucessivos",
+      "parameters": [
+        500,
+        10,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-produtividade-inversa-01",
+      "family": "produtividade-inversa",
+      "parameters": [
+        4,
+        6,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-001-fracao-quantidade-01",
+      "family": "fracao-quantidade",
+      "parameters": [
+        120,
+        2,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-valor-ausente-01",
+      "family": "media-valor-ausente",
+      "parameters": [
+        14,
+        10,
+        12,
+        16
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-ponderada-01",
+      "family": "media-ponderada",
+      "parameters": [
+        6,
+        12,
+        2,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-juros-simples-01",
+      "family": "juros-simples",
+      "parameters": [
+        1000,
+        2,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-probabilidade-sem-reposicao-01",
+      "family": "probabilidade-sem-reposicao",
+      "parameters": [
+        3,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-001-combinacoes-01",
+      "family": "combinacoes",
+      "parameters": [
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-permutacao-bloco-01",
+      "family": "permutacao-bloco",
+      "parameters": [
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mmc-periodos-01",
+      "family": "mmc-periodos",
+      "parameters": [
+        6,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mdc-kits-01",
+      "family": "mdc-kits",
+      "parameters": [
+        24,
+        36
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-aritmetica-01",
+      "family": "progressao-aritmetica",
+      "parameters": [
+        3,
+        2,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-geometrica-01",
+      "family": "progressao-geometrica",
+      "parameters": [
+        2,
+        2,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-001-equacao-tarifa-01",
+      "family": "equacao-tarifa",
+      "parameters": [
+        8,
+        3,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-sistema-soma-diferenca-01",
+      "family": "sistema-soma-diferenca",
+      "parameters": [
+        20,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-001-area-composta-01",
+      "family": "area-composta",
+      "parameters": [
+        12,
+        8,
+        4,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-001-velocidade-media-01",
+      "family": "velocidade-media",
+      "parameters": [
+        30,
+        60
+      ]
+    },
+    {
+      "externalId": "mat-original-001-conjuntos-01",
+      "family": "conjuntos",
+      "parameters": [
+        80,
+        35,
+        30,
+        10
+      ]
+    },
+    {
+      "externalId": "mat-original-001-logica-atribuicoes-01",
+      "family": "logica-atribuicoes",
+      "parameters": [
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-divisao-proporcional-01",
+      "family": "divisao-proporcional",
+      "parameters": [
+        500,
+        3,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-001-percentuais-sucessivos-02",
+      "family": "percentuais-sucessivos",
+      "parameters": [
+        600,
+        15,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-produtividade-inversa-02",
+      "family": "produtividade-inversa",
+      "parameters": [
+        5,
+        12,
+        15
+      ]
+    },
+    {
+      "externalId": "mat-original-001-fracao-quantidade-02",
+      "family": "fracao-quantidade",
+      "parameters": [
+        144,
+        3,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-valor-ausente-02",
+      "family": "media-valor-ausente",
+      "parameters": [
+        15,
+        11,
+        13,
+        17
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-ponderada-02",
+      "family": "media-ponderada",
+      "parameters": [
+        7,
+        13,
+        2,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-juros-simples-02",
+      "family": "juros-simples",
+      "parameters": [
+        1500,
+        3,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-001-probabilidade-sem-reposicao-02",
+      "family": "probabilidade-sem-reposicao",
+      "parameters": [
+        4,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-combinacoes-02",
+      "family": "combinacoes",
+      "parameters": [
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-permutacao-bloco-02",
+      "family": "permutacao-bloco",
+      "parameters": [
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mmc-periodos-02",
+      "family": "mmc-periodos",
+      "parameters": [
+        8,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mdc-kits-02",
+      "family": "mdc-kits",
+      "parameters": [
+        30,
+        45
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-aritmetica-02",
+      "family": "progressao-aritmetica",
+      "parameters": [
+        4,
+        3,
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-geometrica-02",
+      "family": "progressao-geometrica",
+      "parameters": [
+        3,
+        2,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-equacao-tarifa-02",
+      "family": "equacao-tarifa",
+      "parameters": [
+        9,
+        4,
+        29
+      ]
+    },
+    {
+      "externalId": "mat-original-001-sistema-soma-diferenca-02",
+      "family": "sistema-soma-diferenca",
+      "parameters": [
+        23,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-area-composta-02",
+      "family": "area-composta",
+      "parameters": [
+        14,
+        9,
+        5,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-velocidade-media-02",
+      "family": "velocidade-media",
+      "parameters": [
+        36,
+        72
+      ]
+    },
+    {
+      "externalId": "mat-original-001-conjuntos-02",
+      "family": "conjuntos",
+      "parameters": [
+        90,
+        38,
+        32,
+        11
+      ]
+    },
+    {
+      "externalId": "mat-original-001-logica-atribuicoes-02",
+      "family": "logica-atribuicoes",
+      "parameters": [
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-001-divisao-proporcional-02",
+      "family": "divisao-proporcional",
+      "parameters": [
+        1200,
+        4,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-001-percentuais-sucessivos-03",
+      "family": "percentuais-sucessivos",
+      "parameters": [
+        700,
+        20,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-produtividade-inversa-03",
+      "family": "produtividade-inversa",
+      "parameters": [
+        6,
+        18,
+        18
+      ]
+    },
+    {
+      "externalId": "mat-original-001-fracao-quantidade-03",
+      "family": "fracao-quantidade",
+      "parameters": [
+        168,
+        4,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-valor-ausente-03",
+      "family": "media-valor-ausente",
+      "parameters": [
+        16,
+        12,
+        14,
+        18
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-ponderada-03",
+      "family": "media-ponderada",
+      "parameters": [
+        8,
+        14,
+        2,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-juros-simples-03",
+      "family": "juros-simples",
+      "parameters": [
+        2000,
+        4,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-probabilidade-sem-reposicao-03",
+      "family": "probabilidade-sem-reposicao",
+      "parameters": [
+        5,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-combinacoes-03",
+      "family": "combinacoes",
+      "parameters": [
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-permutacao-bloco-03",
+      "family": "permutacao-bloco",
+      "parameters": [
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mmc-periodos-03",
+      "family": "mmc-periodos",
+      "parameters": [
+        9,
+        15
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mdc-kits-03",
+      "family": "mdc-kits",
+      "parameters": [
+        40,
+        60
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-aritmetica-03",
+      "family": "progressao-aritmetica",
+      "parameters": [
+        5,
+        4,
+        10
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-geometrica-03",
+      "family": "progressao-geometrica",
+      "parameters": [
+        4,
+        2,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-equacao-tarifa-03",
+      "family": "equacao-tarifa",
+      "parameters": [
+        10,
+        5,
+        40
+      ]
+    },
+    {
+      "externalId": "mat-original-001-sistema-soma-diferenca-03",
+      "family": "sistema-soma-diferenca",
+      "parameters": [
+        26,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-area-composta-03",
+      "family": "area-composta",
+      "parameters": [
+        16,
+        10,
+        6,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-001-velocidade-media-03",
+      "family": "velocidade-media",
+      "parameters": [
+        45,
+        90
+      ]
+    },
+    {
+      "externalId": "mat-original-001-conjuntos-03",
+      "family": "conjuntos",
+      "parameters": [
+        100,
+        41,
+        34,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-001-logica-atribuicoes-03",
+      "family": "logica-atribuicoes",
+      "parameters": [
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-divisao-proporcional-03",
+      "family": "divisao-proporcional",
+      "parameters": [
+        2100,
+        5,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-001-percentuais-sucessivos-04",
+      "family": "percentuais-sucessivos",
+      "parameters": [
+        800,
+        25,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-produtividade-inversa-04",
+      "family": "produtividade-inversa",
+      "parameters": [
+        7,
+        24,
+        21
+      ]
+    },
+    {
+      "externalId": "mat-original-001-fracao-quantidade-04",
+      "family": "fracao-quantidade",
+      "parameters": [
+        192,
+        5,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-valor-ausente-04",
+      "family": "media-valor-ausente",
+      "parameters": [
+        17,
+        13,
+        15,
+        19
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-ponderada-04",
+      "family": "media-ponderada",
+      "parameters": [
+        9,
+        15,
+        2,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-juros-simples-04",
+      "family": "juros-simples",
+      "parameters": [
+        2500,
+        5,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-probabilidade-sem-reposicao-04",
+      "family": "probabilidade-sem-reposicao",
+      "parameters": [
+        6,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-combinacoes-04",
+      "family": "combinacoes",
+      "parameters": [
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-permutacao-bloco-04",
+      "family": "permutacao-bloco",
+      "parameters": [
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mmc-periodos-04",
+      "family": "mmc-periodos",
+      "parameters": [
+        10,
+        14
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mdc-kits-04",
+      "family": "mdc-kits",
+      "parameters": [
+        42,
+        70
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-aritmetica-04",
+      "family": "progressao-aritmetica",
+      "parameters": [
+        6,
+        5,
+        11
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-geometrica-04",
+      "family": "progressao-geometrica",
+      "parameters": [
+        5,
+        2,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-equacao-tarifa-04",
+      "family": "equacao-tarifa",
+      "parameters": [
+        11,
+        6,
+        53
+      ]
+    },
+    {
+      "externalId": "mat-original-001-sistema-soma-diferenca-04",
+      "family": "sistema-soma-diferenca",
+      "parameters": [
+        29,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-area-composta-04",
+      "family": "area-composta",
+      "parameters": [
+        18,
+        11,
+        7,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-001-velocidade-media-04",
+      "family": "velocidade-media",
+      "parameters": [
+        54,
+        108
+      ]
+    },
+    {
+      "externalId": "mat-original-001-conjuntos-04",
+      "family": "conjuntos",
+      "parameters": [
+        110,
+        44,
+        36,
+        13
+      ]
+    },
+    {
+      "externalId": "mat-original-001-logica-atribuicoes-04",
+      "family": "logica-atribuicoes",
+      "parameters": [
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-divisao-proporcional-04",
+      "family": "divisao-proporcional",
+      "parameters": [
+        3200,
+        6,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-001-percentuais-sucessivos-05",
+      "family": "percentuais-sucessivos",
+      "parameters": [
+        900,
+        30,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-produtividade-inversa-05",
+      "family": "produtividade-inversa",
+      "parameters": [
+        8,
+        30,
+        24
+      ]
+    },
+    {
+      "externalId": "mat-original-001-fracao-quantidade-05",
+      "family": "fracao-quantidade",
+      "parameters": [
+        216,
+        6,
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-valor-ausente-05",
+      "family": "media-valor-ausente",
+      "parameters": [
+        18,
+        14,
+        16,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-001-media-ponderada-05",
+      "family": "media-ponderada",
+      "parameters": [
+        10,
+        16,
+        2,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-001-juros-simples-05",
+      "family": "juros-simples",
+      "parameters": [
+        3000,
+        6,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-probabilidade-sem-reposicao-05",
+      "family": "probabilidade-sem-reposicao",
+      "parameters": [
+        7,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-combinacoes-05",
+      "family": "combinacoes",
+      "parameters": [
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-001-permutacao-bloco-05",
+      "family": "permutacao-bloco",
+      "parameters": [
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mmc-periodos-05",
+      "family": "mmc-periodos",
+      "parameters": [
+        12,
+        18
+      ]
+    },
+    {
+      "externalId": "mat-original-001-mdc-kits-05",
+      "family": "mdc-kits",
+      "parameters": [
+        48,
+        72
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-aritmetica-05",
+      "family": "progressao-aritmetica",
+      "parameters": [
+        7,
+        6,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-001-progressao-geometrica-05",
+      "family": "progressao-geometrica",
+      "parameters": [
+        6,
+        2,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-equacao-tarifa-05",
+      "family": "equacao-tarifa",
+      "parameters": [
+        12,
+        7,
+        68
+      ]
+    },
+    {
+      "externalId": "mat-original-001-sistema-soma-diferenca-05",
+      "family": "sistema-soma-diferenca",
+      "parameters": [
+        32,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-001-area-composta-05",
+      "family": "area-composta",
+      "parameters": [
+        20,
+        12,
+        8,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-001-velocidade-media-05",
+      "family": "velocidade-media",
+      "parameters": [
+        60,
+        120
+      ]
+    },
+    {
+      "externalId": "mat-original-001-conjuntos-05",
+      "family": "conjuntos",
+      "parameters": [
+        120,
+        47,
+        38,
+        14
+      ]
+    },
+    {
+      "externalId": "mat-original-001-logica-atribuicoes-05",
+      "family": "logica-atribuicoes",
+      "parameters": [
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-001-divisao-proporcional-05",
+      "family": "divisao-proporcional",
+      "parameters": [
+        4500,
+        7,
+        2
+      ]
+    }
+  ]
+}

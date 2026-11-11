@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
+import { isUuid } from '~~/shared/domain/common/uuid'
 
 definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Administração editorial | Me Aprovaê' })
@@ -64,7 +65,8 @@ const questionTopics = computed(() => topicsData.value?.topics.filter(topic => t
 const noticeSubjectIds = ref<string[]>([])
 const questionNotice = computed(() => noticesData.value?.notices.find(notice => notice.id === questionForm.noticeId) ?? null)
 const questionContest = computed(() => contestsData.value?.contests.find(contest => contest.id === questionNotice.value?.contest_id) ?? null)
-const selectedQuestion = computed(() => questionsData.value?.questions.find(question => question.id === editingQuestionId.value) ?? null)
+const loadedQuestion = ref<QuestionRow | null>(null)
+const selectedQuestion = computed(() => questionsData.value?.questions.find(question => question.id === editingQuestionId.value) ?? (loadedQuestion.value?.id === editingQuestionId.value ? loadedQuestion.value : null))
 const publicationChecks = computed(() => [
   { label: 'Concurso publicado', passed: questionContest.value?.status === 'published' },
   { label: 'Edital publicado', passed: questionNotice.value?.status === 'published' },
@@ -82,16 +84,18 @@ watch(() => questionForm.noticeId, async (noticeId) => {
   } catch { noticeSubjectIds.value = [] }
 })
 function resetQuestionForm() {
+  loadedQuestion.value = null
   editingQuestionId.value = ''; questionForm.noticeId = ''; questionForm.subjectId = ''; questionForm.topicId = ''; questionForm.difficulty = 'medium'; questionForm.difficultyReviewed = false
   questionForm.statement = ''; questionForm.explanation = ''; questionForm.sourceLabel = ''; questionForm.sourceUrl = ''; questionForm.sourceYear = ''
   questionCorrectOption.value = ''
   noticeSubjectIds.value = []
   questionOptions.value = [{ label: 'A', content: '' }, { label: 'B', content: '' }, { label: 'C', content: '' }, { label: 'D', content: '' }]
 }
-async function editQuestion(question: QuestionRow) {
+async function editQuestion(question: Pick<QuestionRow, 'id'>) {
   loadingQuestionEditor.value = true; questionError.value = ''
   try {
     const result = await $fetch<{ question: QuestionRow; options: QuestionOption[]; answer: { correct_option_id: string } | null }>('/api/admin/questions/' + question.id)
+    loadedQuestion.value = result.question
     editingQuestionId.value = result.question.id; questionForm.noticeId = result.question.notice_id; questionForm.subjectId = result.question.subject_id
     questionForm.topicId = result.question.topic_id ?? ''; questionForm.difficulty = result.question.difficulty ?? 'medium'; questionForm.difficultyReviewed = result.question.difficulty_reviewed; questionForm.statement = result.question.statement; questionForm.explanation = result.question.explanation
     questionForm.sourceLabel = result.question.source_label ?? ''; questionForm.sourceUrl = result.question.source_url ?? ''; questionForm.sourceYear = result.question.source_year?.toString() ?? ''
@@ -100,6 +104,14 @@ async function editQuestion(question: QuestionRow) {
   } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível carregar a questão.' }
   finally { loadingQuestionEditor.value = false }
 }
+const route = useRoute()
+async function openRequestedQuestion() {
+  const id = route.query.questionId
+  if (typeof id === 'string' && isUuid(id) && id !== editingQuestionId.value) await editQuestion({ id })
+}
+onMounted(openRequestedQuestion)
+watch(() => route.query.questionId, openRequestedQuestion)
+
 function addQuestionOption() {
   if (questionOptions.value.length >= 10) return
   questionOptions.value.push({ label: String.fromCharCode(65 + questionOptions.value.length), content: '' })
@@ -153,6 +165,7 @@ async function changeQuestionStatus(question: QuestionRow, status: QuestionRow['
   questionError.value = ''; questionMessage.value = ''
   try {
     await $fetch('/api/admin/questions/' + question.id, { method: 'PATCH', body: { status } })
+    if (loadedQuestion.value?.id === question.id) loadedQuestion.value.status = status
     questionMessage.value = status === 'published' ? 'Questão publicada.' : 'Status da questão atualizado.'
     await refreshQuestions()
   } catch (cause: unknown) { questionError.value = cause instanceof Error ? cause.message : 'Não foi possível atualizar a questão.' }
@@ -363,6 +376,7 @@ const label = (table: string) => ({
     <header class="student-header">
       <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
       <nav class="admin-nav">
+        <NuxtLink class="study-link" to="/admin/acervo">Acervo em revisão</NuxtLink>
         <NuxtLink class="study-link" to="/admin/importar">Importar questões</NuxtLink>
         <NuxtLink class="study-link" to="/app">Área do estudante</NuxtLink>
       </nav>
@@ -561,7 +575,7 @@ const label = (table: string) => ({
 
         <section class="study-section student-empty">
           <p class="auth-eyebrow">BANCO DE QUESTÕES</p>
-          <h2>{{ editingQuestionId ? 'Editar questão' : 'Nova questão' }}</h2>
+          <h2 id="question-editor">{{ editingQuestionId ? 'Editar questão' : 'Nova questão' }}</h2>
           <form class="contest-form" @submit.prevent="saveQuestion">
             <label>Edital<select v-model="questionForm.noticeId" required><option value="" disabled>Selecione um edital</option><option v-for="notice in noticesData?.notices || []" :key="notice.id" :value="notice.id">{{ notice.title }}</option></select></label>
             <label>Disciplina<select v-model="questionForm.subjectId" required @change="questionForm.topicId = ''"><option value="" disabled>Selecione uma disciplina</option><option v-for="subject in subjectsData?.subjects || []" :key="subject.id" :value="subject.id">{{ subject.name }}</option></select></label>
@@ -658,7 +672,7 @@ const label = (table: string) => ({
 .admin-metrics .study-card { display: grid; gap: 9px; width: auto; transform: none; }
 .admin-metrics strong { font-family: var(--font-display); font-size: 34px; }
 .admin-metrics small { color: var(--color-muted); font-size: 12px; }
-.admin-nav { display: flex; gap: 16px; }
+.admin-nav { display: flex; flex-wrap: wrap; gap: 16px; }
 .study-section { margin-top: 38px; }
 .study-section h2 { font-family: var(--font-display); }
 .study-history { display: grid; gap: 14px; padding: 0; list-style: none; }

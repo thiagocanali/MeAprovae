@@ -1,5 +1,14 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 11/11/2026 — primeiro lote de expansão original
+
+- Lote matematica-original-001: 100 questões, 20 famílias com 5 variantes, assuntos, alternativas, gabaritos e explicações. Assistência de IA declarada; revisão humana e dificuldade revisada pendentes.
+- Arquivo e manifesto versionados com SHA-256, gerador determinístico e checker independente; 100/100 gabaritos conferidos automaticamente.
+- Registro de releases com instalação administrativa transacional e idempotente em rascunho, sem assumir identidade de editor nem publicar automaticamente. Schema original_content_releases aplicado ao Supabase; instalação do conteúdo registrada na descrição do PR após integração.
+- /admin/acervo e links diretos para revisão no editor adicionados. Teste local com navegador, PostgREST e PostgreSQL aprovou abertura do lote e isolamento entre editor/estudante.
+- 83 testes unitários e suites SQL de importação, simulados e releases aprovados; checker do conteúdo também executa no CI.
+- Detalhes: docs/ORIGINAL_MATH_RELEASE_001.md. As 60 questões publicadas de origem não foram alteradas por esse lote.
+
 ## Continuação de 11/11/2026 — simulados persistidos
 
 - Sessões privadas, retomada, histórico e resultados persistidos implementados; prazo e nota calculados no servidor.
