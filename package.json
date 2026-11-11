@@ -12,7 +12,8 @@
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
-    "content:validate": "node scripts/validate-question-bank.mjs"
+    "content:validate": "node scripts/validate-question-bank.mjs",
+    "content:check": "python3 scripts/content/check_math_release.py"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
