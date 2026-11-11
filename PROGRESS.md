@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 11/11/2026 — importação editorial
+
+- PR #38 integrado em main (`1ac7241`); CI #232 e deploys Preview/Production READY.
+- Importador transacional em rascunho implementado, com validação, direitos, deduplicação, idempotência e histórico dos lotes. Migration question_batch_import aplicada ao Supabase.
+- Testes PostgreSQL de isolamento/rollback e navegador com APIs simuladas aprovados. Fluxo autenticado completo em Supabase continua pendente.
+- Nenhuma questão adicionada/publicada no acervo real nesta etapa; a ampliação depende de lotes originais ou licenciados revisados.
+- Detalhes e limites em docs/CONTENT_IMPORT.md e docs/AUDIT_2026-11-11.md.
+
 ## Entrega de 11/11/2026
 
 Atualização mais recente; substitui os itens de divergência de schema registrados em 08/11 abaixo.

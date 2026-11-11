@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (!to.path.startsWith('/app') && to.path !== '/redefinir-senha') return
+  if (!to.path.startsWith('/app') && !to.path.startsWith('/admin') && to.path !== '/redefinir-senha') return
 
   try {
     const requestFetch = useRequestFetch()

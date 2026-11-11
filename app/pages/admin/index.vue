@@ -363,6 +363,7 @@ const label = (table: string) => ({
     <header class="student-header">
       <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
       <nav class="admin-nav">
+        <NuxtLink class="study-link" to="/admin/importar">Importar questões</NuxtLink>
         <NuxtLink class="study-link" to="/app">Área do estudante</NuxtLink>
       </nav>
     </header>
