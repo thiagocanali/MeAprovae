@@ -24,3 +24,9 @@ pnpm-debug.log*
 coverage/
 playwright-report/
 test-results/
+
+# Vercel local build artifacts
+.vercel/
+
+# Supabase CLI local state
+supabase/.temp/
