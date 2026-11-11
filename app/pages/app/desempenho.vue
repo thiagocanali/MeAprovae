@@ -2,7 +2,14 @@
 import authMiddleware from '~/middleware/auth'
 definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Meu desempenho | Me Aprovaê' })
-const { data, pending, error, refresh } = await useFetch('/api/study/performance')
+interface PerformanceResponse {
+  days: Array<{ date: string; attempts: number; correct: number; accuracy: number }>
+  sampled: boolean
+  totalInPeriod: number
+  sampleSize: number
+  timezone: string
+}
+const { data, pending, error, refresh } = await useFetch<PerformanceResponse>('/api/study/performance')
 const { data: dashboard, error: subjectError, refresh: refreshSubjects } = await useFetch<{
   performanceBySubject: Array<{ subjectId: string; subjectName: string; attempts: number; accuracy: number }>
 }>('/api/study/dashboard')
