@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
-import { IMPORT_MAX_BYTES, parseQuestionImport } from '../../../shared/domain/questions/import'
+import { IMPORT_MAX_BYTES, parseQuestionImport } from '~~/shared/domain/questions/import'
 definePageMeta({ middleware: authMiddleware })
 useSeoMeta({ title: 'Importar questões | Me Aprovaê' })
 const { data: overview, error: accessError } = await useFetch('/api/admin/overview')
