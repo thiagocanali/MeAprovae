@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 11/11/2026 — desempenho exato por período
+
+- /app/desempenho passa a oferecer 7/30/90 dias e fusos São Paulo/UTC, com prática, disciplinas e simulados no mesmo intervalo.
+- Agregação no banco remove a amostragem das mil tentativas. Questões arquivadas não fazem seus registros desaparecerem dos totais.
+- Gráfico e tabela dos últimos 20 resultados de simulados; média, melhor nota e contagem consideram todos os encerrados no período. Sessões ativas ficam fora da média.
+- Migration student_performance_overview aplicada ao Supabase. Não altera tentativas, sessões ou conteúdo editorial.
+- 106 testes unitários, suite PostgreSQL com mais de mil tentativas, fronteiras de fuso e isolamento, e fluxo local Chromium/PostgREST aprovados. Evidências e limites em docs/PERFORMANCE_OVERVIEW.md e na descrição do PR.
+
 ## Continuação de 11/11/2026 — fila editorial paginada
 
 - /admin/revisao e API editorial com filtros por status, disciplina, lote, dificuldade pendente e trecho literal do enunciado.
