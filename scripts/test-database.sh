@@ -13,3 +13,4 @@ for migration in supabase/migrations/*.sql; do
   psql -X -v ON_ERROR_STOP=1 -f "$migration"
 done
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/question-import.sql
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-sessions.sql

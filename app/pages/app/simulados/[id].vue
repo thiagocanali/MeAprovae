@@ -1,0 +1,117 @@
+<script setup lang="ts">
+import authMiddleware from '~/middleware/auth'
+import { remainingExamSeconds, type ExamSession } from '~~/shared/domain/questions/exam-session'
+definePageMeta({ middleware: authMiddleware })
+useSeoMeta({ title: 'Meu simulado | Me Aprovaê' })
+const route = useRoute()
+const endpoint = `/api/study/exams/${String(route.params.id)}`
+const { data, error, pending, refresh } = await useFetch<{ session: ExamSession }>(endpoint)
+const session = computed(() => data.value?.session)
+const currentIndex = ref(Math.max(0, session.value?.questions.findIndex(item => !item.result) ?? 0))
+const current = computed(() => session.value?.questions[currentIndex.value])
+const selectedOptionId = ref(current.value?.result?.selectedOptionId ?? '')
+const saving = ref(false)
+const errorMessage = ref('')
+const remainingSeconds = ref(session.value ? remainingExamSeconds(session.value.expiresAt, session.value.serverNow) : 0)
+const timeLabel = computed(() => `${String(Math.floor(remainingSeconds.value / 60)).padStart(2, '0')}:${String(remainingSeconds.value % 60).padStart(2, '0')}`)
+let interval: ReturnType<typeof setInterval> | undefined
+let anchor = 0
+let expirationRequested = false
+function stopTimer() { if (interval !== undefined) { clearInterval(interval); interval = undefined } }
+function synchronizeTimer() {
+  stopTimer()
+  if (!session.value) return
+  remainingSeconds.value = remainingExamSeconds(session.value.expiresAt, session.value.serverNow)
+  if (!import.meta.client || session.value.status !== 'active') return
+  anchor = performance.now()
+  expirationRequested = false
+  interval = setInterval(() => {
+    if (!session.value) return
+    remainingSeconds.value = remainingExamSeconds(session.value.expiresAt, session.value.serverNow, performance.now() - anchor)
+    if (remainingSeconds.value === 0 && !expirationRequested) {
+      expirationRequested = true; stopTimer(); void synchronize()
+    }
+  }, 1000)
+}
+async function synchronize() {
+  await refresh()
+  if (!error.value) synchronizeTimer()
+}
+watch(data, synchronizeTimer)
+watch(current, item => { selectedOptionId.value = item?.result?.selectedOptionId ?? '' })
+onMounted(synchronizeTimer)
+onBeforeUnmount(stopTimer)
+async function submitAnswer() {
+  if (!current.value || !selectedOptionId.value || current.value.result || saving.value || remainingSeconds.value <= 0) return
+  saving.value = true; errorMessage.value = ''
+  try {
+    data.value = await $fetch<{ session: ExamSession }>(`${endpoint}/answers`, { method: 'POST', body: {
+      position: current.value.position, optionId: selectedOptionId.value,
+    } })
+  } catch (cause: unknown) {
+    const failure = cause as { data?: { statusMessage?: string } }
+    errorMessage.value = failure.data?.statusMessage ?? 'Não foi possível salvar sua resposta. A seleção foi mantida; tente novamente.'
+  } finally { saving.value = false }
+}
+async function finishExam() {
+  if (saving.value) return
+  saving.value = true; errorMessage.value = ''
+  try { data.value = await $fetch<{ session: ExamSession }>(`${endpoint}/finish`, { method: 'POST' }) }
+  catch { errorMessage.value = 'Não foi possível finalizar. Tente novamente; suas respostas confirmadas estão salvas.' }
+  finally { saving.value = false }
+}
+function changeQuestion(index: number) {
+  if (saving.value) return
+  currentIndex.value = index; errorMessage.value = ''
+}
+const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
+  selected: item.question.options.find(option => option.id === item.result?.selectedOptionId),
+  correct: item.question.options.find(option => option.id === item.result?.correctOptionId),
+})) ?? [])
+</script>
+
+<template>
+  <main class="study-page">
+    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/provas">Meus simulados</NuxtLink><NuxtLink to="/app/desempenho">Desempenho</NuxtLink></nav></header>
+    <section class="study-content">
+      <p v-if="pending && !session" role="status">Carregando simulado…</p>
+      <div v-if="error" class="study-error" role="alert">Não foi possível carregar este simulado. Ele deve pertencer à sua conta. <button @click="synchronize()">Tentar novamente</button></div>
+      <template v-if="session">
+        <template v-if="session.status === 'active' && current">
+          <div class="study-exam-top"><h1>Questão {{ currentIndex + 1 }} de {{ session.questionCount }}</h1><span class="study-exam-timer" aria-label="Tempo restante">{{ timeLabel }}</span></div>
+          <p class="study-muted">Modo estudo · {{ session.answeredCount }} respostas salvas. O prazo continua contando ao sair.</p>
+          <p v-if="remainingSeconds === 0" role="status">O tempo terminou. <button @click="synchronize()">Sincronizar resultado</button></p>
+          <nav class="exam-question-nav" aria-label="Questões do simulado"><button v-for="(item, index) in session.questions" :key="item.position" :aria-current="index === currentIndex ? 'step' : undefined" :aria-label="`Questão ${item.position}${item.result ? ', respondida' : ', não respondida'}`" :disabled="saving" @click="changeQuestion(index)">{{ item.position }}{{ item.result ? ' ✓' : '' }}</button></nav>
+          <article class="study-question-card">
+            <p v-if="current.question.source_label" class="study-muted">{{ current.question.source_label }}</p>
+            <h2>{{ current.question.statement }}</h2>
+            <fieldset class="study-options" :disabled="saving || Boolean(current.result) || remainingSeconds === 0"><legend>Selecione uma alternativa</legend>
+              <label v-for="option in current.question.options" :key="option.id" class="study-option" :class="{ 'is-selected': selectedOptionId === option.id, 'is-correct': current.result?.correctOptionId === option.id, 'is-wrong': current.result?.selectedOptionId === option.id && !current.result.isCorrect }">
+                <input v-model="selectedOptionId" type="radio" :name="current.question.id" :value="option.id"><span class="study-option-label">{{ option.option_label }}</span><span>{{ option.content }}</span>
+              </label>
+            </fieldset>
+            <button v-if="!current.result" class="study-primary-button" :disabled="saving || !selectedOptionId || remainingSeconds === 0" @click="submitAnswer">{{ saving ? 'Salvando…' : 'Confirmar resposta' }}</button>
+            <section v-else class="study-result" aria-live="polite"><h3>{{ current.result.isCorrect ? 'Resposta correta!' : 'Resposta incorreta.' }}</h3><p>{{ current.result.explanation || 'Esta questão ainda não possui explicação cadastrada.' }}</p><p>Resposta salva na sua conta.</p></section>
+            <div class="study-actions"><button v-if="currentIndex > 0" class="study-secondary-button" :disabled="saving" @click="changeQuestion(currentIndex - 1)">Anterior</button><button v-if="currentIndex < session.questionCount - 1" class="study-secondary-button" :disabled="saving" @click="changeQuestion(currentIndex + 1)">Próxima questão</button></div>
+          </article>
+          <div class="study-card"><p>{{ session.questionCount - session.answeredCount }} questão(ões) sem resposta. Ao finalizar, elas permanecerão sem acerto na nota.</p><button class="study-primary-button" :disabled="saving" @click="finishExam">Finalizar simulado</button></div>
+        </template>
+        <template v-else-if="session.status !== 'active'">
+          <p class="auth-eyebrow">RESULTADO SALVO</p><h1>{{ session.status === 'expired' ? 'Tempo do simulado encerrado' : 'Simulado concluído' }}</h1>
+          <div class="study-stats"><article class="study-card"><span>Nota</span><strong>{{ session.score }}%</strong></article><article class="study-card"><span>Acertos</span><strong>{{ session.correctCount }} / {{ session.questionCount }}</strong></article><article class="study-card"><span>Sem resposta</span><strong>{{ session.questionCount - session.answeredCount }}</strong></article></div>
+          <p class="study-muted">A nota considera todas as questões, inclusive as não respondidas. Você pode consultar este resultado novamente em Meus simulados.</p>
+          <h2>Revisão das questões</h2>
+          <article v-for="item in reviewed" :key="item.position" class="study-card"><h3>Questão {{ item.position }} · {{ !item.result ? 'Não respondida' : item.result.isCorrect ? 'Acerto' : 'Erro' }}</h3><p>{{ item.question.statement }}</p><p v-if="item.selected"><strong>Sua resposta:</strong> {{ item.selected.option_label }} — {{ item.selected.content }}</p><p v-if="item.correct"><strong>Resposta correta:</strong> {{ item.correct.option_label }} — {{ item.correct.content }}</p><p v-if="item.result?.explanation">{{ item.result.explanation }}</p></article>
+          <NuxtLink to="/app/provas" class="study-link">Voltar aos meus simulados →</NuxtLink>
+        </template>
+      </template>
+      <p v-if="errorMessage" class="study-error" role="alert">{{ errorMessage }} <button :disabled="saving" @click="synchronize()">Sincronizar respostas salvas</button></p>
+    </section>
+  </main>
+</template>
+
+<style scoped>
+.exam-question-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.exam-question-nav button { min-width: 44px; min-height: 44px; padding: 8px; }
+.exam-question-nav button[aria-current] { outline: 3px solid #246b67; font-weight: 700; }
+</style>

@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 11/11/2026 — simulados persistidos
+
+- Sessões privadas, retomada, histórico e resultados persistidos implementados; prazo e nota calculados no servidor.
+- Migration persistent_exam_sessions aplicada ao Supabase. Questões utilizadas em sessões passam a exigir nova versão para alterar conteúdo; arquivamento continua permitido.
+- Typecheck, 81 testes, build Vercel local, suites PostgreSQL e fluxo Chromium com PostgREST real/adaptador Auth local aprovados.
+- Não houve inserção de conteúdo ou sessões fictícias no banco remoto. Comparações entre perfis e expansão editorial continuam pendentes.
+- Evidências e limites em docs/EXAM_SESSION_DELIVERY_2026-11-11.md e docs/EXAM_SESSIONS.md.
+
 ## Continuação de 11/11/2026 — importação editorial
 
 - PR #38 integrado em main (`1ac7241`); CI #232 e deploys Preview/Production READY.
