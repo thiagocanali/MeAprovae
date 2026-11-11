@@ -76,7 +76,7 @@ Este plano é vivo. Os itens marcados como concluídos possuem evidência em [PR
 - [x] Validar timer com testes de contagem, finalização em zero, reinício sem intervalo duplicado e cancelamento no teardown.
 - [ ] Obter CI atualizado e integrar o PR; Vercel permanece bloqueada por rate limit.
 - [ ] Validar quantidade, filtro, timer e fluxo de resposta com conteúdo real no Supabase.
-- [ ] Persistir sessões/retomada e resultados agregados se o produto exigir continuidade após atualizar ou sair.
+- [x] Persistir sessões/retomada, prazo no servidor e resultados privados; testes SQL e fluxo local navegador → PostgREST → PostgreSQL aprovados em 11/11/2026. Ver docs/EXAM_SESSIONS.md.
 - [ ] Implementar modo prova separado, com gabarito e explicação ocultos até a finalização.
 - [ ] Validar histórico, dashboard e fila de erros após tentativas do simulado em banco real.
 

@@ -13,7 +13,7 @@ A nova experiência persiste sessão e resultados, permite retomada entre págin
 - Implementação privilegiada no schema não exposto `exam_private`; wrappers públicos SECURITY INVOKER. Todas as operações verificam auth.uid()/propriedade; EXECUTE revogado de PUBLIC/anon, search_path vazio, sem autorização baseada em user_metadata.
 - O schema contém triggers que congelam conteúdo utilizado em sessões. Correções editoriais passam a exigir nova versão também quando existe sessão sem tentativa respondida. Status pode mudar; snapshots preservam a experiência de sessões já iniciadas.
 - Somente uma sessão ativa por conta. Criação e respostas idempotentes, bloqueios transacionais, prazo pelo relógio do PostgreSQL e contagens mantidas no banco.
-- Migração aplicada no projeto meaprovae após revisão e testes locais. Nenhuma questão ou sessão fictícia foi inserida no banco remoto.
+- Migração aplicada no projeto meaprovae após revisão e testes locais; ledger `20261111135719 / persistent_exam_sessions`. Advisors mantiveram apenas os avisos preexistentes, sem novo SECURITY DEFINER exposto. RLS e grants de leitura/escrita/EXECUTE conferidos. Nenhuma questão ou sessão fictícia foi inserida no banco remoto.
 
 ## Verificação
 
