@@ -1,5 +1,12 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 12/11/2026 — resolução sem respostas obsoletas
+
+- Troca de filtro, lista ou questão invalida operações anteriores de resposta, favorito e paginação. Resultados, erros e finalizações antigos não afetam a nova visualização.
+- Retorno à mesma questão e reenvio incerto preservam a chave de idempotência; uma confirmação antiga não libera o envio atual.
+- Regressão reproduzida na versão anterior e sete cenários Chromium móvel aprovados com APIs inteiramente simuladas, sem dados remotos. 114 testes unitários, typecheck e build Vercel aprovados.
+- Sem alteração de schema, APIs ou regras de pontuação. Detalhes e execução em docs/QUESTION_PRACTICE_REQUESTS.md; CI e implantação no PR.
+
 ## Continuação de 12/11/2026 — comparação voluntária de prática
 
 - /app/comparar com adesão explícita e retirada, desativada por padrão. Caderno mensal fixo de 20 questões do mesmo concurso; primeira resposta no mês; média apenas com dez outros participantes completos/aderentes.
