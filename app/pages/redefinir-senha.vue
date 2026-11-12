@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getAuthErrorMessage } from '~~/shared/domain/auth/error-message'
 import authMiddleware from '~/middleware/auth'
 
 definePageMeta({ layout: false, middleware: authMiddleware })
@@ -30,7 +31,7 @@ async function submit() {
     password.value = ''
     confirmPassword.value = ''
   } catch (error: unknown) {
-    errorMessage.value = error instanceof Error ? error.message : 'Não foi possível atualizar a senha.'
+    errorMessage.value = getAuthErrorMessage(error, 'Não foi possível atualizar a senha. Tente novamente.')
   } finally {
     pending.value = false
   }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getAuthErrorMessage } from '~~/shared/domain/auth/error-message'
 definePageMeta({ layout: false })
 useSeoMeta({ title: 'Recuperar senha | Me Aprovaê' })
 
@@ -15,7 +16,7 @@ async function submit() {
     await $fetch('/api/auth/recover', { method: 'POST', body: { email: email.value } })
     successMessage.value = 'Se houver uma conta associada a esse e-mail, enviaremos as instruções de recuperação.'
   } catch (error: unknown) {
-    errorMessage.value = error instanceof Error ? error.message : 'Não foi possível solicitar a recuperação.'
+    errorMessage.value = getAuthErrorMessage(error, 'Não foi possível solicitar a recuperação. Tente novamente mais tarde.')
   } finally {
     pending.value = false
   }
