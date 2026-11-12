@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 12/11/2026 — comparação voluntária de prática
+
+- /app/comparar com adesão explícita e retirada, desativada por padrão. Caderno mensal fixo de 20 questões do mesmo concurso; primeira resposta no mês; média apenas com dez outros participantes completos/aderentes.
+- Não retorna nomes, IDs de participantes, notas individuais, ranking ou número exato de membros. Média arredondada a múltiplos de cinco pontos; estados insuficientes sem valores fictícios.
+- Preferências com RLS própria e somente leitura direta; cadernos/implementação em schema privado; wrappers públicos invoker; no-store e ausência de filtros de terceiros.
+- Migrations aplicadas ao Supabase; conferência inicial zero preferências, sem inclusão automática ou fixtures remotas.
+- 114 testes unitários, suites SQL completas, build Vercel e fluxo local Chromium/PostgREST aprovados. Limites de privacidade/integridade e evidências em docs/STUDY_COMPARISON.md.
+
 ## Continuação de 11/11/2026 — desempenho exato por período
 
 - /app/desempenho passa a oferecer 7/30/90 dias e fusos São Paulo/UTC, com prática, disciplinas e simulados no mesmo intervalo.
