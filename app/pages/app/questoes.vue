@@ -49,17 +49,6 @@ const hasMoreQuestions = ref(false)
 const loadingMore = ref(false)
 const loadMoreError = ref('')
 
-watch(data, (response) => {
-  if (!response) return
-  questions.value = response.questions
-  page.value = response.page
-  totalQuestions.value = response.total
-  hasMoreQuestions.value = response.hasMore
-  currentIndex.value = 0
-  selectedOptionId.value = ''
-  result.value = null
-  loadMoreError.value = ''
-}, { immediate: true })
 const submitPending = ref(false)
 const submitError = ref('')
 const attemptKeys = createAttemptIdempotencyKeys()
@@ -67,23 +56,59 @@ const currentQuestion = computed(() => questions.value[currentIndex.value] ?? nu
 const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
 const favoritePending = ref(false)
 const favoriteError = ref('')
+// Each filter/list/question transition invalidates work started in the previous view.
+// A revision also distinguishes A → B → A from the original A request.
+let practiceRevision = 0
+function resetQuestionState() {
+  practiceRevision += 1
+  selectedOptionId.value = ''
+  result.value = null
+  submitPending.value = false
+  submitError.value = ''
+  favoritePending.value = false
+  favoriteError.value = ''
+  loadingMore.value = false
+  loadMoreError.value = ''
+}
+watch(query, () => {
+  resetQuestionState()
+  questions.value = []
+  currentIndex.value = 0
+  page.value = 1
+  totalQuestions.value = 0
+  hasMoreQuestions.value = false
+}, { flush: 'sync' })
+watch(data, (response) => {
+  if (!response) return
+  resetQuestionState()
+  questions.value = response.questions
+  page.value = response.page
+  totalQuestions.value = response.total
+  hasMoreQuestions.value = response.hasMore
+  currentIndex.value = 0
+}, { immediate: true, flush: 'sync' })
+onBeforeUnmount(() => { practiceRevision += 1 })
 
 async function toggleFavorite() {
   if (!currentQuestion.value || favoritePending.value) return
+  const revision = practiceRevision
+  const questionId = currentQuestion.value.id
+  const method = isFavorite.value ? 'DELETE' : 'POST'
   favoritePending.value = true
   favoriteError.value = ''
   try {
-    await $fetch(`/api/study/questions/${currentQuestion.value.id}/favorite`, { method: isFavorite.value ? 'DELETE' : 'POST' })
+    await $fetch(`/api/study/questions/${questionId}/favorite`, { method })
     await refreshFavorites()
   } catch {
-    favoriteError.value = 'Não foi possível atualizar seus favoritos. Verifique se a migração de favoritos foi aplicada.'
+    if (revision === practiceRevision) favoriteError.value = 'Não foi possível atualizar seus favoritos. Tente novamente.'
   } finally {
-    favoritePending.value = false
+    if (revision === practiceRevision) favoritePending.value = false
   }
 }
 
 async function submitAnswer() {
   if (!currentQuestion.value || !selectedOptionId.value || submitPending.value || result.value) return
+  const revision = practiceRevision
   submitPending.value = true
   submitError.value = ''
   const questionId = currentQuestion.value.id
@@ -97,45 +122,50 @@ async function submitAnswer() {
         idempotencyKey: attemptKeys.forSubmission(questionId, optionId),
       },
     })
-    result.value = response.result
-    attemptKeys.clear(questionId, optionId)
+    if (revision === practiceRevision) {
+      result.value = response.result
+      attemptKeys.clear(questionId, optionId)
+    }
   } catch {
-    submitError.value = 'Não foi possível registrar sua resposta. Sua seleção foi mantida; tente novamente.'
+    if (revision === practiceRevision) submitError.value = 'Não foi possível registrar sua resposta. Sua seleção foi mantida; tente novamente.'
   } finally {
-    submitPending.value = false
+    if (revision === practiceRevision) submitPending.value = false
   }
 }
 
 async function loadMoreQuestions() {
   if (!hasMoreQuestions.value || loadingMore.value) return
+  const revision = practiceRevision
+  const nextQuery = { ...query.value, page: page.value + 1, pageSize: 20 }
   loadingMore.value = true
   loadMoreError.value = ''
   try {
     const response = await $fetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>(
       '/api/study/questions',
-      { query: { ...query.value, page: page.value + 1, pageSize: 20 } },
+      { query: nextQuery },
     )
+    if (revision !== practiceRevision) return
     const knownIds = new Set(questions.value.map(question => question.id))
     questions.value.push(...response.questions.filter(question => !knownIds.has(question.id)))
     page.value = response.page
     totalQuestions.value = response.total
     hasMoreQuestions.value = response.hasMore
   } catch {
-    loadMoreError.value = 'Não foi possível carregar mais questões. Tente novamente.'
+    if (revision === practiceRevision) loadMoreError.value = 'Não foi possível carregar mais questões. Tente novamente.'
   } finally {
-    loadingMore.value = false
+    if (revision === practiceRevision) loadingMore.value = false
   }
 }
 
 async function nextQuestion() {
+  if (loadingMore.value || submitPending.value) return
+  const revision = practiceRevision
   if (currentIndex.value >= questions.value.length - 1 && hasMoreQuestions.value) {
     await loadMoreQuestions()
   }
-  if (currentIndex.value >= questions.value.length - 1) return
+  if (revision !== practiceRevision || currentIndex.value >= questions.value.length - 1) return
+  resetQuestionState()
   currentIndex.value += 1
-  selectedOptionId.value = ''
-  result.value = null
-  submitError.value = ''
 }
 </script>
 
