@@ -58,6 +58,8 @@ Os simulados em modo estudo passam a ter sessão persistida, retomada sem renova
 
 O [painel de desempenho](docs/PERFORMANCE_OVERVIEW.md) oferece 7/30/90 dias, fusos São Paulo/UTC, agregações exatas de tentativas e gráficos de resultados dos simulados.
 
+A [comparação voluntária de prática](docs/STUDY_COMPARISON.md) usa as mesmas 20 questões e mês por concurso, com média agregada somente após adesão e amostra mínima de dez outros participantes. Não há ranking ou dados individuais de terceiros.
+
 O acervo de origem tem **60 questões publicadas**. O [lote original de matemática 001](docs/ORIGINAL_MATH_RELEASE_001.md) acrescenta 100 questões em rascunho, com 20 famílias de problemas, assistência de IA declarada e gabaritos conferidos automaticamente. A revisão humana e a publicação dessas novas questões continuam pendentes. A página `/admin/acervo` acompanha seus estados e abre cada item no editor. A auditoria anterior encontrou 32 sem URL de fonte e dificuldades ainda sem revisão individual. A triagem em [CONTENT_REVIEW_2026-11-07.md](docs/CONTENT_REVIEW_2026-11-07.md) permanece pendente: precisão de itens, fontes, direitos e classificação pedagógica devem ser revisados antes da expansão. Gabaritos e explicações associados não comprovam qualidade editorial. O [importador](docs/CONTENT_IMPORT.md) recebe conteúdo como rascunho e não publica automaticamente.
 
 Consulte [PROGRESS.md](PROGRESS.md) para o registro atual, [auditoria técnica](docs/AUDIT_2026-11-11.md) e [ENVIRONMENT.md](ENVIRONMENT.md) para ambiente e limites de validação.

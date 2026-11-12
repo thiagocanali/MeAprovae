@@ -16,3 +16,4 @@ psql -X -v ON_ERROR_STOP=1 -f tests/integration/question-import.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-sessions.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/content-releases.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/performance-overview.sql
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/study-comparison.sql
