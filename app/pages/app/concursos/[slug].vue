@@ -46,10 +46,7 @@ async function toggleFollow() {
 
 <template>
   <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink></nav>
-    </header>
+    <StudentNavigation />
     <section class="study-content">
       <NuxtLink class="study-back" to="/app/concursos">← Voltar aos concursos</NuxtLink>
       <p v-if="pending" class="study-state">Carregando concurso…</p>
