@@ -45,6 +45,10 @@ async function synchronize() {
   } finally { synchronizing.value = false }
 }
 watch(data, synchronizeTimer)
+watch(session, value => {
+  if (!value) return
+  if (currentIndex.value >= value.questions.length) currentIndex.value = Math.max(0, value.questions.length - 1)
+})
 watch(current, item => { selectedOptionId.value = item?.result?.selectedOptionId ?? '' })
 watch(unansweredCount, () => { confirmFinish.value = false })
 onMounted(synchronizeTimer)
@@ -74,7 +78,7 @@ async function finishExam() {
   finally { saving.value = false }
 }
 function changeQuestion(index: number) {
-  if (saving.value) return
+  if (saving.value || index < 0 || index >= (session.value?.questions.length ?? 0)) return
   currentIndex.value = index; errorMessage.value = ''; confirmFinish.value = false
 }
 const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
