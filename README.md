@@ -20,7 +20,7 @@ Ajudar cada estudante a entender **o que estudar, o que revisar, onde está erra
 
 ## Aplicação
 
-A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS próprio. A `main` contém a fundação de autenticação Supabase SSR, catálogo e motor de questões, progresso, favoritos, revisão, área administrativa e suporte de código à dificuldade revisada (PR #33 integrada). A funcionalidade ainda não está operacional em produção: a migration 0016 não consta no ledger do Supabase e a coluna `difficulty_reviewed` não existe no banco auditado em 08/11/2026.
+A aplicação está sendo evoluída em **Nuxt 4 + Vue 3 + TypeScript**, com CSS próprio. A `main` contém a fundação de autenticação Supabase SSR, catálogo e motor de questões, progresso, favoritos, revisão, área administrativa e suporte de código à dificuldade revisada (PR #33 integrada). A divergência de schema identificada em 08/11/2026 foi corrigida em 11/11/2026 com a aplicação da migration 0016. O campo `difficulty_reviewed` está disponível; isso não significa que as questões já tenham sido revisadas editorialmente.
 
 - Site: https://meaprovae.vercel.app
 - Repositório: https://github.com/thiagocanali/MeAprovae

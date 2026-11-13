@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getAuthErrorMessage } from '~~/shared/domain/auth/error-message'
 definePageMeta({ layout: false })
 useSeoMeta({ title: 'Entrar | Me Aprovaê' })
 
@@ -18,7 +19,7 @@ async function submit() {
     })
     await navigateTo('/app')
   } catch (error: unknown) {
-    errorMessage.value = error instanceof Error ? error.message : 'Não foi possível entrar.'
+    errorMessage.value = getAuthErrorMessage(error, 'Não foi possível entrar. Tente novamente.')
   } finally {
     pending.value = false
   }
