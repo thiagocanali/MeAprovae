@@ -188,3 +188,32 @@ button:disabled, select:disabled { cursor: not-allowed; }
   }
   .student-navigation-links a { white-space: nowrap; }
 }
+
+/* Precedência explícita sobre estilos legados de auth.css. */
+.student-nav.student-navigation-links {
+  gap: var(--space-2);
+  justify-content: flex-start;
+}
+.student-nav.student-navigation-links a {
+  font-size: .875rem;
+}
+.student-nav.student-navigation-links a.router-link-active:not(.is-active) {
+  color: var(--color-muted);
+}
+.student-nav.student-navigation-links a.is-active {
+  color: var(--color-primary);
+  background: var(--color-surface-soft);
+}
+.study-page > .student-navigation {
+  width: min(calc(100% - 40px), 1120px);
+  margin-inline: auto;
+  padding-block: var(--space-4);
+}
+@media (max-width: 760px) {
+  .student-nav.student-navigation-links {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+  }
+  .study-page > .student-navigation { width: min(calc(100% - 32px), 1120px); }
+}
