@@ -53,6 +53,7 @@ const submitPending = ref(false)
 const submitError = ref('')
 const attemptKeys = createAttemptIdempotencyKeys()
 const currentQuestion = computed(() => questions.value[currentIndex.value] ?? null)
+const answeredProgress = computed(() => totalQuestions.value > 0 ? Math.round(((currentIndex.value + 1) / totalQuestions.value) * 100) : 0)
 const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
 const favoritePending = ref(false)
 const favoriteError = ref('')
@@ -201,7 +202,7 @@ async function nextQuestion() {
           <p id="difficulty-help" class="study-muted">O filtro de dificuldade inclui apenas questões já classificadas após revisão. Para praticar também as que aguardam classificação, mantenha “Todas as dificuldades”.</p>
           <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
         </div>
-      <p v-if="pending" class="study-state">Carregando questões…</p>
+      <p v-if="pending" class="study-state" role="status" aria-live="polite">Carregando questões…</p>
       <div v-else-if="error" class="study-state study-error" role="alert">
         Não foi possível carregar as questões.
         <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
@@ -216,13 +217,14 @@ async function nextQuestion() {
           <h2>Nenhuma questão encontrada.</h2>
           <p>Não há questões publicadas para os filtros escolhidos. Tente outra disciplina ou limpe os filtros para continuar praticando.</p>
         </template>
-        <NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink>
+        <div class="study-actions"><button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" type="button" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar todos os filtros</button><NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink></div>
       </div>
       <template v-else>
         <div class="study-progress-line">
           <span>Questão {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
-          <span>{{ Math.round(((currentIndex + 1) / (totalQuestions || 1)) * 100) }}%</span>
+          <span>{{ answeredProgress }}%</span>
         </div>
+        <progress class="study-progress" :value="currentIndex + 1" :max="Math.max(1, totalQuestions)" :aria-label="`Questão ${currentIndex + 1} de ${totalQuestions}`">{{ answeredProgress }}%</progress>
         <article class="study-question-card">
           <p v-if="currentQuestion.source_label || currentQuestion.source_year || currentQuestion.source_url" class="study-muted">
             {{ currentQuestion.source_label || 'Fonte não identificada' }}<span v-if="currentQuestion.source_year"> · {{ currentQuestion.source_year }}</span><span v-if="currentQuestion.source_url"> · <a :href="currentQuestion.source_url" target="_blank" rel="noopener noreferrer">Consultar referência oficial</a></span>
