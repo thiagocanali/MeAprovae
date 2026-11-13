@@ -187,7 +187,7 @@ async function nextQuestion() {
             </select>
           </label>
           <label>Dificuldade
-            <select v-model="selectedDifficulty">
+            <select v-model="selectedDifficulty" aria-describedby="difficulty-help">
               <option value="">Todas as dificuldades</option>
               <option value="easy">Fácil</option>
               <option value="medium">Média</option>
@@ -201,6 +201,7 @@ async function nextQuestion() {
             </select>
           </label>
           <button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar filtros</button>
+          <p id="difficulty-help" class="study-muted">O filtro de dificuldade inclui apenas questões já classificadas após revisão. Para praticar também as que aguardam classificação, mantenha “Todas as dificuldades”.</p>
           <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
         </div>
       <p v-if="pending" class="study-state">Carregando questões…</p>
@@ -209,8 +210,15 @@ async function nextQuestion() {
         <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
       </div>
       <div v-else-if="!currentQuestion" class="study-empty">
-        <h2>Nenhuma questão disponível ainda.</h2>
-        <p>O banco ainda não possui questões publicadas para este filtro. Questões só aparecerão após cadastro editorial e publicação no banco.</p>
+        <template v-if="selectedDifficulty">
+          <h2>Nenhuma questão revisada nesta dificuldade.</h2>
+          <p>Não encontramos questões com esta dificuldade revisada para os filtros escolhidos. Outras questões podem estar disponíveis sem classificação de dificuldade.</p>
+          <button class="study-secondary-button" @click="selectedDifficulty = ''">Ver todas as dificuldades</button>
+        </template>
+        <template v-else>
+          <h2>Nenhuma questão encontrada.</h2>
+          <p>Não há questões publicadas para os filtros escolhidos. Tente outra disciplina ou limpe os filtros para continuar praticando.</p>
+        </template>
         <NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink>
       </div>
       <template v-else>
