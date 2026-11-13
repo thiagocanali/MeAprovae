@@ -58,6 +58,13 @@ const answeredProgress = computed(() => totalQuestions.value > 0 ? Math.round(((
 const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
 const favoritePending = ref(false)
 const favoriteError = ref('')
+const favoritesRetryPending = ref(false)
+async function retryFavorites() {
+  if (favoritesRetryPending.value) return
+  favoritesRetryPending.value = true
+  try { await refreshFavorites() }
+  finally { favoritesRetryPending.value = false }
+}
 // Each filter/list/question transition invalidates work started in the previous view.
 // A revision also distinguishes A → B → A from the original A request.
 let practiceRevision = 0
@@ -232,10 +239,11 @@ async function nextQuestion() {
           </p>
           <p class="study-muted">Dificuldade: {{ currentQuestion.difficulty === 'easy' ? 'Fácil' : currentQuestion.difficulty === 'hard' ? 'Difícil' : currentQuestion.difficulty === 'medium' ? 'Média' : 'Ainda não revisada' }}</p>
           <h2>{{ currentQuestion.statement }}</h2>
-          <button class="study-secondary-button study-favorite-button" :disabled="favoritePending || Boolean(favoritesError)" @click="toggleFavorite">
+          <button type="button" class="study-secondary-button study-favorite-button" :disabled="favoritePending || favoritesRetryPending || Boolean(favoritesError)" @click="toggleFavorite">
             {{ favoritePending ? 'Salvando…' : isFavorite ? '★ Remover dos favoritos' : '☆ Salvar nos favoritos' }}
           </button>
           <p v-if="favoriteError" class="auth-error" role="alert">{{ favoriteError }}</p>
+          <div v-if="favoritesError" class="study-error" role="alert">Não foi possível consultar seus favoritos. <button type="button" class="study-secondary-button" :disabled="favoritesRetryPending" @click="retryFavorites()">{{ favoritesRetryPending ? 'Atualizando…' : 'Tentar novamente' }}</button></div>
           <fieldset class="study-options" :disabled="Boolean(result) || submitPending">
             <legend>Selecione uma alternativa</legend>
             <label v-for="option in currentQuestion.options" :key="option.id" class="study-option" :class="{ 'is-selected': selectedOptionId === option.id, 'is-correct': result?.correctOptionId === option.id, 'is-wrong': result?.selectedOptionId === option.id && !result.isCorrect }">
