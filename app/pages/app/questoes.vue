@@ -171,10 +171,7 @@ async function nextQuestion() {
 
 <template>
   <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/provas">Simulados</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/erros">Revisar erros</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
-    </header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">PRÁTICA</p>
       <h1>Banco de questões</h1>
