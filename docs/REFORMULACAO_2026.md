@@ -54,3 +54,10 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Corrigido bloqueio sem recuperação na prática: se a leitura de favoritos falhar, o botão de favoritar continua indisponível para evitar decisão baseada em estado desconhecido, mas a tela oferece **Tentar novamente** para atualizar o estado.
 - A ação de atualização evita chamadas repetidas enquanto a tentativa está em andamento.
 - A Vercel permanece bloqueada por limite de builds; não foi feito merge nem alteração no ambiente de produção.
+
+## Encerramento seguro de simulados
+- CI #275, run `43507177266`, concluído com sucesso no commit `2224fb9`.
+- Encerrar um simulado com respostas pendentes agora exige uma confirmação explícita, com quantidade de questões sem resposta e ação para voltar à resolução.
+- A confirmação é descartada quando o estudante muda de questão ou quando o total de respostas pendentes muda.
+- Simulados totalmente respondidos continuam com finalização direta.
+- Os commits desta seção exigem nova validação automatizada e visual antes do merge.
