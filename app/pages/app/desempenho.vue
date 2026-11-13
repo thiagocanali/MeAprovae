@@ -9,6 +9,7 @@ const { data, pending, error, refresh } = await useFetch<PerformanceOverview>('/
   query: computed(() => ({ days: period.value, timezone: timezone.value })),
 })
 const maximum = computed(() => Math.max(1, ...(data.value?.days.map(day => day.attempts) ?? [])))
+const performanceSummary = computed(() => data.value ? `${data.value.totals.attempts} tentativas, ${data.value.totals.accuracy}% de acerto, ${data.value.totals.activeDays} dias ativos nos últimos ${data.value.periodDays} dias.` : '')
 const examPoints = computed(() => examChartPoints(data.value?.recentExams ?? []))
 const polyline = computed(() => examPoints.value.map(point => `${point.x},${point.y}`).join(' '))
 const calendarLabel = (date: string) => `${date.slice(8, 10)}/${date.slice(5, 7)}`
@@ -28,9 +29,10 @@ function examDate(date: string) {
         <label for="performance-timezone">Fuso dos dias</label><select id="performance-timezone" v-model="timezone" :disabled="pending"><option value="America/Sao_Paulo">Horário de São Paulo</option><option value="UTC">UTC</option></select>
         <button class="study-secondary-button" :disabled="pending" @click="refresh()">Atualizar indicadores</button>
       </div>
-      <p v-if="pending" role="status">Carregando indicadores…</p>
-      <div v-else-if="error" class="study-state" role="alert">Não foi possível carregar sua evolução. <button @click="refresh()">Tentar novamente</button></div>
+      <p v-if="pending" role="status" aria-live="polite">Carregando indicadores…</p>
+      <div v-else-if="error" class="study-state study-error" role="alert">Não foi possível carregar sua evolução. <button type="button" class="study-secondary-button" @click="refresh()">Tentar novamente</button></div>
       <template v-else-if="data">
+        <p class="sr-only" role="status">{{ performanceSummary }}</p>
         <div class="study-stats">
           <article class="study-card"><span>Tentativas no período</span><strong>{{ data.totals.attempts }}</strong></article>
           <article class="study-card"><span>Taxa de acerto</span><strong>{{ data.totals.attempts ? `${data.totals.accuracy}%` : '—' }}</strong></article>
