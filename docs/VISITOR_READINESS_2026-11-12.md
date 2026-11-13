@@ -3,6 +3,28 @@
 Base observada: main b6104a4f67fc206f21796f0b4f1771698c10f3b1.
 Objetivo: visitante entende a proposta, acessa sua conta, responde uma questão e consulta o resultado.
 
+## Continuação autenticada — 13/11/2026
+
+Uso da sessão autorizado pelo usuário, que realizou o login diretamente no navegador. Não houve compartilhamento de credenciais.
+
+- Questão avulsa: resposta correta e explicação exibidas; tentativa registrada no histórico e no painel (5 → 6 tentativas; 4 → 5 acertos).
+- Simulado de 10 questões: uma resposta correta salva; recarregar manteve a resposta e não renovou o prazo (59:48 → 59:42).
+- Encerramento deliberado com nove questões em branco: nota de 10%, 1/10 acertos e nove sem resposta. Resultado apareceu na página de desempenho.
+- Desempenho de 30 dias: sete tentativas, 85,7% de acerto, um simulado encerrado e média de 10%. Janela de sete dias: seis tentativas e 83,3%, excluindo a tentativa mais antiga.
+- Simulado percorrido em viewport 390×844; na retomada, scrollWidth 375 e innerWidth 390, sem overflow horizontal.
+- Impacto na conta: duas novas tentativas e um simulado de teste com 10%, preservados no histórico. Não são medida de desempenho pessoal.
+- Ainda não cobertos: cadastro/confirmação por e-mail, recuperação completa, novo ciclo de logout/login, isolamento entre duas contas e expiração natural do simulado.
+
+A correção de mensagens da PR #46 foi integrada, com 128 testes, typecheck, build e suíte PostgreSQL aprovados. Produção READY e mensagem “E-mail ou senha inválidos.” confirmada no navegador.
+
+### Clareza dos filtros de dificuldade
+
+A API inclui apenas questões com dificuldade revisada quando se escolhe Fácil/Média/Difícil. A consulta agregada confirmou zero questões nessa condição, além de 60 publicadas em nove disciplinas e 32 sem URL de fonte.
+
+A interface passa a explicar essa regra junto ao filtro e, na lista vazia com dificuldade selecionada, oferece “Ver todas as dificuldades”. Essa ação remove somente a dificuldade, mantendo disciplina e assunto. Nenhuma dificuldade é atribuída automaticamente; não há alteração de API, banco ou conteúdo.
+
+Os itens pendentes nas seções históricas abaixo devem ser lidos com a cobertura adicional descrita nesta continuação.
+
 ## Evidências desta sessão
 
 | Parte da jornada | Resultado | Limite |
