@@ -145,3 +145,46 @@ button:disabled, select:disabled { cursor: not-allowed; }
   .hero-actions { gap: var(--space-4); }
   .study-card { transform: none; }
 }
+
+/* Navegação compartilhada: rolagem horizontal previsível em telas estreitas. */
+.student-navigation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.student-navigation-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.student-navigation-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: .5rem .75rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-muted);
+  font-size: .875rem;
+  font-weight: 600;
+}
+.student-navigation-links a:hover,
+.student-navigation-links a.is-active {
+  color: var(--color-text);
+  background: var(--color-surface-soft);
+}
+@media (max-width: 760px) {
+  .student-navigation { gap: var(--space-2); }
+  .student-navigation-links {
+    order: 3;
+    flex: 0 0 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-block: var(--space-2);
+    scrollbar-width: thin;
+  }
+  .student-navigation-links a { white-space: nowrap; }
+}
