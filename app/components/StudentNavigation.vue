@@ -26,8 +26,8 @@ const links = [
         v-for="link in links"
         :key="link.to"
         :to="link.to"
-        active-class="is-active"
-        :exact-active-class="link.to === '/app' ? 'is-active' : undefined"
+        :active-class="link.to === '/app' ? '' : 'is-active'"
+        exact-active-class="is-active"
       >{{ link.label }}</NuxtLink>
     </nav>
     <button
