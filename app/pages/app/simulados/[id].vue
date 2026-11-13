@@ -13,6 +13,7 @@ const current = computed(() => session.value?.questions[currentIndex.value])
 const selectedOptionId = ref(current.value?.result?.selectedOptionId ?? '')
 const saving = ref(false)
 const errorMessage = ref('')
+const confirmFinish = ref(false)
 const remainingSeconds = ref(session.value ? remainingExamSeconds(session.value.expiresAt, session.value.serverNow) : 0)
 const timeLabel = computed(() => `${String(Math.floor(remainingSeconds.value / 60)).padStart(2, '0')}:${String(remainingSeconds.value % 60).padStart(2, '0')}`)
 let interval: ReturnType<typeof setInterval> | undefined
@@ -56,6 +57,10 @@ async function submitAnswer() {
 }
 async function finishExam() {
   if (saving.value) return
+  if (unansweredCount.value > 0 && !confirmFinish.value) {
+    confirmFinish.value = true
+    return
+  }
   saving.value = true; errorMessage.value = ''
   try { data.value = await $fetch<{ session: ExamSession }>(`${endpoint}/finish`, { method: 'POST' }) }
   catch { errorMessage.value = 'Não foi possível finalizar. Tente novamente; suas respostas confirmadas estão salvas.' }
@@ -63,7 +68,7 @@ async function finishExam() {
 }
 function changeQuestion(index: number) {
   if (saving.value) return
-  currentIndex.value = index; errorMessage.value = ''
+  currentIndex.value = index; errorMessage.value = ''; confirmFinish.value = false
 }
 const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
   selected: item.question.options.find(option => option.id === item.result?.selectedOptionId),
@@ -96,7 +101,7 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
             <section v-else class="study-result" aria-live="polite"><h3>{{ current.result.isCorrect ? 'Resposta correta!' : 'Resposta incorreta.' }}</h3><p>{{ current.result.explanation || 'Esta questão ainda não possui explicação cadastrada.' }}</p><p>Resposta salva na sua conta.</p></section>
             <div class="study-actions"><button v-if="currentIndex > 0" class="study-secondary-button" :disabled="saving" @click="changeQuestion(currentIndex - 1)">Anterior</button><button v-if="currentIndex < session.questionCount - 1" class="study-secondary-button" :disabled="saving" @click="changeQuestion(currentIndex + 1)">Próxima questão</button></div>
           </article>
-          <div class="study-card"><p>{{ unansweredCount }} questão(ões) sem resposta. Ao finalizar, elas permanecerão sem acerto na nota.</p><button class="study-primary-button" :disabled="saving" @click="finishExam">{{ saving ? 'Finalizando…' : unansweredCount ? `Finalizar com ${unansweredCount} sem resposta` : 'Finalizar simulado' }}</button></div>
+          <div class="study-card"><p>{{ unansweredCount }} questão(ões) sem resposta. Ao finalizar, elas permanecerão sem acerto na nota.</p><p v-if="confirmFinish" class="study-error" role="alert">Confirma a finalização? As {{ unansweredCount }} questões sem resposta serão contabilizadas na nota e você não poderá responder depois.</p><div class="study-actions"><button v-if="confirmFinish" type="button" class="study-secondary-button" :disabled="saving" @click="confirmFinish = false">Continuar respondendo</button><button type="button" class="study-primary-button" :disabled="saving" @click="finishExam">{{ saving ? 'Finalizando…' : confirmFinish ? 'Confirmar finalização' : unansweredCount ? `Finalizar com ${unansweredCount} sem resposta` : 'Finalizar simulado' }}</button></div></div>
         </template>
         <template v-else-if="session.status !== 'active'">
           <p class="auth-eyebrow">RESULTADO SALVO</p><h1>{{ session.status === 'expired' ? 'Tempo do simulado encerrado' : 'Simulado concluído' }}</h1>
