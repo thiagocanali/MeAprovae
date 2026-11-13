@@ -34,3 +34,10 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Melhorado o estado ativo e a rolagem móvel dos botões de navegação entre questões do simulado.
 - Total desta PR: 12 telas do estudante e 4 páginas editoriais com cabeçalhos compartilhados.
 - Validação visual e testes de integração ainda necessários antes de merge.
+
+## Correções e validação — continuação
+- GitHub Actions run **43447579476** (commit `deaefaee`): jobs `validate` e `database` concluídos com sucesso. O job `validate` passou typecheck, Vitest, verificação de cálculos, build Vercel e repetição do build com cache.
+- O status de deploy Vercel desse commit falhou por `build-rate-limit` da conta, **não** por erro de compilação comprovado. Novos commits exigem nova validação de CI.
+- Corrigida a atualização dependente dos filtros de prática: alterar a disciplina limpa o assunto imediatamente via `watch(..., { flush: 'sync' })`, evitando consultas com disciplina e assunto incompatíveis.
+- Falha no carregamento do catálogo de filtros agora oferece ação de nova tentativa (`refreshCatalog`).
+- Mantida a PR sem merge até os checks mais recentes passarem e existir evidência suficiente da experiência visual.
