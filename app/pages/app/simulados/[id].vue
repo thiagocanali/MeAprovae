@@ -41,6 +41,7 @@ async function synchronize() {
 }
 watch(data, synchronizeTimer)
 watch(current, item => { selectedOptionId.value = item?.result?.selectedOptionId ?? '' })
+watch(unansweredCount, () => { confirmFinish.value = false })
 onMounted(synchronizeTimer)
 onBeforeUnmount(stopTimer)
 async function submitAnswer() {
@@ -50,6 +51,7 @@ async function submitAnswer() {
     data.value = await $fetch<{ session: ExamSession }>(`${endpoint}/answers`, { method: 'POST', body: {
       position: current.value.position, optionId: selectedOptionId.value,
     } })
+    confirmFinish.value = false
   } catch (cause: unknown) {
     const failure = cause as { data?: { statusMessage?: string } }
     errorMessage.value = failure.data?.statusMessage ?? 'Não foi possível salvar sua resposta. A seleção foi mantida; tente novamente.'
