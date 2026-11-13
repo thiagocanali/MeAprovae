@@ -20,10 +20,7 @@ const accuracy = computed(() => total.value ? Math.round((correct.value / total.
 
 <template>
   <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink></nav>
-    </header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">SUA EVOLUÇÃO</p>
       <h1>Histórico de questões</h1>
