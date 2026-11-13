@@ -31,6 +31,12 @@ jobs:
         run: python3 scripts/content/check_math_release.py
       - name: Production build
         run: npm run build
+        env:
+          NITRO_PRESET: vercel
+      - name: Repeat production build with generated cache
+        run: npm run build
+        env:
+          NITRO_PRESET: vercel
 
   database:
     runs-on: ubuntu-latest
