@@ -12,14 +12,14 @@
 .study-content { width: min(calc(100% - 48px), var(--ui-container)); padding-block: clamp(32px, 5vw, 64px) 88px; }
 .student-welcome h1, .study-content h1 { font-family: var(--font-display); line-height: 1.13; letter-spacing: -.035em; }
 .study-section { gap: var(--space-4); margin-top: var(--space-8); }
-.study-card, .study-question-card, .study-empty, .study-state, .student-empty {
+.study-page .study-card, .student-home .study-card, .study-question-card, .study-empty, .study-state, .student-empty {
   min-width: 0;
   border: 1px solid var(--ui-border);
   border-radius: var(--radius-lg);
   background: var(--ui-surface);
   box-shadow: var(--ui-shadow);
 }
-.study-card { padding: clamp(18px, 2.5vw, 28px); }
+.study-page .study-card, .student-home .study-card { width: auto; transform: none; padding: clamp(18px, 2.5vw, 28px); }
 .study-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--space-4); }
 .study-stats { grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: var(--space-4); }
 .study-stats .study-card { align-content: space-between; }
@@ -94,7 +94,7 @@
   .study-page > .student-navigation, .study-content { width: min(calc(100% - 32px), var(--ui-container)); }
   .study-content { padding-block: 32px 64px; }
   .study-stats { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
-  .study-card { padding: 18px; }
+  .study-page .study-card, .student-home .study-card { padding: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .study-option, .study-primary-button, .study-secondary-button, .logout-button { transition: none; }
