@@ -33,7 +33,7 @@ async function startExam() {
 
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/desempenho">Desempenho</NuxtLink></nav></header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">SIMULADOS</p><h1>Pratique e acompanhe sua evolução</h1>
       <p class="auth-description">Modo estudo: correção após cada resposta. Sua sessão fica salva para retomar em outro momento ou dispositivo, dentro do prazo original.</p>
