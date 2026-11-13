@@ -26,3 +26,11 @@ Unificar a experiência visual e funcional do Me Aprovaê sem perder dados, sess
 
 ## Critério de conclusão
 A PR de fundação não equivale à conclusão da reformulação. Exigir CI, preview e inspeção visual antes de merge; para as fases posteriores, validar fluxos autenticados e dados reais.
+
+## Continuação — navegação de simulados e editorial
+- Simulado individual `app/pages/app/simulados/[id].vue` agora usa `StudentNavigation` sem alterar cronômetro, respostas ou persistência.
+- Componente `app/components/AdminNavigation.vue` criado para a área editorial, mantendo seus links de gestão, fila, acervo, importação e retorno à área do estudante.
+- Migradas as páginas `app/pages/admin/index.vue`, `acervo.vue`, `revisao.vue` e `importar.vue`.
+- Melhorado o estado ativo e a rolagem móvel dos botões de navegação entre questões do simulado.
+- Total desta PR: 12 telas do estudante e 4 páginas editoriais com cabeçalhos compartilhados.
+- Validação visual e testes de integração ainda necessários antes de merge.
