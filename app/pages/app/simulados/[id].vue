@@ -72,7 +72,7 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
 
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/provas">Meus simulados</NuxtLink><NuxtLink to="/app/desempenho">Desempenho</NuxtLink></nav></header>
+    <StudentNavigation />
     <section class="study-content">
       <p v-if="pending && !session" role="status">Carregando simulado…</p>
       <div v-if="error" class="study-error" role="alert">Não foi possível carregar este simulado. Ele deve pertencer à sua conta. <button @click="synchronize()">Tentar novamente</button></div>
