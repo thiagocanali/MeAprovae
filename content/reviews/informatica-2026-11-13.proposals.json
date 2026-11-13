@@ -1,0 +1,146 @@
+{
+  "status": "draft_for_editorial_review",
+  "reviewed_on": "2026-11-13",
+  "method": "AI-assisted technical review against primary references",
+  "human_review_complete": false,
+  "ready_for_publication": false,
+  "difficulty_reviewed": false,
+  "authorship_and_rights_verified": false,
+  "notes": [
+    "Não é arquivo de importação nem instrução de atualização SQL.",
+    "Dados de tentativas são contagens agregadas observadas na data; reconferir antes de qualquer edição.",
+    "Os identificadores apontam para itens existentes; não são IDs para novos registros.",
+    "Referências sustentam conceitos; não comprovam autoria/licença do texto das questões."
+  ],
+  "proposals": [
+    {
+      "question_id": "44719196-a657-438a-be84-c4b173a1f9ec",
+      "topic": "Autenticação multifator",
+      "current_answer_label": "B",
+      "observed_attempt_count": 0,
+      "proposed_statement": null,
+      "proposed_explanation": "MFA usa fatores de categorias distintas, como senha (conhecimento) e um autenticador em dispositivo (posse). Senha e PIN, sozinhos, pertencem à mesma categoria. Uma senha longa não cria outro fator, e MFA não autoriza compartilhar contas nem substitui atualizações.",
+      "proposed_reference_urls": [
+        "https://pages.nist.gov/800-63-4/sp800-63/model/"
+      ],
+      "editorial_note": "Explicitar que duas credenciais do mesmo tipo não formam MFA.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "a5a11f1e-66a1-4ee8-9394-4599531ebbb7",
+      "topic": "Phishing",
+      "current_answer_label": "A",
+      "observed_attempt_count": 0,
+      "proposed_statement": null,
+      "proposed_explanation": "A mensagem e a página falsas simulam uma instituição para obter credenciais: esse é o cenário de phishing descrito. Fragmentação, desfragmentação e virtualização não designam essa fraude. A aparência de banco ou um cadeado no navegador, isoladamente, não comprova a legitimidade do destino.",
+      "proposed_reference_urls": [
+        "https://www.fbi.gov/how-we-can-help-you/common-frauds-and-scams/spoofing-and-phishing"
+      ],
+      "editorial_note": "Manter cenário; ampliar distinção entre fraude e operações legítimas.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "a9dbb13d-857f-4491-ac9e-88b498845701",
+      "topic": "TLS no HTTPS",
+      "current_answer_label": "B",
+      "observed_attempt_count": 0,
+      "proposed_statement": null,
+      "proposed_explanation": "TLS estabelece um canal com confidencialidade, integridade e autenticação. No HTTPS usual, o navegador valida a identidade do servidor por certificados. Isso protege o transporte, mas não garante que o conteúdo ou a organização do site sejam confiáveis. TLS não melhora a resolução de imagens nem elimina autenticação da aplicação.",
+      "proposed_reference_urls": [
+        "https://www.rfc-editor.org/rfc/rfc8446.html#section-1"
+      ],
+      "editorial_note": "Incluir integridade e evitar sugerir garantia de legitimidade do conteúdo do site.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "b5ed7227-6867-42c4-ad16-e772bc428f6c",
+      "topic": "DNS",
+      "current_answer_label": "A",
+      "observed_attempt_count": 0,
+      "proposed_statement": null,
+      "proposed_explanation": "DNS permite consultar registros associados a nomes de domínio; entre eles estão os endereços usados para localizar hosts. O sistema também armazena outros tipos de informação. DHCP trata da configuração de hosts na rede; FTP e SMTP não são serviços de resolução de nomes.",
+      "proposed_reference_urls": [
+        "https://www.rfc-editor.org/rfc/rfc1034.html#section-3.6"
+      ],
+      "editorial_note": "Precisar que resolução nome/endereço é uma função do DNS, não a totalidade dele.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "c591b138-ae1f-48e0-9241-aad976e09f9e",
+      "topic": "Hash criptográfico",
+      "current_answer_label": "B",
+      "observed_attempt_count": 1,
+      "proposed_statement": null,
+      "proposed_explanation": "Um hash criptográfico gera um resumo determinístico. Resistência à pré-imagem dificulta encontrar uma entrada que produza um resumo dado; resistência a colisões dificulta encontrar duas entradas distintas com o mesmo resumo. Isso não significa impossibilidade matemática nem substitui controle de acesso. Senhas exigem esquema adequado de hashing com salt e custo, não apenas um hash rápido genérico.",
+      "proposed_reference_urls": [
+        "https://csrc.nist.gov/Projects/hash-functions",
+        "https://pages.nist.gov/800-63-4/sp800-63b.html#passwordver"
+      ],
+      "editorial_note": "Precisar pré-imagem e colisão sem afirmar que é matematicamente impossível descobrir entradas. Nova versão obrigatória para mudança material.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "ceebeab7-e91a-4a6c-b85b-2090d490744e",
+      "topic": "SQL WHERE",
+      "current_answer_label": "C",
+      "observed_attempt_count": 1,
+      "proposed_statement": "Em uma consulta SELECT, qual cláusula filtra as linhas da tabela resultante de FROM antes do agrupamento?",
+      "proposed_explanation": "WHERE mantém somente as linhas para as quais a condição é verdadeira; falso e NULL são descartados. GROUP BY forma grupos e HAVING filtra grupos. ORDER BY ordena o resultado. JOIN combina tabelas e pode ter sua própria condição ON; no ponto do processamento indicado pelo enunciado, a cláusula pedida é WHERE.",
+      "proposed_reference_urls": [
+        "https://www.postgresql.org/docs/18/queries-table-expressions.html#QUERIES-WHERE"
+      ],
+      "editorial_note": "Delimitar o enunciado para evitar confusão com HAVING e JOIN ON. Nova versão se materialmente reformulado.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "f2fac4eb-ab32-4679-8322-e7dc1d81dc3b",
+      "topic": "Menor privilégio",
+      "current_answer_label": "C",
+      "observed_attempt_count": 1,
+      "proposed_statement": null,
+      "proposed_explanation": "Menor privilégio é conceder somente o acesso necessário para executar as tarefas atribuídas. O princípio também se aplica a processos. Acesso administrativo por padrão, permissões gerais para reduzir chamados ou cópia das permissões do gestor não demonstram essa necessidade.",
+      "proposed_reference_urls": [
+        "https://csrc.nist.gov/glossary/term/least_privilege"
+      ],
+      "editorial_note": "Explicação pode incluir processos e concessões temporárias sem mudar a alternativa correta.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    },
+    {
+      "question_id": "fd48edbf-2a6f-412e-8367-40236c8c12a2",
+      "topic": "Backup 3-2-1",
+      "current_answer_label": "A",
+      "observed_attempt_count": 1,
+      "proposed_statement": null,
+      "proposed_explanation": "Na regra 3-2-1, são três cópias ao todo: o original e dois backups, em dois tipos de mídia, com uma cópia fora do local principal. Três pastas no mesmo computador não oferecem essa separação. A regra é uma base; cópias offline e testes de restauração complementam a proteção.",
+      "proposed_reference_urls": [
+        "https://www.cyber.gc.ca/en/guidance/tips-backing-your-information-itsap40002"
+      ],
+      "editorial_note": "Três cópias incluem o original; esclarecer armazenamento externo e testes. Nova versão para mudanças materiais.",
+      "publication_state": "pending_human_review",
+      "difficulty_proposal": "easy",
+      "difficulty_rationale": "Reconhecimento direto de um conceito, sem cálculo ou integração de múltiplas etapas; hipótese pedagógica ainda não validada.",
+      "difficulty_reviewed": false
+    }
+  ]
+}
