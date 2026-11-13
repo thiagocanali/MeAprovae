@@ -13,6 +13,7 @@ const current = computed(() => session.value?.questions[currentIndex.value])
 const selectedOptionId = ref(current.value?.result?.selectedOptionId ?? '')
 const saving = ref(false)
 const errorMessage = ref('')
+const synchronizing = ref(false)
 const confirmFinish = ref(false)
 const remainingSeconds = ref(session.value ? remainingExamSeconds(session.value.expiresAt, session.value.serverNow) : 0)
 const timeLabel = computed(() => `${String(Math.floor(remainingSeconds.value / 60)).padStart(2, '0')}:${String(remainingSeconds.value % 60).padStart(2, '0')}`)
@@ -36,8 +37,12 @@ function synchronizeTimer() {
   }, 1000)
 }
 async function synchronize() {
-  await refresh()
-  if (!error.value) synchronizeTimer()
+  if (synchronizing.value) return
+  synchronizing.value = true
+  try {
+    await refresh()
+    if (!error.value) synchronizeTimer()
+  } finally { synchronizing.value = false }
 }
 watch(data, synchronizeTimer)
 watch(current, item => { selectedOptionId.value = item?.result?.selectedOptionId ?? '' })
@@ -82,14 +87,14 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
   <main class="study-page">
     <StudentNavigation />
     <section class="study-content">
-      <p v-if="pending && !session" role="status">Carregando simulado…</p>
-      <div v-if="error" class="study-error" role="alert">Não foi possível carregar este simulado. Ele deve pertencer à sua conta. <button type="button" class="study-secondary-button" @click="synchronize()">Tentar novamente</button></div>
+      <p v-if="pending && !session" role="status" aria-live="polite">Carregando simulado…</p>
+      <div v-if="error" class="study-error" role="alert">Não foi possível carregar este simulado. Ele deve pertencer à sua conta. <button type="button" class="study-secondary-button" :disabled="synchronizing" @click="synchronize()">{{ synchronizing ? 'Sincronizando…' : 'Tentar novamente' }}</button></div>
       <template v-if="session">
         <template v-if="session.status === 'active' && current">
           <div class="study-exam-top"><h1>Questão {{ currentIndex + 1 }} de {{ session.questionCount }}</h1><span class="study-exam-timer" aria-label="Tempo restante">{{ timeLabel }}</span></div>
           <p class="study-muted">Modo estudo · {{ session.answeredCount }} respostas salvas. O prazo continua contando ao sair.</p>
           <progress class="study-progress" :value="session.answeredCount" :max="Math.max(1, session.questionCount)" :aria-label="`${session.answeredCount} de ${session.questionCount} questões respondidas`">{{ session.answeredCount }} de {{ session.questionCount }}</progress>
-          <p v-if="remainingSeconds === 0" role="status">O tempo terminou. <button @click="synchronize()">Sincronizar resultado</button></p>
+          <p v-if="remainingSeconds === 0" role="status">O tempo terminou. <button type="button" class="study-secondary-button" :disabled="synchronizing" @click="synchronize()">{{ synchronizing ? 'Sincronizando…' : 'Sincronizar resultado' }}</button></p>
           <nav class="exam-question-nav" aria-label="Questões do simulado"><button v-for="(item, index) in session.questions" :key="item.position" :aria-current="index === currentIndex ? 'step' : undefined" :aria-label="`Questão ${item.position}${item.result ? ', respondida' : ', não respondida'}`" :disabled="saving" @click="changeQuestion(index)">{{ item.position }}{{ item.result ? ' ✓' : '' }}</button></nav>
           <article class="study-question-card">
             <p v-if="current.question.source_label" class="study-muted">{{ current.question.source_label }}</p>
@@ -114,7 +119,7 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
           <NuxtLink to="/app/provas" class="study-link">Voltar aos meus simulados →</NuxtLink>
         </template>
       </template>
-      <p v-if="errorMessage" class="study-error" role="alert">{{ errorMessage }} <button :disabled="saving" @click="synchronize()">Sincronizar respostas salvas</button></p>
+      <p v-if="errorMessage" class="study-error" role="alert">{{ errorMessage }} <button type="button" class="study-secondary-button" :disabled="saving || synchronizing" @click="synchronize()">{{ synchronizing ? 'Sincronizando…' : 'Sincronizar respostas salvas' }}</button></p>
     </section>
   </main>
 </template>
