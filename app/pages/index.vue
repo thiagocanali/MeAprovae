@@ -25,14 +25,15 @@ useSeoMeta({
         <p class="eyebrow"><span class="eyebrow-dot" /> SUA JORNADA, COM DIREÇÃO</p>
         <h1 id="hero-title">Sua aprovação começa com <span>um passo de cada vez.</span></h1>
         <p class="hero-description">
-          Um espaço para organizar seus estudos, acompanhar editais, praticar com questões
-          e enxergar sua evolução com clareza.
+          Pratique questões para concursos, entenda suas respostas
+          e acompanhe sua evolução em um só lugar.
         </p>
         <div class="hero-actions">
           <NuxtLink class="primary-action" to="/cadastro">Começar agora <span aria-hidden="true">↗</span></NuxtLink>
           <a class="secondary-action" href="#proposta">Conheça a proposta</a>
         </div>
-        <p class="status-note">Crie sua conta para definir um objetivo de estudo e acompanhar sua evolução.</p>
+        <p class="status-note">Crie sua conta para praticar e salvar seu histórico. Escolher um concurso como objetivo é opcional.</p>
+        <p class="status-note"><strong>Versão inicial:</strong> acervo piloto em revisão, com cobertura limitada de disciplinas. Ainda não oferecemos preparação completa para um edital.</p>
       </div>
 
       <div class="hero-visual" aria-label="Ilustração abstrata de progresso nos estudos">
@@ -66,7 +67,7 @@ useSeoMeta({
         <article class="value-card">
           <span class="value-index">01</span>
           <h3>Saiba o que estudar</h3>
-          <p>Organize seu objetivo e visualize os assuntos do edital em uma estrutura clara.</p>
+          <p>Escolha uma disciplina para praticar e, se quiser, defina um concurso como objetivo.</p>
         </article>
         <article class="value-card">
           <span class="value-index">02</span>

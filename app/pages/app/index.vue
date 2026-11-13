@@ -52,7 +52,7 @@ async function logout() {
     <section class="student-welcome">
       <p class="auth-eyebrow">ÁREA DO ESTUDANTE</p>
       <h1>Seu próximo passo começa aqui.</h1>
-      <p v-if="data?.user?.email" class="auth-description">Sessão autenticada: {{ data.user.email }}</p>
+      <p v-if="data?.user?.email" class="auth-description">Você está conectado como {{ data.user.email }}</p>
       <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
       <div v-if="dashboardPending" class="study-state" role="status" aria-live="polite">
         Carregando seus indicadores...
@@ -71,10 +71,11 @@ async function logout() {
         <p class="study-muted">{{ dashboardData.dashboard.activeGoal.positionTitle || 'Cargo não selecionado' }}<span v-if="dashboardData.dashboard.activeGoal.noticeTitle"> · {{ dashboardData.dashboard.activeGoal.noticeTitle }}</span></p>
         <NuxtLink class="study-link" to="/app/concursos">Ver concursos e editais →</NuxtLink>
       </div>
-      <div v-else class="student-empty">
-        <h2>Vamos organizar seus estudos.</h2>
-        <p>Escolha um concurso como objetivo para acompanhar seu edital e orientar sua preparação. Nenhum indicador fictício será exibido aqui.</p>
-        <NuxtLink class="study-link" to="/app/onboarding">Definir meu objetivo →</NuxtLink>
+      <div v-else-if="dashboardData?.dashboard && !dashboardPending && !dashboardError" class="student-empty">
+        <h2>Comece pelas questões.</h2>
+        <p>Você pode praticar por disciplina sem escolher um concurso. Suas respostas ficam salvas no histórico e ajudam a acompanhar sua evolução.</p>
+        <p><NuxtLink class="study-link" to="/app/questoes">Praticar questões →</NuxtLink></p>
+        <p><NuxtLink class="study-link" to="/app/onboarding">Definir um objetivo de estudo (opcional) →</NuxtLink></p>
       </div>
       <section v-if="dashboardData?.performanceBySubject.length" class="study-section">
         <h2>Desempenho por disciplina</h2>
