@@ -37,7 +37,7 @@ const difficultyLabel = (difficulty: string | null) => ({ easy: 'Fácil', medium
 
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><nav><NuxtLink to="/admin/acervo">Acervo</NuxtLink><NuxtLink to="/admin">Gestão</NuxtLink></nav></header>
+    <AdminNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">REVISÃO EDITORIAL</p><h1>Fila de revisão</h1>
       <p class="auth-description">Encontre questões por disciplina, lote e pendência de dificuldade. Abra cada item no editor para conferir enunciado, gabarito, explicação e procedência. Classificar a dificuldade não aprova automaticamente o conteúdo.</p>

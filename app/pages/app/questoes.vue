@@ -35,8 +35,9 @@ const query = computed(() => ({
 const selectedSubjectId = ref(typeof route.query.subjectId === 'string' ? route.query.subjectId : '')
 const selectedTopicId = ref(typeof route.query.topicId === 'string' ? route.query.topicId : '')
 const selectedDifficulty = ref(typeof route.query.difficulty === 'string' && ['easy', 'medium', 'hard'].includes(route.query.difficulty) ? route.query.difficulty : '')
-const { data: catalogData, error: catalogError } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
+const { data: catalogData, error: catalogError, refresh: refreshCatalog } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
 const availableTopics = computed(() => catalogData.value?.topics.filter(topic => topic.subject_id === selectedSubjectId.value) ?? [])
+watch(selectedSubjectId, () => { selectedTopicId.value = '' }, { flush: 'sync' })
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>('/api/study/questions', { query })
 const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
@@ -53,9 +54,17 @@ const submitPending = ref(false)
 const submitError = ref('')
 const attemptKeys = createAttemptIdempotencyKeys()
 const currentQuestion = computed(() => questions.value[currentIndex.value] ?? null)
+const answeredProgress = computed(() => totalQuestions.value > 0 ? Math.round(((currentIndex.value + 1) / totalQuestions.value) * 100) : 0)
 const isFavorite = computed(() => Boolean(currentQuestion.value && favoritesData.value?.favorites.some((favorite) => favorite.question_id === currentQuestion.value?.id)))
 const favoritePending = ref(false)
 const favoriteError = ref('')
+const favoritesRetryPending = ref(false)
+async function retryFavorites() {
+  if (favoritesRetryPending.value) return
+  favoritesRetryPending.value = true
+  try { await refreshFavorites() }
+  finally { favoritesRetryPending.value = false }
+}
 // Each filter/list/question transition invalidates work started in the previous view.
 // A revision also distinguishes A → B → A from the original A request.
 let practiceRevision = 0
@@ -171,17 +180,14 @@ async function nextQuestion() {
 
 <template>
   <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/provas">Simulados</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/erros">Revisar erros</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
-    </header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">PRÁTICA</p>
       <h1>Banco de questões</h1>
       <p class="auth-description">Responda questões publicadas. Sua tentativa será registrada no seu histórico.</p>
         <div class="study-filters" aria-label="Filtros de questões">
           <label>Disciplina
-            <select v-model="selectedSubjectId" @change="selectedTopicId = ''">
+            <select v-model="selectedSubjectId">
               <option value="">Todas as disciplinas</option>
               <option v-for="subject in catalogData?.subjects ?? []" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
             </select>
@@ -202,9 +208,9 @@ async function nextQuestion() {
           </label>
           <button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar filtros</button>
           <p id="difficulty-help" class="study-muted">O filtro de dificuldade inclui apenas questões já classificadas após revisão. Para praticar também as que aguardam classificação, mantenha “Todas as dificuldades”.</p>
-          <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
+          <div v-if="catalogError" class="study-error" role="alert">Os filtros não puderam ser carregados. <button type="button" class="study-secondary-button" @click="refreshCatalog()">Tentar novamente</button></div>
         </div>
-      <p v-if="pending" class="study-state">Carregando questões…</p>
+      <p v-if="pending" class="study-state" role="status" aria-live="polite">Carregando questões…</p>
       <div v-else-if="error" class="study-state study-error" role="alert">
         Não foi possível carregar as questões.
         <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
@@ -219,23 +225,25 @@ async function nextQuestion() {
           <h2>Nenhuma questão encontrada.</h2>
           <p>Não há questões publicadas para os filtros escolhidos. Tente outra disciplina ou limpe os filtros para continuar praticando.</p>
         </template>
-        <NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink>
+        <div class="study-actions"><button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" type="button" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar todos os filtros</button><NuxtLink class="study-link" to="/app/concursos">Explorar concursos →</NuxtLink></div>
       </div>
       <template v-else>
         <div class="study-progress-line">
           <span>Questão {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
-          <span>{{ Math.round(((currentIndex + 1) / (totalQuestions || 1)) * 100) }}%</span>
+          <span>{{ answeredProgress }}%</span>
         </div>
+        <progress class="study-progress" :value="currentIndex + 1" :max="Math.max(1, totalQuestions)" :aria-label="`Questão ${currentIndex + 1} de ${totalQuestions}`">{{ answeredProgress }}%</progress>
         <article class="study-question-card">
           <p v-if="currentQuestion.source_label || currentQuestion.source_year || currentQuestion.source_url" class="study-muted">
             {{ currentQuestion.source_label || 'Fonte não identificada' }}<span v-if="currentQuestion.source_year"> · {{ currentQuestion.source_year }}</span><span v-if="currentQuestion.source_url"> · <a :href="currentQuestion.source_url" target="_blank" rel="noopener noreferrer">Consultar referência oficial</a></span>
           </p>
           <p class="study-muted">Dificuldade: {{ currentQuestion.difficulty === 'easy' ? 'Fácil' : currentQuestion.difficulty === 'hard' ? 'Difícil' : currentQuestion.difficulty === 'medium' ? 'Média' : 'Ainda não revisada' }}</p>
           <h2>{{ currentQuestion.statement }}</h2>
-          <button class="study-secondary-button study-favorite-button" :disabled="favoritePending || Boolean(favoritesError)" @click="toggleFavorite">
+          <button type="button" class="study-secondary-button study-favorite-button" :disabled="favoritePending || favoritesRetryPending || Boolean(favoritesError)" @click="toggleFavorite">
             {{ favoritePending ? 'Salvando…' : isFavorite ? '★ Remover dos favoritos' : '☆ Salvar nos favoritos' }}
           </button>
           <p v-if="favoriteError" class="auth-error" role="alert">{{ favoriteError }}</p>
+          <div v-if="favoritesError" class="study-error" role="alert">Não foi possível consultar seus favoritos. <button type="button" class="study-secondary-button" :disabled="favoritesRetryPending" @click="retryFavorites()">{{ favoritesRetryPending ? 'Atualizando…' : 'Tentar novamente' }}</button></div>
           <fieldset class="study-options" :disabled="Boolean(result) || submitPending">
             <legend>Selecione uma alternativa</legend>
             <label v-for="option in currentQuestion.options" :key="option.id" class="study-option" :class="{ 'is-selected': selectedOptionId === option.id, 'is-correct': result?.correctOptionId === option.id, 'is-wrong': result?.selectedOptionId === option.id && !result.isCorrect }">

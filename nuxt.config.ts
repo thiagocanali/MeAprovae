@@ -3,7 +3,7 @@ const environment = (globalThis as { process?: { env?: Record<string, string | u
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-04',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css', '~/assets/css/auth.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/auth.css', '~/assets/css/design-system.css'],
   runtimeConfig: {
     supabaseUrl: environment.SUPABASE_URL ?? '',
     supabaseAnonKey: environment.SUPABASE_ANON_KEY ?? '',
