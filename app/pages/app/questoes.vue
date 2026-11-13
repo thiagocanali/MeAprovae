@@ -35,8 +35,9 @@ const query = computed(() => ({
 const selectedSubjectId = ref(typeof route.query.subjectId === 'string' ? route.query.subjectId : '')
 const selectedTopicId = ref(typeof route.query.topicId === 'string' ? route.query.topicId : '')
 const selectedDifficulty = ref(typeof route.query.difficulty === 'string' && ['easy', 'medium', 'hard'].includes(route.query.difficulty) ? route.query.difficulty : '')
-const { data: catalogData, error: catalogError } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
+const { data: catalogData, error: catalogError, refresh: refreshCatalog } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
 const availableTopics = computed(() => catalogData.value?.topics.filter(topic => topic.subject_id === selectedSubjectId.value) ?? [])
+watch(selectedSubjectId, () => { selectedTopicId.value = '' }, { flush: 'sync' })
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>('/api/study/questions', { query })
 const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
@@ -179,7 +180,7 @@ async function nextQuestion() {
       <p class="auth-description">Responda questões publicadas. Sua tentativa será registrada no seu histórico.</p>
         <div class="study-filters" aria-label="Filtros de questões">
           <label>Disciplina
-            <select v-model="selectedSubjectId" @change="selectedTopicId = ''">
+            <select v-model="selectedSubjectId">
               <option value="">Todas as disciplinas</option>
               <option v-for="subject in catalogData?.subjects ?? []" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
             </select>
@@ -200,7 +201,7 @@ async function nextQuestion() {
           </label>
           <button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar filtros</button>
           <p id="difficulty-help" class="study-muted">O filtro de dificuldade inclui apenas questões já classificadas após revisão. Para praticar também as que aguardam classificação, mantenha “Todas as dificuldades”.</p>
-          <p v-if="catalogError" class="study-muted">Os filtros não puderam ser carregados.</p>
+          <div v-if="catalogError" class="study-error" role="alert">Os filtros não puderam ser carregados. <button type="button" class="study-secondary-button" @click="refreshCatalog()">Tentar novamente</button></div>
         </div>
       <p v-if="pending" class="study-state" role="status" aria-live="polite">Carregando questões…</p>
       <div v-else-if="error" class="study-state study-error" role="alert">
