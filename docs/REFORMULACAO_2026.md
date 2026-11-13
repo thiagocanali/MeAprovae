@@ -41,3 +41,10 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Corrigida a atualização dependente dos filtros de prática: alterar a disciplina limpa o assunto imediatamente via `watch(..., { flush: 'sync' })`, evitando consultas com disciplina e assunto incompatíveis.
 - Falha no carregamento do catálogo de filtros agora oferece ação de nova tentativa (`refreshCatalog`).
 - Mantida a PR sem merge até os checks mais recentes passarem e existir evidência suficiente da experiência visual.
+
+## Continuação — acessibilidade de desempenho
+- Resumo textual dos indicadores de desempenho disponibilizado para tecnologias assistivas.
+- Mensagem de carregamento com região de status e erro de consulta com botão de nova tentativa padronizado.
+- Filtros de período e fuso horário receberam estilos e áreas de interação consistentes.
+- GitHub Actions run **43448301944** (CI #270) iniciado para `684dbfe`; verificação de banco concluída com sucesso, validação de aplicação ainda em andamento no momento da consulta.
+- Commits posteriores exigem nova execução completa do CI.
