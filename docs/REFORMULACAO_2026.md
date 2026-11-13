@@ -61,3 +61,9 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - A confirmação é descartada quando o estudante muda de questão ou quando o total de respostas pendentes muda.
 - Simulados totalmente respondidos continuam com finalização direta.
 - Os commits desta seção exigem nova validação automatizada e visual antes do merge.
+
+## Robustez da retomada de simulados
+- CI #278 (run `43507618885`) concluído com sucesso no commit `c7a2d8a`.
+- Sincronização manual de respostas/resultado agora tem estado de carregamento e bloqueia solicitações concorrentes.
+- Navegação entre questões valida limites do índice e normaliza o índice atual se uma sessão sincronizada retornar menos questões.
+- Mudanças posteriores ao CI #278 ainda precisam de validação.
