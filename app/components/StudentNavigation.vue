@@ -14,7 +14,9 @@ const links = [
   { to: '/app/concursos', label: 'Concursos' },
   { to: '/app/desempenho', label: 'Desempenho' },
   { to: '/app/favoritas', label: 'Favoritas' },
+  { to: '/app/erros', label: 'Revisar erros' },
   { to: '/app/historico', label: 'Histórico' },
+  { to: '/app/comparar', label: 'Comparar' },
 ]
 </script>
 
