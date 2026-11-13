@@ -48,3 +48,9 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Filtros de período e fuso horário receberam estilos e áreas de interação consistentes.
 - GitHub Actions run **43448301944** (CI #270) iniciado para `684dbfe`; verificação de banco concluída com sucesso, validação de aplicação ainda em andamento no momento da consulta.
 - Commits posteriores exigem nova execução completa do CI.
+
+## Correção de recuperação de favoritos
+- CI **#273**, run `43448599623`, concluiu com sucesso para `b8dfc15`, antes desta correção.
+- Corrigido bloqueio sem recuperação na prática: se a leitura de favoritos falhar, o botão de favoritar continua indisponível para evitar decisão baseada em estado desconhecido, mas a tela oferece **Tentar novamente** para atualizar o estado.
+- A ação de atualização evita chamadas repetidas enquanto a tentativa está em andamento.
+- A Vercel permanece bloqueada por limite de builds; não foi feito merge nem alteração no ambiente de produção.
