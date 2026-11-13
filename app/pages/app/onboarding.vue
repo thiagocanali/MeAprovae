@@ -59,7 +59,8 @@ async function saveGoal() {
     <section class="study-content">
       <p class="auth-eyebrow">PRIMEIRO PASSO</p>
       <h1>Qual é o seu objetivo?</h1>
-      <p class="auth-description">Escolha o concurso que deseja acompanhar. Você poderá alterar seu objetivo depois.</p>
+      <p class="auth-description">Escolha o concurso que deseja acompanhar. Esta etapa é opcional: você pode começar pelas questões e definir seu objetivo depois.</p>
+      <p><NuxtLink class="study-link" to="/app/questoes">Começar pelas questões sem definir objetivo →</NuxtLink></p>
       <p v-if="pending" class="study-state">Carregando concursos publicados…</p>
       <div v-else-if="error" class="study-state study-error" role="alert">
         Não foi possível carregar o catálogo.
