@@ -1,0 +1,101 @@
+/* Me Aprovaê — camada visual da aplicação.
+   Carregada depois de auth.css para evitar regressões por ordem de cascata. */
+:root {
+  --ui-container: 1120px;
+  --ui-border: rgba(209, 226, 245, .14);
+  --ui-surface: #172438;
+  --ui-surface-raised: #1d2c43;
+  --ui-shadow: 0 14px 44px rgba(0, 0, 0, .16);
+}
+.student-home, .study-page { background: var(--color-bg); color: var(--color-text); }
+.student-welcome { width: min(100%, 1040px); margin: clamp(36px, 6vw, 76px) auto; }
+.study-content { width: min(calc(100% - 48px), var(--ui-container)); padding-block: clamp(32px, 5vw, 64px) 88px; }
+.student-welcome h1, .study-content h1 { font-family: var(--font-display); line-height: 1.13; letter-spacing: -.035em; }
+.study-section { gap: var(--space-4); margin-top: var(--space-8); }
+.study-card, .study-question-card, .study-empty, .study-state, .student-empty {
+  min-width: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow);
+}
+.study-card { padding: clamp(18px, 2.5vw, 28px); }
+.study-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--space-4); }
+.study-stats { grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: var(--space-4); }
+.study-stats .study-card { align-content: space-between; }
+.study-stats strong { font-family: var(--font-display); font-size: clamp(1.65rem, 3vw, 2.25rem); line-height: 1.2; font-variant-numeric: tabular-nums; }
+.study-question-card { background: var(--ui-surface-raised); }
+.study-option { min-width: 0; transition: border-color .15s ease, background-color .15s ease; }
+.study-option:hover:not(.is-correct):not(.is-wrong) { border-color: rgba(155, 227, 189, .45); }
+.study-primary-button, .study-secondary-button, .logout-button {
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.study-primary-button:hover:not(:disabled) { background: var(--color-primary-strong); }
+.study-secondary-button:hover:not(:disabled) { background: rgba(255,255,255,.12); }
+.study-form :is(input, select, textarea), .study-filters select, .performance-filters select {
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.table-scroll table { width: 100%; border-collapse: collapse; }
+.table-scroll th, .table-scroll td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid var(--ui-border); }
+.table-scroll th { font-weight: 700; }
+.student-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.student-nav.student-navigation-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+  justify-content: flex-start;
+}
+.student-nav.student-navigation-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: .5rem .75rem;
+  border-radius: var(--radius-sm);
+  font-size: .875rem;
+  color: var(--color-muted);
+}
+.student-nav.student-navigation-links a.router-link-active:not(.is-active) { color: var(--color-muted); }
+.student-nav.student-navigation-links a.is-active,
+.student-nav.student-navigation-links a:hover { color: var(--color-primary); background: var(--color-surface-soft); }
+.study-page > .student-navigation {
+  width: min(calc(100% - 48px), var(--ui-container));
+  margin-inline: auto;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--ui-border);
+}
+@media (max-width: 760px) {
+  .student-navigation { gap: var(--space-2); }
+  .student-nav.student-navigation-links {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    padding-block: var(--space-2);
+  }
+  .student-nav.student-navigation-links a { flex: 0 0 auto; white-space: nowrap; }
+  .study-page > .student-navigation, .study-content { width: min(calc(100% - 32px), var(--ui-container)); }
+  .study-content { padding-block: 32px 64px; }
+  .study-stats { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+  .study-card { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .study-option, .study-primary-button, .study-secondary-button, .logout-button { transition: none; }
+}
