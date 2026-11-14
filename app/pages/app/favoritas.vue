@@ -40,7 +40,7 @@ async function removeFavorite(questionId: string) {
       <p class="auth-description">Questões salvas na sua conta para encontrar e revisar depois.</p>
       <p v-if="pending" class="study-state">Carregando favoritas…</p>
       <div v-else-if="error" class="study-state study-error" role="alert">
-        Não foi possível carregar suas favoritas. Confirme se a migração de favoritos foi aplicada.
+        Não foi possível carregar suas favoritas. Tente novamente em instantes.
         <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
       </div>
       <div v-else-if="!data?.favorites.length" class="study-empty">
@@ -53,6 +53,10 @@ async function removeFavorite(questionId: string) {
         <article v-for="favorite in data.favorites" :key="favorite.question_id" class="study-card">
           <p class="study-muted">{{ favorite.study_questions?.source_label || 'Fonte não informada' }}<span v-if="favorite.study_questions?.source_year"> · {{ favorite.study_questions.source_year }}</span></p>
           <h2>{{ favorite.study_questions?.statement || 'Questão indisponível' }}</h2>
+          <p v-if="favorite.study_questions">
+            <NuxtLink class="study-link" :to="{ path: '/app/questoes', query: { questionId: favorite.question_id } }">Resolver questão →</NuxtLink>
+          </p>
+          <p v-else class="study-muted">Esta questão não está disponível para prática. Você pode removê-la da sua lista.</p>
           <button class="study-secondary-button" :disabled="removingId === favorite.question_id" @click="removeFavorite(favorite.question_id)">
             {{ removingId === favorite.question_id ? 'Removendo…' : 'Remover dos favoritos' }}
           </button>
