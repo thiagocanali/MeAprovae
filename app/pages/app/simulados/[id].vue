@@ -53,11 +53,11 @@ watch(session, value => {
 watch(() => current.value?.question.id, () => {
   const item = current.value
   selectedOptionId.value = item?.result?.selectedOptionId ?? (item ? unsavedSelections.value[item.question.id] ?? '' : '')
-})
+}, { flush: 'sync' })
 watch(selectedOptionId, value => {
   const item = current.value
   if (item && !item.result) unsavedSelections.value[item.question.id] = value
-})
+}, { flush: 'sync' })
 watch(() => current.value?.result?.selectedOptionId, optionId => {
   if (optionId) selectedOptionId.value = optionId
 })
