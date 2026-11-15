@@ -1,6 +1,6 @@
 import { createError, readBody } from 'h3'
 import { createSupabaseServerClient, getAuthenticatedUser } from '../../utils/supabase'
-import { requestNeonAuth, usingNeon } from '../../utils/neon'
+import { ensureNeonAuthAvailability, requestNeonAuth, usingNeon } from '../../utils/neon'
 import { isValidPassword } from '../../../shared/domain/auth/validation'
 
 interface UpdatePasswordBody { password?: unknown; token?: unknown }
@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
     const token = typeof body.token === 'string' ? body.token.trim() : ''
     if (!token || token.length > 4096) throw createError({ statusCode: 400, statusMessage: 'Link de recuperação inválido ou ausente.' })
     const result = await requestNeonAuth(event, 'reset-password', { body: { token, newPassword: body.password }, forwardCookies: true })
+    ensureNeonAuthAvailability(result)
     if (!result.ok) throw createError({ statusCode: 400, statusMessage: 'Não foi possível atualizar a senha. Solicite um novo link.' })
     return { success: true }
   }
