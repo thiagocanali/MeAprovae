@@ -1,6 +1,6 @@
 import { createError, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
-import { requestNeonAuth, usingNeon } from '../../utils/neon'
+import { ensureNeonAuthAvailability, requestNeonAuth, usingNeon } from '../../utils/neon'
 import { isValidPassword, normalizeEmail } from '../../../shared/domain/auth/validation'
 
 interface LoginBody { email?: unknown; password?: unknown }
@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     const result = await requestNeonAuth(event, 'sign-in/email', {
       body: { email, password }, forwardCookies: true,
     })
+    ensureNeonAuthAvailability(result)
     if (!result.ok || !result.data?.user?.id) {
       throw createError({ statusCode: 401, statusMessage: 'E-mail ou senha inválidos.' })
     }
