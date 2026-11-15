@@ -38,6 +38,10 @@ insert into neon_auth."user"(id,name) values
 ('11111111-1111-4111-8111-111111111111','Estudante A'),
 ('22222222-2222-4222-8222-222222222222','Estudante B');
 
+-- Published contest used to verify per-user goals via a SECURITY DEFINER RPC.
+insert into public.study_contests (id,slug,title,status)
+values ('44444444-4444-4444-8444-444444444444','neon-rls-fixture','Teste de isolamento Neon','published');
+
 set local role anonymous;
 do $anonymous$
 begin
@@ -54,11 +58,15 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
 select public.ensure_neon_student_account('Estudante A');
 select public.ensure_neon_student_account('Estudante A');
+select public.set_student_study_goal('44444444-4444-4444-8444-444444444444');
 
 do $first$
 begin
   if (select count(*) from public.student_profiles) <> 1 then
     raise exception 'User profile missing or identity isolation broken';
+  end if;
+  if (select count(*) from public.study_goals where status='active') <> 1 then
+    raise exception 'Student A goal was not visible';
   end if;
   if public.has_platform_role('editor') then
     raise exception 'New student acquired editorial privileges';
@@ -82,6 +90,9 @@ begin
   if (select count(*) from public.student_profiles) <> 1 then
     raise exception 'Authenticated user can see other students';
   end if;
+  if (select count(*) from public.study_goals) <> 0 then
+    raise exception 'Student B can read student A goal';
+  end if;
   if (select display_name from public.student_profiles) <> 'Estudante B' then
     raise exception 'Wrong isolated profile';
   end if;
@@ -92,6 +103,19 @@ begin
   end;
 end
 $second$;
+
+-- Student B may create their own goal, without changing student A's goal.
+select public.set_student_study_goal('44444444-4444-4444-8444-444444444444');
+do $goal_isolation$
+begin
+  if (select count(*) from public.study_goals where status='active') <> 1 then
+    raise exception 'Student B goal isolation failed';
+  end if;
+  if (select count(*) from public.study_goals where user_id='11111111-1111-4111-8111-111111111111') <> 0 then
+    raise exception 'Student A goal leaked into B session';
+  end if;
+end
+$goal_isolation$;
 
 select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',true);
 do $missing$
