@@ -26,8 +26,24 @@ interface ManagedAuthResponse {
 export function normalizeNeonSetCookie(raw: string): string | null {
   if (!raw || /[\r\n]/.test(raw) || !/^[^=;\s]+=[^;]*/.test(raw)) return null
   const parts = raw.split(';').map((part) => part.trim()).filter(Boolean)
-  const attributes = parts.slice(1).filter((part) => !/^(?:domain|path|httponly)(?:=|$)/i.test(part))
-  return [parts[0], 'Path=/', ...attributes, 'HttpOnly'].join('; ')
+  const name = parts[0].split('=', 1)[0]
+  // Only relay cookies belonging to the managed identity provider.
+  if (!/^(?:__(?:Secure|Host)-)?(?:neon-auth|better-auth)\.[a-zA-Z0-9_.-]+$/.test(name)) return null
+  const attributes = parts.slice(1).filter((part) =>
+    !/^(?:domain|path|httponly|samesite|partitioned)(?:=|$)/i.test(part))
+  // The upstream sends SameSite=None; Partitioned for a third-party origin.
+  // The application has a first-party proxy, so use Lax and strip Partitioned.
+  return [parts[0], 'Path=/', ...attributes, 'SameSite=Lax', 'HttpOnly'].join('; ')
+}
+
+export function filterNeonRequestCookies(raw: string | undefined): string {
+  if (!raw) return ''
+  return raw.split(';').map((part) => part.trim()).filter((part) => {
+    const separator = part.indexOf('=')
+    if (separator < 1) return false
+    const name = part.slice(0, separator)
+    return /^(?:__(?:Secure|Host)-)?(?:neon-auth|better-auth)\.[a-zA-Z0-9_.-]+$/.test(name)
+  }).join('; ')
 }
 
 const sessions = new WeakMap<H3Event, Promise<ManagedSession | null>>()
@@ -83,7 +99,8 @@ export async function requestNeonAuth(
   const base = neonAuthUrl(event)
   const headers = new Headers({ 'content-type': 'application/json', origin: getRequestURL(event).origin })
   const cookie = getHeader(event, 'cookie')
-  if (cookie) headers.set('cookie', cookie)
+  const scopedCookie = filterNeonRequestCookies(cookie)
+  if (scopedCookie) headers.set('cookie', scopedCookie)
   let response: Response
   try {
     response = await fetch(`${base}/${endpoint}`, {
