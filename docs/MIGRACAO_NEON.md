@@ -33,9 +33,26 @@ Status: **em preparação; nenhuma migração de dados ou cutover executado** (2
 - `SUPABASE_URL` e `SUPABASE_ANON_KEY`: manter até substituir Auth e chamadas REST/RPC.
 - Não expor strings PostgreSQL em `NUXT_PUBLIC_*`, código, logs ou artefatos de CI.
 
-## Bloqueio atual
+## Provisionamento Neon confirmado — 15/11/2026
 
-A integração Neon está **conectada** e permite listar organizações/projetos, mas a única organização acessível, `Vercel: thiagocanali's projects`, usa plano gratuito **gerenciado pela Vercel**. A operação de criar o projeto `meaprovae` (PostgreSQL 17, região São Paulo) foi recusada com `action restricted; organization is managed by Vercel`. Seu único projeto existente acessível, `neon-lime-apple` (PostgreSQL 18, região US East 1), não será reutilizado: a exigência é projeto isolado. Para continuar o provisionamento, é necessário vincular uma organização Neon independente com permissão de criação, ou criar o projeto `meaprovae` no console Neon e disponibilizar o projeto pela conexão. Nenhuma cópia de dados, mudança em Vercel ou alteração de produção foi realizada.
+A organização independente `org-bold-mountain-42921987` (plano **Free**, gerenciada pelo próprio console Neon) foi disponibilizada e confirmada.
+
+- **Projeto:** `meaprovae` — ID `flat-frog-80262320`; PostgreSQL **17**, região `aws-sa-east-1` (São Paulo).
+- **Banco:** `meaprovae` (UTF8); branch principal `main` — `br-round-cell-b6guly16`.
+- **Branch isolada de homologação:** `migration-staging` — `br-dry-frost-b64e6265`; consultas de leitura confirmaram PostgreSQL **17.12** e zero tabelas `public`.
+- **Conexão:** consulta SQL executada com sucesso via integração Neon. Nenhuma URL de conexão, senha ou chave foi publicada no Git.
+- **Extensões verificadas no destino:** `pgcrypto`, `uuid-ossp` e `pg_stat_statements` disponíveis para instalação; `supabase_vault` **não disponível**. Não instalar nem omitir objetos dependentes dessa extensão sem análise. Nenhuma extensão foi instalada neste passo.
+- **Origem:** PostgreSQL 17.11; aproximadamente 15 MB no banco, 2.7 MB em tabelas da aplicação. SQL confirmou 160 questões, 640 alternativas, 160 respostas corretas, 160 explicações, 7 tentativas, 1 sessão de prova, 1 perfil, 1 usuário Auth e 1498 eventos de auditoria no momento da inspeção.
+- **Identidade:** existem 11 FKs da aplicação para `auth.users`, 12 funções dependentes de `auth.uid()` e 15 políticas dependentes dessa identidade. Não restaurar o schema `auth` indiscriminadamente: a alternativa de autenticação ainda precisa de compatibilidade de UUID, sessão e autorização.
+- **Recursos da origem:** Storage com 0 buckets / 0 objetos; nenhuma Edge Function implantada. Realtime e todos os recursos não SQL ainda exigem auditoria funcional.
+
+## Etapa ainda bloqueada — transferência dos dados
+
+Para executar `pg_dump` / `pg_restore` ou o Import Data Assistant **sem expor segredos**, precisamos disponibilizar a conexão PostgreSQL **direta** da origem em um ambiente seguro de execução (não em texto do chat, commit ou log), ou executar a importação pelo console com a credencial mantida exclusivamente nele. Os conectores SQL atuais não fornecem uma transferência binária de backup verificável. Não copiar linhas de dados pessoais por respostas de ferramentas.
+
+A restauração deve ocorrer primeiro na branch `migration-staging`, não na principal. Como parte da origem depende de `auth.users` e `supabase_vault`, qualquer importação requer um plano explícito de compatibilidade antes de se tornar utilizável.
+
+Nenhum dado foi copiado; nenhuma migração foi aplicada; Supabase Auth e produção permanecem inalterados.
 
 Documentação de referência: https://neon.com/docs/import/migrate-from-supabase
 
