@@ -7,6 +7,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     supabaseUrl: environment.SUPABASE_URL ?? '',
     supabaseAnonKey: environment.SUPABASE_ANON_KEY ?? '',
+    backendProvider: environment.DATABASE_PROVIDER ?? 'supabase',
+    neonAuthBaseUrl: environment.NEON_AUTH_BASE_URL ?? '',
+    neonDataApiUrl: environment.NEON_DATA_API_URL ?? '',
   },
   typescript: {
     strict: true,
