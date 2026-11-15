@@ -90,8 +90,9 @@ export async function requestNeonAuth(
 
 async function readNeonSession(event: H3Event): Promise<ManagedSession | null> {
   const response = await requestNeonAuth(event, 'get-session', { forwardCookies: true })
-  if (response.status === 401 || response.status === 403 || !response.data?.user) return null
+  if (response.status === 401 || response.status === 403) return null
   if (!response.ok) throw createError({ statusCode: 503, statusMessage: 'Não foi possível verificar sua sessão.' })
+  if (!response.data?.user) return null
   const user = response.data.user as ManagedUser
   if (!isUuid(user?.id)) return null
   // Managed Better Auth exposes short-lived Data API JWTs through its token
@@ -161,5 +162,6 @@ export async function fetchNeonData(event: H3Event, input: RequestInfo | URL, in
   headers.delete('authorization')
   headers.delete('apikey')
   if (session) headers.set('authorization', `Bearer ${session.jwt}`)
-  return fetch(input, { ...init, headers, cache: 'no-store' })
+  // Never follow a Data API redirect while holding an authenticated JWT.
+  return fetch(input, { ...init, headers, cache: 'no-store', redirect: 'error' })
 }
