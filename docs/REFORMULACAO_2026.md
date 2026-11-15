@@ -74,3 +74,9 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Controles de navegação e resposta ficam temporariamente indisponíveis durante sincronização.
 - Se o prazo expirar enquanto uma resposta está sendo enviada, uma nova sincronização é solicitada após o término do envio.
 - Os commits posteriores ao CI #279 ainda exigem nova validação.
+
+## Auditoria de fluxo e recuperação (15/11/2026)
+- CI #284, run `43741238749`, aprovado no commit `a3c0e85` (antes das alterações desta seção).
+- Corrigido botão de próxima questão que permanecia habilitado durante sincronização e usava `questionCount` em vez do tamanho real de `questions`.
+- Ocultado o conteúdo da sessão armazenada quando a sincronização apresenta erro, evitando que a interface apresente dados antigos como atuais.
+- Ainda faltam validação do HEAD, inspeção visual autenticada e implementação transacional da issue #37. A falha Vercel `build-rate-limit` não equivale a falha de compilação.
