@@ -13,7 +13,7 @@ select count(*) as public_triggers from pg_trigger t join pg_class c on c.oid=t.
 select count(*) as public_foreign_keys from pg_constraint c join pg_namespace n on n.oid=c.connamespace where n.nspname='public' and c.contype='f';
 select conrelid::regclass as source_table, confrelid::regclass as referenced_table, conname
 from pg_constraint where contype='f' and connamespace='public'::regnamespace
-order by source_table::text, conname;
+order by 1, 3;
 -- Exact per-table counts; avoids printing any row contents.
 do $inventory$
 declare t record; n bigint;
