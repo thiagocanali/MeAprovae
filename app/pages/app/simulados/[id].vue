@@ -64,7 +64,10 @@ async function submitAnswer() {
   } catch (cause: unknown) {
     const failure = cause as { data?: { statusMessage?: string } }
     errorMessage.value = failure.data?.statusMessage ?? 'Não foi possível salvar sua resposta. A seleção foi mantida; tente novamente.'
-  } finally { saving.value = false }
+  } finally {
+    saving.value = false
+    if (remainingSeconds.value <= 0 && session.value?.status === 'active') void synchronize()
+  }
 }
 async function finishExam() {
   if (saving.value || synchronizing.value || session.value?.status !== 'active') return
