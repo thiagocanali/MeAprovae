@@ -99,7 +99,7 @@ describe('Neon Auth -> Data API authentication boundary', () => {
       .toBe('session=abc; Path=/; Secure; SameSite=Lax; HttpOnly')
     expect(normalizeNeonSetCookie('__Host-session=abc; Secure; Path=/; HttpOnly'))
       .toBe('__Host-session=abc; Path=/; Secure; HttpOnly')
-    expect(normalizeNeonSetCookie('session=abc\\r\\nSet-Cookie: other=unsafe')).toBeNull()
+    expect(normalizeNeonSetCookie('session=abc\r\nSet-Cookie: other=unsafe')).toBeNull()
   })
 
   it('relays only valid first-party HttpOnly cookies from Neon Auth', async () => {
