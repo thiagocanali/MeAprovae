@@ -120,7 +120,7 @@ describe('Neon Auth -> Data API authentication boundary', () => {
   it('forwards only Neon Auth session cookies upstream, not unrelated app cookies', async () => {
     const raw = 'session=other-service; theme=dark; __Secure-neon-auth.session_token=valid; better-auth.session_data=cached'
     expect(filterNeonRequestCookies(raw)).toBe('__Secure-neon-auth.session_token=valid; better-auth.session_data=cached')
-    const fetchMock = vi.fn(async () => data({ user: null }))
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _options?: RequestInit) => data({ user: null }))
     vi.stubGlobal('fetch', fetchMock)
     await requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session')
     expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get('cookie')).toBeNull()
