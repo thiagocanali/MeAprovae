@@ -48,6 +48,20 @@ NEON_DATA_API_URL=
 
 Somente na homologação Neon usar `DATABASE_PROVIDER=neon`, URL de Auth da **mesma branch** e URL de Data API terminando em `/rest/v1`. Para backup/migrations administrativas usar conexão TLS **direta** em local protegido; não adicionar `DATABASE_URL` ou senha de Postgres à aplicação enquanto ela usar exclusivamente a Data API.
 
+## Inicialização segura da primeira conta editorial
+
+O banco novo começa sem usuários nem administradores. Após cadastrar a conta real pelo Neon Auth no ambiente de homologação, verificar o **e-mail e o UUID** da identidade no console Neon e executar apenas na branch de homologação:
+
+```bash
+psql -X -v ON_ERROR_STOP=1 -v confirm_staging=on \
+  -v owner_email='conta@example.com' -v owner_id='<UUID_DA_CONTA>' \
+  -f scripts/neon/bootstrap-owner.sql
+```
+
+A conexão `psql` deve ser **direta, TLS e protegida**, nunca colocada em linha de comando, commits ou logs. O script usa um bloqueio de escrita e só insere um proprietário quando não existe nenhum administrador; exige a identidade simultaneamente por e-mail e UUID e não cria login nem senha. Nenhuma conta editorial foi criada nesta migração. Verificar a identidade manualmente antes de conceder autorização.
+
+Em `migration-app-staging` o Neon Data API foi confirmado ativo com `auth_provider=neon_auth` e schema `public`. O cache do schema foi atualizado após aplicar as migrations. A inspeção de privilégios confirmou que `authenticated` pode executar `ensure_neon_student_account`, `anonymous` não pode, e a tabela `auth_users` não concede leitura direta a `authenticated`.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
