@@ -91,6 +91,15 @@ function neonAuthUrl(event: H3Event) {
   return url.toString().replace(/\/$/, '')
 }
 
+export function ensureNeonAuthAvailability(response: Pick<ManagedAuthResponse, 'status'>): void {
+  if (response.status === 429) {
+    throw createError({ statusCode: 429, statusMessage: 'Muitas tentativas. Aguarde antes de tentar novamente.' })
+  }
+  if (response.status >= 500) {
+    throw createError({ statusCode: 503, statusMessage: 'Serviço de autenticação temporariamente indisponível.' })
+  }
+}
+
 export async function requestNeonAuth(
   event: H3Event,
   endpoint: 'get-session' | 'token' | 'sign-in/email' | 'sign-up/email' | 'sign-out' | 'request-password-reset' | 'reset-password',
@@ -109,6 +118,7 @@ export async function requestNeonAuth(
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
       redirect: 'manual',
       cache: 'no-store',
+      signal: AbortSignal.timeout(15000),
     })
   } catch {
     throw createError({ statusCode: 503, statusMessage: 'Serviço de autenticação temporariamente indisponível.' })
