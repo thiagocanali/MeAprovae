@@ -5,8 +5,9 @@
 create or replace function public.create_editorial_question(p_payload jsonb)
 returns jsonb language plpgsql security definer set search_path = ''
 as $$
-declare v_question public.study_questions%rowtype;
-declare v_explanation text := coalesce(p_payload->>'explanation', '');
+declare
+  v_question public.study_questions%rowtype;
+  v_explanation text := coalesce(p_payload->>'explanation', '');
 begin
   if (select auth.uid()) is null or not (select public.has_platform_role('editor')) then
     raise exception using errcode = '42501', message = 'Editorial role required';
