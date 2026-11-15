@@ -41,6 +41,7 @@ A organização independente `org-bold-mountain-42921987` (plano **Free**, geren
 - **Banco:** `meaprovae` (UTF8); branch principal `main` — `br-round-cell-b6guly16`.
 - **Branch isolada de homologação:** `migration-staging` — `br-dry-frost-b64e6265`; consultas de leitura confirmaram PostgreSQL **17.12** e zero tabelas `public`.
 - **Conexão:** consulta SQL executada com sucesso via integração Neon. Nenhuma URL de conexão, senha ou chave foi publicada no Git.
+- **Preflight automatizado:** `scripts/neon/compatibility.sql` executado com sucesso em `migration-staging` (6 verificações somente leitura). O mesmo arquivo foi adicionado ao runner de integração PostgreSQL do CI. Detectou ausência de `auth.users`/`storage.objects` no destino e ausência de dependências Supabase até o momento.
 - **Extensões verificadas no destino:** `pgcrypto`, `uuid-ossp` e `pg_stat_statements` disponíveis para instalação; `supabase_vault` **não disponível**. Não instalar nem omitir objetos dependentes dessa extensão sem análise. Nenhuma extensão foi instalada neste passo.
 - **Origem:** PostgreSQL 17.11; aproximadamente 15 MB no banco, 2.7 MB em tabelas da aplicação. SQL confirmou 160 questões, 640 alternativas, 160 respostas corretas, 160 explicações, 7 tentativas, 1 sessão de prova, 1 perfil, 1 usuário Auth e 1498 eventos de auditoria no momento da inspeção.
 - **Identidade:** existem 11 FKs da aplicação para `auth.users`, 12 funções dependentes de `auth.uid()` e 15 políticas dependentes dessa identidade. Não restaurar o schema `auth` indiscriminadamente: a alternativa de autenticação ainda precisa de compatibilidade de UUID, sessão e autorização.
@@ -52,7 +53,7 @@ Para executar `pg_dump` / `pg_restore` ou o Import Data Assistant **sem expor se
 
 A restauração deve ocorrer primeiro na branch `migration-staging`, não na principal. Como parte da origem depende de `auth.users` e `supabase_vault`, qualquer importação requer um plano explícito de compatibilidade antes de se tornar utilizável.
 
-Nenhum dado foi copiado; nenhuma migração foi aplicada; Supabase Auth e produção permanecem inalterados.
+Nenhum dado foi copiado; nenhuma migração foi aplicada; Supabase Auth e produção permanecem inalterados. A branch Neon `migration-staging` está isolada da branch principal, pronta para testes de compatibilidade antes da restauração de um backup protegido.
 
 Documentação de referência: https://neon.com/docs/import/migrate-from-supabase
 
