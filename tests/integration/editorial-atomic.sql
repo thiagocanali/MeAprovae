@@ -16,6 +16,13 @@ begin
 end $$;
 create trigger atomic_test_detail_failure before update on public.study_question_editorial_details
 for each row execute function pg_temp.reject_detail_update();
+set local role anon;
+do $ begin
+  begin
+    perform public.create_editorial_question('{}'::jsonb);
+    raise exception 'Anonymous RPC execution succeeded';
+  exception when insufficient_privilege then null; end;
+end $;
 set local role authenticated;
 select set_config('request.jwt.claim.sub','a2222222-2222-4222-8222-222222222222',true);
 do $$ begin
@@ -58,12 +65,20 @@ begin
   if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.'
     or (select explanation from public.study_question_editorial_details where question_id=v_id) <> 'Updated explanation.' then
     raise exception 'Atomic update failed'; end if;
+  -- Explanation-only and field-only PATCH must preserve the other component.
+  perform public.update_editorial_question(v_id, '{}'::jsonb, 'Explanation-only edit.');
+  if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.'
+    or (select explanation from public.study_question_editorial_details where question_id=v_id) <> 'Explanation-only edit.' then
+    raise exception 'Explanation-only PATCH failed'; end if;
+  perform public.update_editorial_question(v_id, '{"statement":"Field-only edit."}'::jsonb, null);
+  if (select explanation from public.study_question_editorial_details where question_id=v_id) <> 'Explanation-only edit.' then
+    raise exception 'Field-only PATCH modified explanation'; end if;
   -- Force a failure in the details UPDATE after the question UPDATE.
   begin
     perform public.update_editorial_question(v_id, '{"statement":"Must not persist."}'::jsonb, 'Rejected explanation.');
     raise exception 'Injected detail failure was ignored';
   exception when check_violation then null; end;
-  if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.' then
+  if (select statement from public.study_questions where id=v_id) <> 'Field-only edit.' then
     raise exception 'Partial update persisted'; end if;
 end $$;
 reset role;
