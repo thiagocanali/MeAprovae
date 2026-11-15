@@ -67,3 +67,10 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Sincronização manual de respostas/resultado agora tem estado de carregamento e bloqueia solicitações concorrentes.
 - Navegação entre questões valida limites do índice e normaliza o índice atual se uma sessão sincronizada retornar menos questões.
 - Mudanças posteriores ao CI #278 ainda precisam de validação.
+
+## Serialização de operações do simulado
+- CI #279 (run `43507991921`) passou no commit `7906fbd`.
+- Sincronização, envio de resposta e finalização não são iniciados simultaneamente na interface. Isso reduz o risco de uma leitura antiga sobrescrever o estado atualizado de uma resposta.
+- Controles de navegação e resposta ficam temporariamente indisponíveis durante sincronização.
+- Se o prazo expirar enquanto uma resposta está sendo enviada, uma nova sincronização é solicitada após o término do envio.
+- Os commits posteriores ao CI #279 ainda exigem nova validação.
