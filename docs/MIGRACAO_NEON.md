@@ -62,6 +62,15 @@ A conexão `psql` deve ser **direta, TLS e protegida**, nunca colocada em linha 
 
 Em `migration-app-staging` o Neon Data API foi confirmado ativo com `auth_provider=neon_auth` e schema `public`. O cache do schema foi atualizado após aplicar as migrations. A inspeção de privilégios confirmou que `authenticated` pode executar `ensure_neon_student_account`, `anonymous` não pode, e a tabela `auth_users` não concede leitura direta a `authenticated`.
 
+## Endurecimento de segurança do ciclo (15/11/2026)
+
+- A ponte Nuxt → Neon Auth reescreve cookies recebidos da origem remota como cookies da própria aplicação, com `Path=/`, `HttpOnly` e sem `Domain` externo, preservando os atributos de segurança emitidos pelo provedor. Testes rejeitam cookies com injeção de quebras de linha.
+- Falhas de infraestrutura da sessão retornam erro de serviço, sem serem confundidas com ausência voluntária de sessão.
+- O transporte autenticado para Data API rejeita redirecionamentos HTTP, validando previamente o destino HTTPS; JWTs de outros clientes não são reutilizados.
+- URLs de Neon Auth e Data API devem apontar para a **mesma branch e o mesmo banco**. Configuração cruzada é rejeitada antes de fazer a chamada.
+- Os testes PostgreSQL também conferem que usuários anônimos não podem executar RPCs editoriais e que um estudante novo não obtém privilégios de editor.
+- A validação real com duas sessões, cookie round-trip em navegador, recuperação por e-mail e visual das páginas ainda requer um ambiente de homologação executando a aplicação; os testes unitários e de banco isolados não substituem essa etapa.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
