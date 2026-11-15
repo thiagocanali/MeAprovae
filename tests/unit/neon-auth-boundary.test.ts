@@ -8,7 +8,7 @@ vi.mock('h3', () => ({
   getRequestURL: () => new URL('http://localhost:3000/'),
 }))
 
-import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, requestNeonAuth } from '../../server/utils/neon'
+import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, requestNeonAuth } from '../../server/utils/neon'
 import { appendResponseHeader } from 'h3'
 
 const authUrl = 'https://ep-staging.neonauth.c-2.sa-east-1.aws.neon.tech/meaprovae/auth'
@@ -95,17 +95,17 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
   it('scopes upstream cookies to the app root and removes remote domains', () => {
-    expect(normalizeNeonSetCookie('session=abc; Domain=.neon.tech; Path=/meaprovae/auth; Secure; SameSite=Lax'))
-      .toBe('session=abc; Path=/; Secure; SameSite=Lax; HttpOnly')
-    expect(normalizeNeonSetCookie('__Host-session=abc; Secure; Path=/; HttpOnly'))
-      .toBe('__Host-session=abc; Path=/; Secure; HttpOnly')
-    expect(normalizeNeonSetCookie('session=abc\r\nSet-Cookie: other=unsafe')).toBeNull()
+    expect(normalizeNeonSetCookie('__Secure-neon-auth.session_token=abc; Domain=.neon.tech; Path=/meaprovae/auth; Secure; SameSite=None; Partitioned'))
+      .toBe('__Secure-neon-auth.session_token=abc; Path=/; Secure; SameSite=Lax; HttpOnly')
+    expect(normalizeNeonSetCookie('__Host-neon-auth.session_token=abc; Secure; Path=/; HttpOnly'))
+      .toBe('__Host-neon-auth.session_token=abc; Path=/; Secure; SameSite=Lax; HttpOnly')
+    expect(normalizeNeonSetCookie('neon-auth.session_token=abc\r\nSet-Cookie: other=unsafe')).toBeNull()
   })
 
   it('relays only valid first-party HttpOnly cookies from Neon Auth', async () => {
     const upstream = new Response(JSON.stringify({ user: { id: userId } }), {
       status: 200,
-      headers: { 'content-type': 'application/json', 'set-cookie': 'session=safe; Domain=neon.tech; Path=/meaprovae/auth; Secure' },
+      headers: { 'content-type': 'application/json', 'set-cookie': '__Secure-neon-auth.session_token=safe; Domain=neon.tech; Path=/meaprovae/auth; Secure; SameSite=None; Partitioned' },
     })
     vi.stubGlobal('fetch', vi.fn(async () => upstream))
     await requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'sign-in/email', {
@@ -113,8 +113,18 @@ describe('Neon Auth -> Data API authentication boundary', () => {
       forwardCookies: true,
     })
     expect(vi.mocked(appendResponseHeader)).toHaveBeenCalledWith(
-      expect.anything(), 'set-cookie', 'session=safe; Path=/; Secure; HttpOnly',
+      expect.anything(), 'set-cookie', '__Secure-neon-auth.session_token=safe; Path=/; Secure; SameSite=Lax; HttpOnly',
     )
+  })
+
+  it('forwards only Neon Auth session cookies upstream, not unrelated app cookies', async () => {
+    const raw = 'session=other-service; theme=dark; __Secure-neon-auth.session_token=valid; better-auth.session_data=cached'
+    expect(filterNeonRequestCookies(raw)).toBe('__Secure-neon-auth.session_token=valid; better-auth.session_data=cached')
+    const fetchMock = vi.fn(async () => data({ user: null }))
+    vi.stubGlobal('fetch', fetchMock)
+    await requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session')
+    expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get('cookie')).toBeNull()
+    expect(normalizeNeonSetCookie('unrelated_session=sensitive; Path=/')).toBeNull()
   })
 
   it('does not treat an upstream Auth outage as a signed-out user', async () => {
