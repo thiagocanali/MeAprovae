@@ -23,6 +23,10 @@ do $$ begin
     perform public.create_editorial_question('{"notice_id":"a4444444-4444-4444-8444-444444444444","subject_id":"a5555555-5555-4555-8555-555555555555","statement":"Unauthorized atomic question."}'::jsonb);
     raise exception 'Non-editor creation succeeded';
   exception when insufficient_privilege then null; end;
+  begin
+    perform public.update_editorial_question('a6666666-6666-4666-8666-666666666666','{}'::jsonb,'Unauthorized');
+    raise exception 'Non-editor update succeeded';
+  exception when insufficient_privilege then null; end;
 end $$;
 select set_config('request.jwt.claim.sub','a1111111-1111-4111-8111-111111111111',true);
 do $$
