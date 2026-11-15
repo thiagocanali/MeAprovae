@@ -21,6 +21,13 @@ begin
     or has_table_privilege('authenticated', 'public.auth_users', 'INSERT') then
     raise exception 'Auth bridge has excessive grants';
   end if;
+  if has_function_privilege('anonymous', 'public.create_editorial_question(jsonb)', 'EXECUTE')
+    or has_function_privilege('anonymous', 'public.update_editorial_question(uuid,jsonb,text)', 'EXECUTE') then
+    raise exception 'Anonymous role has editorial mutation privileges';
+  end if;
+  if has_function_privilege('anonymous', 'public.ensure_neon_student_account(text)', 'EXECUTE') then
+    raise exception 'Anonymous role can provision student identities';
+  end if;
   if (select count(*) from public.study_questions) <> 0 then
     raise exception 'Neon clean schema must have no legacy questions';
   end if;
@@ -53,6 +60,14 @@ begin
   if (select count(*) from public.student_profiles) <> 1 then
     raise exception 'User profile missing or identity isolation broken';
   end if;
+  if public.has_platform_role('editor') then
+    raise exception 'New student acquired editorial privileges';
+  end if;
+  begin
+    perform public.create_editorial_question('{}'::jsonb);
+    raise exception 'New student created editorial question';
+  exception when insufficient_privilege then null;
+  end;
   if (select display_name from public.student_profiles) <> 'Estudante A' then
     raise exception 'Wrong display name';
   end if;
