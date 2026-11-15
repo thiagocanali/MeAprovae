@@ -1,7 +1,9 @@
 -- Atomic editorial mutations: both tables participate in the same PostgreSQL transaction.
--- SECURITY INVOKER retains RLS; the existing editor policies remain authoritative.
+-- SECURITY DEFINER is required for protected question columns; both functions
+-- explicitly enforce authenticated editorial membership before any mutation.
+-- The RPC grants are restricted to authenticated, with no anonymous execution.
 create or replace function public.create_editorial_question(p_payload jsonb)
-returns jsonb language plpgsql security invoker set search_path = ''
+returns jsonb language plpgsql security definer set search_path = ''
 as $$
 declare v_question public.study_questions%rowtype;
 declare v_explanation text := coalesce(p_payload->>'explanation', '');
@@ -42,7 +44,7 @@ end;
 $$;
 
 create or replace function public.update_editorial_question(p_question_id uuid, p_updates jsonb, p_explanation text default null)
-returns jsonb language plpgsql security invoker set search_path = ''
+returns jsonb language plpgsql security definer set search_path = ''
 as $$
 declare v_question public.study_questions%rowtype;
 begin
