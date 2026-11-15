@@ -7,13 +7,13 @@ insert into public.study_contests(id, slug, title) values ('a3333333-3333-4333-8
 insert into public.study_notices(id, contest_id, title) values ('a4444444-4444-4444-8444-444444444444','a3333333-3333-4333-8333-333333333333','Atomic notice');
 insert into public.study_subjects(id, name) values ('a5555555-5555-4555-8555-555555555555','Atomic subject');
 insert into public.study_notice_subjects(notice_id,subject_id) values ('a4444444-4444-4444-8444-444444444444','a5555555-5555-4555-8555-555555555555');
-create function pg_temp.reject_detail_update() returns trigger language plpgsql as $
+create function pg_temp.reject_detail_update() returns trigger language plpgsql as $$
 begin
   if new.explanation = 'Rejected explanation.' then
     raise exception using errcode = '23514', message = 'Injected detail failure';
   end if;
   return new;
-end $;
+end $$;
 create trigger atomic_test_detail_failure before update on public.study_question_editorial_details
 for each row execute function pg_temp.reject_detail_update();
 set local role authenticated;
