@@ -80,3 +80,9 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Corrigido botão de próxima questão que permanecia habilitado durante sincronização e usava `questionCount` em vez do tamanho real de `questions`.
 - Ocultado o conteúdo da sessão armazenada quando a sincronização apresenta erro, evitando que a interface apresente dados antigos como atuais.
 - Ainda faltam validação do HEAD, inspeção visual autenticada e implementação transacional da issue #37. A falha Vercel `build-rate-limit` não equivale a falha de compilação.
+
+## Preservação da seleção durante sincronização
+- CI #285 (run `43741474650`) passou no commit `dd2fa1f`.
+- Corrigido o `watch(current)` que apagava a alternativa selecionada e ainda não enviada sempre que o servidor retornava uma nova instância da questão na sincronização.
+- A seleção é reinicializada ao mudar de questão e atualizada quando o servidor confirma uma resposta salva.
+- A issue #37 exige uma migração SQL transacional com testes de rollback e revisão de permissões; não se deve substituir essa garantia por compensação de deletes.
