@@ -15,6 +15,7 @@ const saving = ref(false)
 const errorMessage = ref('')
 const synchronizing = ref(false)
 const confirmFinish = ref(false)
+const unsavedSelections = ref<Record<string, string>>({})
 const remainingSeconds = ref(session.value ? remainingExamSeconds(session.value.expiresAt, session.value.serverNow) : 0)
 const timeLabel = computed(() => `${String(Math.floor(remainingSeconds.value / 60)).padStart(2, '0')}:${String(remainingSeconds.value % 60).padStart(2, '0')}`)
 let interval: ReturnType<typeof setInterval> | undefined
@@ -50,7 +51,12 @@ watch(session, value => {
   if (currentIndex.value >= value.questions.length) currentIndex.value = Math.max(0, value.questions.length - 1)
 })
 watch(() => current.value?.question.id, () => {
-  selectedOptionId.value = current.value?.result?.selectedOptionId ?? ''
+  const item = current.value
+  selectedOptionId.value = item?.result?.selectedOptionId ?? (item ? unsavedSelections.value[item.question.id] ?? '' : '')
+})
+watch(selectedOptionId, value => {
+  const item = current.value
+  if (item && !item.result) unsavedSelections.value[item.question.id] = value
 })
 watch(() => current.value?.result?.selectedOptionId, optionId => {
   if (optionId) selectedOptionId.value = optionId
@@ -65,6 +71,7 @@ async function submitAnswer() {
     data.value = await $fetch<{ session: ExamSession }>(`${endpoint}/answers`, { method: 'POST', body: {
       position: current.value.position, optionId: selectedOptionId.value,
     } })
+    delete unsavedSelections.value[current.value?.question.id ?? '']
     confirmFinish.value = false
   } catch (cause: unknown) {
     const failure = cause as { data?: { statusMessage?: string } }
