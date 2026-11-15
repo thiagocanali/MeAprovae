@@ -71,6 +71,14 @@ Em `migration-app-staging` o Neon Data API foi confirmado ativo com `auth_provid
 - Os testes PostgreSQL também conferem que usuários anônimos não podem executar RPCs editoriais e que um estudante novo não obtém privilégios de editor.
 - A validação real com duas sessões, cookie round-trip em navegador, recuperação por e-mail e visual das páginas ainda requer um ambiente de homologação executando a aplicação; os testes unitários e de banco isolados não substituem essa etapa.
 
+## Ciclo de integração adicional — novembro de 2026
+
+- No proxy Nuxt, somente cookies `neon-auth.*` ou `better-auth.*` (incluindo prefixos seguros) são aceitos e encaminhados ao serviço Managed Auth. Isso evita encaminhar cookies não relacionados do domínio da aplicação.
+- O provedor emite cookies com `SameSite=None; Partitioned` para operações entre sites. Ao retransmiti-los como cookies **first-party**, a aplicação remove `Partitioned` e normaliza `SameSite=Lax`, `Path=/` e `HttpOnly`, mantendo `Secure` quando presente.
+- Respostas HTTP `429` mantêm a informação de excesso de tentativas; falhas `5xx` e timeout de 15 segundos retornam indisponibilidade, sem simular erro de credenciais.
+- Os testes SQL do banco descartável passaram a exercitar o RPC `set_student_study_goal` com duas identidades distintas e verificar que cada usuário só enxerga sua própria meta ativa.
+- A verificação funcional de autenticação no **navegador com cookies reais** continua pendente, assim como a confirmação de compatibilidade de todos os recursos com os endpoints Managed Auth. Não expor credenciais, desabilitar proteções, iniciar preview automático nem promover migração antes dessa etapa.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
