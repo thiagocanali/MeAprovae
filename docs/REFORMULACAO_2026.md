@@ -92,3 +92,7 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - O estado do rascunho é local à sessão da página; apenas respostas confirmadas pelo servidor são persistidas no banco.
 - Observadores síncronos evitam transferir acidentalmente a seleção de uma questão para outra durante navegação.
 - Os commits correspondentes aguardam validação pelo CI e testes E2E autenticados.
+
+## Consistência no envio de respostas
+- Captura do ID da questão, posição e alternativa no início da requisição; a confirmação remove somente o rascunho da questão enviada, mesmo após atualização da sessão.
+- A verificação do CI deve ser realizada no novo HEAD antes de considerar a alteração validada.
