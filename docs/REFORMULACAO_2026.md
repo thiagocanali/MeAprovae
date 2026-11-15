@@ -96,3 +96,10 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 ## Consistência no envio de respostas
 - Captura do ID da questão, posição e alternativa no início da requisição; a confirmação remove somente o rascunho da questão enviada, mesmo após atualização da sessão.
 - A verificação do CI deve ser realizada no novo HEAD antes de considerar a alteração validada.
+
+## Issue #37 — operações editoriais transacionais
+- Criadas RPCs `create_editorial_question` e `update_editorial_question` em migração versionada, com autorização editorial explícita e transação única por chamada.
+- Rotas POST/PATCH administrativas passaram a usar as RPCs; a criação não utiliza mais exclusão compensatória.
+- Incluído teste SQL `tests/integration/editorial-atomic.sql` no runner do PostgreSQL, cobrindo editor versus não editor, criação, atualização e falha injetada no segundo write com verificação de rollback.
+- As RPCs usam `SECURITY DEFINER` com verificação de `auth.uid()` e `has_platform_role('editor')` porque a tabela de questões mantém colunas protegidas sem acesso direto para o papel autenticado.
+- **Validação pendente:** CI PostgreSQL 17, typecheck, testes e build no HEAD. Nenhuma migração foi aplicada ao banco de produção.
