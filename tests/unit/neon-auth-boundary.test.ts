@@ -34,7 +34,7 @@ afterEach(() => {
 
 describe('Neon Auth -> Data API authentication boundary', () => {
   it('does not provision users or attach bearer tokens without a verified session', async () => {
-    const fetchMock = vi.fn(async () => data({ user: null }))
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _options?: RequestInit) => data({ user: null }))
     vi.stubGlobal('fetch', fetchMock)
     const event = {} as Parameters<typeof ensureNeonAccount>[0]
 
