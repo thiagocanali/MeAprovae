@@ -86,3 +86,9 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Corrigido o `watch(current)` que apagava a alternativa selecionada e ainda não enviada sempre que o servidor retornava uma nova instância da questão na sincronização.
 - A seleção é reinicializada ao mudar de questão e atualizada quando o servidor confirma uma resposta salva.
 - A issue #37 exige uma migração SQL transacional com testes de rollback e revisão de permissões; não se deve substituir essa garantia por compensação de deletes.
+
+## Rascunhos de respostas na navegação
+- Alternativas selecionadas e ainda não enviadas são preservadas por ID da questão enquanto o estudante navega dentro do simulado.
+- O estado do rascunho é local à sessão da página; apenas respostas confirmadas pelo servidor são persistidas no banco.
+- Observadores síncronos evitam transferir acidentalmente a seleção de uma questão para outra durante navegação.
+- Os commits correspondentes aguardam validação pelo CI e testes E2E autenticados.
