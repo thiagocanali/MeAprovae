@@ -1,6 +1,6 @@
 import { createError, getRequestURL, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
-import { requestNeonAuth, usingNeon } from '../../utils/neon'
+import { ensureNeonAuthAvailability, requestNeonAuth, usingNeon } from '../../utils/neon'
 import { isValidPassword, normalizeDisplayName, normalizeEmail } from '../../../shared/domain/auth/validation'
 
 interface RegisterBody { email?: unknown; password?: unknown; displayName?: unknown }
@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
     const result = await requestNeonAuth(event, 'sign-up/email', {
       body: { email, password, name: displayName }, forwardCookies: true,
     })
+    ensureNeonAuthAvailability(result)
     if (!result.ok) {
       throw createError({ statusCode: 400, statusMessage: 'Não foi possível criar a conta. Confira os dados e tente novamente.' })
     }
