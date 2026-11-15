@@ -8,11 +8,11 @@ vi.mock('h3', () => ({
   getRequestURL: () => new URL('http://localhost:3000/'),
 }))
 
-import { ensureNeonAccount, fetchNeonData, getNeonSession, normalizeNeonSetCookie, requestNeonAuth } from '../../server/utils/neon'
+import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, requestNeonAuth } from '../../server/utils/neon'
 import { appendResponseHeader } from 'h3'
 
-const authUrl = 'https://auth.example.test/meaprovae/auth'
-const apiUrl = 'https://api.example.test/meaprovae/rest/v1'
+const authUrl = 'https://ep-staging.neonauth.c-2.sa-east-1.aws.neon.tech/meaprovae/auth'
+const apiUrl = 'https://ep-staging.apirest.c-2.sa-east-1.aws.neon.tech/meaprovae/rest/v1'
 const userId = '550e8400-e29b-41d4-a716-446655440000'
 const jwt = 'header.payload.signature'
 const data = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -136,6 +136,26 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     const event = {} as Parameters<typeof getNeonSession>[0]
     await fetchNeonData(event, `${apiUrl}/study_questions`)
     expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
+  it('accepts only Auth and Data API endpoints from the same Neon branch and database', () => {
+    expect(neonServicesMatch(authUrl, apiUrl)).toBe(true)
+    expect(neonServicesMatch(authUrl, apiUrl.replace('ep-staging', 'ep-production'))).toBe(false)
+    expect(neonServicesMatch(authUrl, apiUrl.replace('/meaprovae/', '/another-db/'))).toBe(false)
+    expect(neonServicesMatch(authUrl, apiUrl.replace('https:', 'http:'))).toBe(false)
+  })
+
+  it('fails before authenticating if Auth and Data API use different branches', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      backendProvider: 'neon',
+      neonAuthBaseUrl: authUrl,
+      neonDataApiUrl: apiUrl.replace('ep-staging', 'ep-production'),
+    }))
+    await expect(requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session'))
+      .rejects.toMatchObject({ statusCode: 503 })
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
 })
