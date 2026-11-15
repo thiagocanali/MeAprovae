@@ -7,6 +7,15 @@ insert into public.study_contests(id, slug, title) values ('a3333333-3333-4333-8
 insert into public.study_notices(id, contest_id, title) values ('a4444444-4444-4444-8444-444444444444','a3333333-3333-4333-8333-333333333333','Atomic notice');
 insert into public.study_subjects(id, name) values ('a5555555-5555-4555-8555-555555555555','Atomic subject');
 insert into public.study_notice_subjects(notice_id,subject_id) values ('a4444444-4444-4444-8444-444444444444','a5555555-5555-4555-8555-555555555555');
+create function pg_temp.reject_detail_update() returns trigger language plpgsql as $
+begin
+  if new.explanation = 'Rejected explanation.' then
+    raise exception using errcode = '23514', message = 'Injected detail failure';
+  end if;
+  return new;
+end $;
+create trigger atomic_test_detail_failure before update on public.study_question_editorial_details
+for each row execute function pg_temp.reject_detail_update();
 set local role authenticated;
 select set_config('request.jwt.claim.sub','a2222222-2222-4222-8222-222222222222',true);
 do $$ begin
@@ -58,7 +67,6 @@ rollback;
     perform public.update_editorial_question(v_id, '{"statement":"Must not persist."}'::jsonb, 'Rejected explanation.');
     raise exception 'Injected detail failure was ignored';
   exception when check_violation then null; end;
-  execute 'drop trigger atomic_test_detail_failure on public.study_question_editorial_details';
   if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.' then
     raise exception 'Partial update persisted'; end if;
 end $$;
