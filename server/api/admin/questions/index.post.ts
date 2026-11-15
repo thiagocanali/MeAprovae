@@ -41,32 +41,17 @@ export default defineEventHandler(async (event) => {
   if (sourceUrl && !/^https?:\/\//i.test(sourceUrl)) throw createError({ statusCode: 400, statusMessage: 'A fonte deve usar HTTP ou HTTPS.' })
   if (sourceYear !== null && (!Number.isInteger(sourceYear) || sourceYear < 1900 || sourceYear > 2200)) throw createError({ statusCode: 400, statusMessage: 'Ano da fonte inválido.' })
 
-  const { data, error } = await supabase.from('study_questions').insert({
-    notice_id: noticeId,
-    subject_id: subjectId,
-    topic_id: topicId || null,
-    difficulty,
-    difficulty_reviewed: difficultyReviewed,
-    statement,
-    source_label: sourceLabel || null,
-    source_url: sourceUrl || null,
-    source_year: sourceYear,
-    status: 'draft',
-  }).select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, status, created_at').single()
+  const { data, error } = await supabase.rpc('create_editorial_question', { p_payload: {
+    notice_id: noticeId, subject_id: subjectId, topic_id: topicId || null,
+    difficulty, difficulty_reviewed: difficultyReviewed, statement,
+    source_label: sourceLabel || null, source_url: sourceUrl || null,
+    source_year: sourceYear, explanation,
+  } })
 
   if (error?.code === '23522') throw createError({ statusCode: 400, statusMessage: 'Assunto ou edital incompatível.' })
   if (error?.code === '23503') throw createError({ statusCode: 400, statusMessage: 'Edital, disciplina ou assunto não encontrado.' })
-  if (error || !data) throw createError({ statusCode: 503, statusMessage: 'Não foi possível criar a questão.' })
-
-  const { error: detailsError } = await supabase.from('study_question_editorial_details').insert({
-    question_id: data.id,
-    explanation,
-  })
-
-  if (detailsError) {
-    await supabase.from('study_questions').delete().eq('id', data.id)
-    throw createError({ statusCode: 503, statusMessage: 'Não foi possível salvar a explicação editorial.' })
-  }
+  if (error?.code === '42501') throw createError({ statusCode: 403, statusMessage: 'Sem permissão editorial.' })
+  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível criar a questão e sua explicação.' })
 
   return { question: { ...data, explanation } }
 })
