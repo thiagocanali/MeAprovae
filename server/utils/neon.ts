@@ -37,8 +37,34 @@ export function usingNeon(event: H3Event): boolean {
   return useRuntimeConfig(event).backendProvider === 'neon'
 }
 
+
+/** Reject mixing JWTs from one Neon branch with the Data API of another. */
+export function neonServicesMatch(authBaseUrl: string, dataApiUrl: string): boolean {
+  try {
+    const auth = new URL(authBaseUrl)
+    const api = new URL(dataApiUrl)
+    const authHost = auth.hostname.split('.')
+    const apiHost = api.hostname.split('.')
+    if (auth.protocol !== 'https:' || api.protocol !== 'https:' ||
+      auth.username || auth.password || api.username || api.password ||
+      auth.search || auth.hash || api.search || api.hash ||
+      authHost.length < 4 || authHost[1] !== 'neonauth' ||
+      apiHost[1] !== 'apirest' || authHost[0] !== apiHost[0] ||
+      authHost.slice(2).join('.') !== apiHost.slice(2).join('.')) return false
+    const authDatabase = auth.pathname.match(/^\/([^/]+)\/auth\/?$/)?.[1]
+    const apiDatabase = api.pathname.match(/^\/([^/]+)\/rest\/v1\/?$/)?.[1]
+    return !!authDatabase && authDatabase === apiDatabase
+  } catch {
+    return false
+  }
+}
+
 function neonAuthUrl(event: H3Event) {
-  const value = useRuntimeConfig(event).neonAuthBaseUrl
+  const config = useRuntimeConfig(event)
+  const value = config.neonAuthBaseUrl
+  if (value && !neonServicesMatch(String(value), String(config.neonDataApiUrl || ''))) {
+    throw createError({ statusCode: 503, statusMessage: 'Neon Auth e Data API devem pertencer à mesma branch.' })
+  }
   if (!value) throw createError({ statusCode: 503, statusMessage: 'Neon Auth não configurado.' })
   let url: URL
   try { url = new URL(value) }
