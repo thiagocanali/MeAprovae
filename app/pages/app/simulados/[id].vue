@@ -66,12 +66,15 @@ onMounted(synchronizeTimer)
 onBeforeUnmount(stopTimer)
 async function submitAnswer() {
   if (!current.value || !selectedOptionId.value || current.value.result || saving.value || synchronizing.value || remainingSeconds.value <= 0) return
+  const questionId = current.value.question.id
+  const position = current.value.position
+  const optionId = selectedOptionId.value
   saving.value = true; errorMessage.value = ''
   try {
     data.value = await $fetch<{ session: ExamSession }>(`${endpoint}/answers`, { method: 'POST', body: {
-      position: current.value.position, optionId: selectedOptionId.value,
+      position, optionId,
     } })
-    delete unsavedSelections.value[current.value?.question.id ?? '']
+    delete unsavedSelections.value[questionId]
     confirmFinish.value = false
   } catch (cause: unknown) {
     const failure = cause as { data?: { statusMessage?: string } }
