@@ -26,14 +26,16 @@ interface ManagedAuthResponse {
 export function normalizeNeonSetCookie(raw: string): string | null {
   if (!raw || /[\r\n]/.test(raw) || !/^[^=;\s]+=[^;]*/.test(raw)) return null
   const parts = raw.split(';').map((part) => part.trim()).filter(Boolean)
-  const name = parts[0].split('=', 1)[0]
+  const firstCookie = parts[0]
+  if (!firstCookie) return null
+  const name = firstCookie.slice(0, firstCookie.indexOf('='))
   // Only relay cookies belonging to the managed identity provider.
   if (!/^(?:__(?:Secure|Host)-)?(?:neon-auth|better-auth)\.[a-zA-Z0-9_.-]+$/.test(name)) return null
   const attributes = parts.slice(1).filter((part) =>
     !/^(?:domain|path|httponly|samesite|partitioned)(?:=|$)/i.test(part))
   // The upstream sends SameSite=None; Partitioned for a third-party origin.
   // The application has a first-party proxy, so use Lax and strip Partitioned.
-  return [parts[0], 'Path=/', ...attributes, 'SameSite=Lax', 'HttpOnly'].join('; ')
+  return [firstCookie, 'Path=/', ...attributes, 'SameSite=Lax', 'HttpOnly'].join('; ')
 }
 
 export function filterNeonRequestCookies(raw: string | undefined): string {
