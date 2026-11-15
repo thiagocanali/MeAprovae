@@ -49,7 +49,12 @@ watch(session, value => {
   if (!value) return
   if (currentIndex.value >= value.questions.length) currentIndex.value = Math.max(0, value.questions.length - 1)
 })
-watch(current, item => { selectedOptionId.value = item?.result?.selectedOptionId ?? '' })
+watch(() => current.value?.question.id, () => {
+  selectedOptionId.value = current.value?.result?.selectedOptionId ?? ''
+})
+watch(() => current.value?.result?.selectedOptionId, optionId => {
+  if (optionId) selectedOptionId.value = optionId
+})
 watch(unansweredCount, () => { confirmFinish.value = false })
 onMounted(synchronizeTimer)
 onBeforeUnmount(stopTimer)
