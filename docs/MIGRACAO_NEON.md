@@ -1,62 +1,69 @@
-# Migração Supabase → Neon — preparação segura
+# Migração limpa para Neon PostgreSQL
 
-Status: **em preparação; nenhuma migração de dados ou cutover executado** (2026-11-15).
+**Status (2026-11-15): desenvolvimento isolado na PR #51. Ainda não aprovado para produção.**
 
-## Inventário verificado (somente leitura)
+## Decisão e preservação
 
-- Origem: Supabase PostgreSQL 17.11, projeto atual do Me Aprovaê.
-- Schema `public`: 25 tabelas, 31 funções, 45 políticas RLS, 33 triggers próprios e nenhuma view.
-- Extensões: `pgcrypto`, `uuid-ossp`, `pg_stat_statements`, `supabase_vault` (além de `plpgsql`).
-- `auth` e `storage` são schemas gerenciados pelo Supabase e **não devem ser restaurados cegamente** no Neon.
-- A inspeção SQL confirmou **11 chaves estrangeiras** de `public` para `auth.users`, **12 funções** com uso de `auth.uid()` e **15 políticas RLS** com referência a `auth.uid()`. Essas relações exigem solução explícita de identidade/roles antes da migração.
-- O storage do projeto consultado possui **0 buckets e 0 objetos** no momento do diagnóstico; isso não prova ausência de uso futuro.
-- Existem dados reais de questões, respostas, histórico editorial e usuários. `pg_stat_user_tables.n_live_tup` é apenas uma estimativa; use `scripts/neon/inventory.sql` em origem e destino para contagens exatas.
-- Backend: `@supabase/ssr`, `@supabase/supabase-js`, cookies de sessão, `auth.getUser()`, RPCs, `auth.uid()` e RLS. Não basta substituir a URL de conexão.
-- `supabase/migrations` contém objetos com dependências de funções/roles do Supabase; requer análise de compatibilidade e nova camada de identidade/autorização antes da migração.
+O proprietário confirmou que **nenhuma conta de teste nem dado legado do Supabase precisa ser migrado**. O destino Neon recebe somente a estrutura e começa vazio. O projeto original Supabase fica integralmente preservado e não é pausado ou excluído. A produção continua usando Supabase; `DATABASE_PROVIDER` tem padrão `supabase`.
 
-## Sequência obrigatória
+## Destino e ambientes
 
-1. Conectar uma organização Neon com permissão de criação de projetos; criar projeto independente `meaprovae` em região apropriada, PostgreSQL compatível, plano gratuito, credenciais isoladas.
-2. Inspecionar extensões, FKs com `auth.users`, policies, funções SECURITY DEFINER, storage buckets/objects e integrações Realtime/Edge; classificar dependências que precisam ser substituídas.
-3. Definir e testar o provedor de identidade substituto (por exemplo Better Auth) e o mapeamento de IDs, sessões, funções `auth.uid()`, roles e RLS. Preservar autenticação Supabase até uma alternativa comprovadamente funcional.
-4. Preparar banco Neon vazio de homologação, conexão TLS, **URL direta** para dump/restore/migrations e URL pooled somente para acesso de aplicação compatível.
-5. Realizar backup completo verificável da origem com `pg_dump -Fc` usando conexão **não pooled**; proteger o arquivo fora do Git. Inspecionar `pg_restore --list` e testar restauração em banco descartável. Não importar os schemas gerenciados `auth` e `storage` como se fossem independentes.
-6. Adaptar esquema e funções, importar dados, comparar inventário exato, integridade, índices, constraints, triggers, sequences, permissões e testes de integração.
-7. Validar login, autorização, isolamento de usuários, APIs, CRUD, RPCs, histórico e rollback em homologação. CI e builds no GitHub Actions; preview Vercel somente após lote consolidado.
-8. Planejar sincronização final ou janela de escrita congelada; **nunca manter duas origens com gravações independentes**. Só executar cutover de produção mediante autorização explícita.
-9. Manter Supabase intacto e backup preservado; plano de retorno: interromper gravações, reconciliar escritas realizadas após o corte e apontar novamente para origem validada.
+- Neon: organização independente Free `org-bold-mountain-42921987`, projeto `flat-frog-80262320` (`meaprovae`), PostgreSQL 17, São Paulo.
+- `main` Neon: `br-round-cell-b6guly16` — **não alterada pela migração da aplicação**.
+- `migration-staging` (`br-dry-frost-b64e6265`): experimento inicial do modelo SQL; **não usar** na aplicação porque o `auth.uid()` experimental lê variável de sessão em vez do componente JWT nativo.
+- **`migration-app-staging` (`br-dry-recipe-b607zy7m`)**: destino funcional de homologação. Provisionados **Neon Managed Better Auth** e **Neon Data API**, que instala `auth.uid()` nativo e valida JWT. Aplicadas todas as migrations SQL existentes, adaptando FKs de `auth.users` para `public.auth_users`. Nenhuma questão ou conta do Supabase foi copiada.
+- Estrutura atual em `migration-app-staging`: 25 tabelas de domínio + 1 tabela de vínculo `public.auth_users`, 45 políticas RLS, 34 triggers (incluindo vínculo), funções RPC, índices e constraints. A configuração é de **staging**, não de produção.
 
-## Variáveis (nomes, nunca valores)
+## Autenticação e isolamento
 
-- `DATABASE_URL`: conexão TLS pooled, **somente servidor**, quando a camada SQL estiver implementada.
-- `DIRECT_DATABASE_URL`: conexão TLS direta, apenas migração/backup/administração.
-- `SUPABASE_URL` e `SUPABASE_ANON_KEY`: manter até substituir Auth e chamadas REST/RPC.
-- Não expor strings PostgreSQL em `NUXT_PUBLIC_*`, código, logs ou artefatos de CI.
+- `neon_auth."user"` é a fonte de identidade e sessão (Managed Better Auth). **Nunca** recriar senhas nem tokens em `public`.
+- `public.auth_users` é ponte de UUIDs, com FK para `neon_auth."user"`, RLS habilitado e nenhuma permissão de escrita direta para usuários da API.
+- `ensure_neon_student_account` valida o UUID de `auth.uid()` **nativo**, confirma a identidade em `neon_auth."user"` e cria perfil de estudante idempotentemente. Somente papel `authenticated` pode executar.
+- O backend Nuxt valida cookies por Neon Auth e solicita um token de curta duração por `/token`, a ser verificado pela Neon Data API. A identidade nunca é recebida como parâmetro fornecido pelo cliente; o JWT do usuário deve determinar todas as políticas.
+- Os endpoints de login, cadastro, logout, recuperação e redefinição de senha possuem roteamento por `DATABASE_PROVIDER`. Ainda são necessários testes funcionais reais (navegador, cookies e e-mails) e auditoria da autorização administrativa.
+- Os endpoints atuais de banco preservam temporariamente o cliente PostgREST `supabase-js` como **construtor de requisições**, mas a camada `server/utils/neon.ts` substitui o transporte pelo Neon Data API, com URL conferida e Bearer JWT. **Não** ligar para Supabase Auth quando `DATABASE_PROVIDER=neon`.
 
-## Provisionamento Neon confirmado — 15/11/2026
+## Migrations reproduzíveis
 
-A organização independente `org-bold-mountain-42921987` (plano **Free**, gerenciada pelo próprio console Neon) foi disponibilizada e confirmada.
+1. No Neon, criar branch a partir de `main` e provisionar Managed Neon Auth + Neon Data API (JWT com `auth.uid()` nativo). Não utilizar as migrations experimentais de autenticação.
+2. Aplicar `neon/migrations/0000_managed_auth_bridge.sql` (roles e FK `public.auth_users`).
+3. Gerar o SQL das migrations existentes sem alterar a origem: `python3 scripts/neon/render-clean-schema.py --output /tmp/meaprovae-neon-schema.sql`.
+4. Aplicar esse SQL na branch isolada com conexão PostgreSQL **direta**; não executar na branch principal sem autorização.
+5. Aplicar `neon/migrations/0001_ensure_neon_student_account.sql`.
+6. Executar testes de RLS, permissões, catálogo, RPCs, endpoints, Auth e navegação antes de qualquer promoção.
 
-- **Projeto:** `meaprovae` — ID `flat-frog-80262320`; PostgreSQL **17**, região `aws-sa-east-1` (São Paulo).
-- **Banco:** `meaprovae` (UTF8); branch principal `main` — `br-round-cell-b6guly16`.
-- **Branch isolada de homologação:** `migration-staging` — `br-dry-frost-b64e6265`; consultas de leitura confirmaram PostgreSQL **17.12** e zero tabelas `public`.
-- **Conexão:** consulta SQL executada com sucesso via integração Neon. Nenhuma URL de conexão, senha ou chave foi publicada no Git.
-- **Preflight automatizado:** `scripts/neon/compatibility.sql` executado com sucesso em `migration-staging` (6 verificações somente leitura). O mesmo arquivo foi adicionado ao runner de integração PostgreSQL do CI. Detectou ausência de `auth.users`/`storage.objects` no destino e ausência de dependências Supabase até o momento.
-- **Extensões verificadas no destino:** `pgcrypto`, `uuid-ossp` e `pg_stat_statements` disponíveis para instalação; `supabase_vault` **não disponível**. Não instalar nem omitir objetos dependentes dessa extensão sem análise. Nenhuma extensão foi instalada neste passo.
-- **Origem:** PostgreSQL 17.11; aproximadamente 15 MB no banco, 2.7 MB em tabelas da aplicação. SQL confirmou 160 questões, 640 alternativas, 160 respostas corretas, 160 explicações, 7 tentativas, 1 sessão de prova, 1 perfil, 1 usuário Auth e 1498 eventos de auditoria no momento da inspeção.
-- **Identidade:** existem 11 FKs da aplicação para `auth.users`, 12 funções dependentes de `auth.uid()` e 15 políticas dependentes dessa identidade. Não restaurar o schema `auth` indiscriminadamente: a alternativa de autenticação ainda precisa de compatibilidade de UUID, sessão e autorização.
-- **Recursos da origem:** Storage com 0 buckets / 0 objetos; nenhuma Edge Function implantada. Realtime e todos os recursos não SQL ainda exigem auditoria funcional.
+O script `scripts/neon/test-clean-schema.sh` recria e valida o schema em PostgreSQL 17 **descartável e localhost**, incluindo as fixtures de Auth **somente para CI**. O CI possui jobs `database` (legado), `neon-database` (nova arquitetura) e `validate` (typecheck, unitários, builds).
 
-## Etapa ainda bloqueada — transferência dos dados
+## Variáveis de ambiente
 
-Para executar `pg_dump` / `pg_restore` ou o Import Data Assistant **sem expor segredos**, precisamos disponibilizar a conexão PostgreSQL **direta** da origem em um ambiente seguro de execução (não em texto do chat, commit ou log), ou executar a importação pelo console com a credencial mantida exclusivamente nele. Os conectores SQL atuais não fornecem uma transferência binária de backup verificável. Não copiar linhas de dados pessoais por respostas de ferramentas.
+**Somente servidor** — não incluir credenciais em `NUXT_PUBLIC_*`, commits, logs ou artefatos:
 
-A restauração deve ocorrer primeiro na branch `migration-staging`, não na principal. Como parte da origem depende de `auth.users` e `supabase_vault`, qualquer importação requer um plano explícito de compatibilidade antes de se tornar utilizável.
+```dotenv
+DATABASE_PROVIDER=supabase
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+NEON_AUTH_BASE_URL=
+NEON_DATA_API_URL=
+```
 
-Nenhum dado foi copiado; nenhuma migração foi aplicada; Supabase Auth e produção permanecem inalterados. A branch Neon `migration-staging` está isolada da branch principal, pronta para testes de compatibilidade antes da restauração de um backup protegido.
+Somente na homologação Neon usar `DATABASE_PROVIDER=neon`, URL de Auth da **mesma branch** e URL de Data API terminando em `/rest/v1`. Para backup/migrations administrativas usar conexão TLS **direta** em local protegido; não adicionar `DATABASE_URL` ou senha de Postgres à aplicação enquanto ela usar exclusivamente a Data API.
 
-Documentação de referência: https://neon.com/docs/import/migrate-from-supabase
+## Validação e pendências obrigatórias
 
-## Verificação automatizada da preparação
+- [x] Projeto Neon isolado e branch de homologação funcional
+- [x] Managed Auth + Data API habilitados na `migration-app-staging`
+- [x] Schema limpo aplicado sem dados legados; identidade vinculada ao Neon Auth
+- [x] Migrations e teste PostgreSQL 17 reproduzíveis no GitHub Actions (CI #321)
+- [ ] Conferir CI do último commit da integração Nuxt
+- [ ] Fluxos de cadastro, login, logout, recuperação, sessão após recarregar, cookies `HttpOnly` e E2E autenticado em homologação
+- [ ] Verificar isolamento real com dois usuários, tentativas de leitura indevida, autoria, privilégios editoriais e RLS no Data API
+- [ ] Garantir funcionamento de todas as APIs de catálogo, questões, respostas, simulados e administração
+- [ ] Publicação inicial do banco de questões revisado (o Neon começa vazio intencionalmente)
+- [ ] Testes de regressão e validação hospedada única quando a cota Vercel permitir
+- [ ] Revisão de segurança, configuração SMTP de produção e plano de rollback
 
-O CI executa o inventário SQL sobre o PostgreSQL descartável da suíte de integração. Isso valida sintaxe e execução sem consultar a origem de produção. O arquivo pode ser executado com conexão TLS direta **em modo somente leitura** na origem e no destino, quando o destino estiver disponível. Não conectar o CI a dados de produção.
+Não inferir funcionalidade aprovada apenas porque build ou SQL passaram. **Nenhuma alteração na produção e nenhum merge sem autorização.**
+
+## Rollback
+
+O backend padrão continua usando Supabase. Desfazer a opção `DATABASE_PROVIDER=neon` em ambiente de teste retorna ao backend anterior sem tocar no banco original. Ao migrar produção futuramente, verificar dados escritos no Neon e evitar duas origens aceitando gravações simultaneamente; preparar plano de reconciliação antes de qualquer reversão.
