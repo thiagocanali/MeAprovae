@@ -17,6 +17,19 @@ interface ManagedAuthResponse {
   jwt: string | null
 }
 
+
+/**
+ * Neon Auth issues cookies for its own host/path. When the Nuxt server relays
+ * them, the browser needs host-only cookies scoped to the entire application.
+ * Never expose a provider cookie without HttpOnly or retain its Domain.
+ */
+export function normalizeNeonSetCookie(raw: string): string | null {
+  if (!raw || /[\r\n]/.test(raw) || !/^[^=;\s]+=[^;]*/.test(raw)) return null
+  const parts = raw.split(';').map((part) => part.trim()).filter(Boolean)
+  const attributes = parts.slice(1).filter((part) => !/^(?:domain|path|httponly)(?:=|$)/i.test(part))
+  return [parts[0], 'Path=/', ...attributes, 'HttpOnly'].join('; ')
+}
+
 const sessions = new WeakMap<H3Event, Promise<ManagedSession | null>>()
 const synchronized = new WeakMap<H3Event, Promise<void>>()
 
@@ -62,7 +75,8 @@ export async function requestNeonAuth(
   // provider Domain attribute; no cookie value is ever logged or returned in JSON.
   if (options.forwardCookies) {
     for (const cookieValue of response.headers.getSetCookie()) {
-      appendResponseHeader(event, 'set-cookie', cookieValue.replace(/;\s*domain=[^;]*/gi, ''))
+      const firstParty = normalizeNeonSetCookie(cookieValue)
+      if (firstParty) appendResponseHeader(event, 'set-cookie', firstParty)
     }
   }
   const data = await response.json().catch(() => null)
