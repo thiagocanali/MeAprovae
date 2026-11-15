@@ -12,6 +12,8 @@ psql -X -v ON_ERROR_STOP=1 -f tests/integration/bootstrap.sql
 for migration in supabase/migrations/*.sql; do
   psql -X -v ON_ERROR_STOP=1 -f "$migration"
 done
+# Validate the read-only migration inventory against disposable CI PostgreSQL.
+psql -X -v ON_ERROR_STOP=1 -f scripts/neon/inventory.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/editorial-atomic.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/question-import.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-sessions.sql
