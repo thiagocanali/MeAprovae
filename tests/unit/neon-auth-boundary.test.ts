@@ -117,4 +117,25 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     )
   })
 
+  it('does not treat an upstream Auth outage as a signed-out user', async () => {
+    const fetchMock = vi.fn(async () => data({ error: 'upstream unavailable' }, 503))
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(getNeonSession({} as Parameters<typeof getNeonSession>[0]))
+      .rejects.toMatchObject({ statusCode: 503 })
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('never follows an authenticated Data API redirect', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, options?: RequestInit) => {
+      if (String(input).endsWith('/get-session')) return data({ user: { id: userId } })
+      if (String(input).endsWith('/token')) return data({ token: jwt })
+      expect(options?.redirect).toBe('error')
+      return data([])
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    const event = {} as Parameters<typeof getNeonSession>[0]
+    await fetchNeonData(event, `${apiUrl}/study_questions`)
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
 })
