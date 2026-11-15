@@ -8,7 +8,7 @@ vi.mock('h3', () => ({
   getRequestURL: () => new URL('http://localhost:3000/'),
 }))
 
-import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, requestNeonAuth } from '../../server/utils/neon'
+import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, ensureNeonAuthAvailability, requestNeonAuth } from '../../server/utils/neon'
 import { appendResponseHeader } from 'h3'
 
 const authUrl = 'https://ep-staging.neonauth.c-2.sa-east-1.aws.neon.tech/meaprovae/auth'
@@ -125,6 +125,22 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     await requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session')
     expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get('cookie')).toBeNull()
     expect(normalizeNeonSetCookie('unrelated_session=sensitive; Path=/')).toBeNull()
+  })
+
+  it('maps upstream outages and throttling without disguising them as wrong passwords', () => {
+    expect(() => ensureNeonAuthAvailability({ status: 502 })).toThrowError()
+    expect(() => ensureNeonAuthAvailability({ status: 429 })).toThrowError()
+    try {
+      ensureNeonAuthAvailability({ status: 503 })
+    } catch (error) {
+      expect(error).toMatchObject({ statusCode: 503 })
+    }
+    try {
+      ensureNeonAuthAvailability({ status: 429 })
+    } catch (error) {
+      expect(error).toMatchObject({ statusCode: 429 })
+    }
+    expect(() => ensureNeonAuthAvailability({ status: 401 })).not.toThrow()
   })
 
   it('does not treat an upstream Auth outage as a signed-out user', async () => {
