@@ -103,3 +103,9 @@ A PR de fundação não equivale à conclusão da reformulação. Exigir CI, pre
 - Incluído teste SQL `tests/integration/editorial-atomic.sql` no runner do PostgreSQL, cobrindo editor versus não editor, criação, atualização e falha injetada no segundo write com verificação de rollback.
 - As RPCs usam `SECURITY DEFINER` com verificação de `auth.uid()` e `has_platform_role('editor')` porque a tabela de questões mantém colunas protegidas sem acesso direto para o papel autenticado.
 - **Validação pendente:** CI PostgreSQL 17, typecheck, testes e build no HEAD. Nenhuma migração foi aplicada ao banco de produção.
+
+## Política de previews Vercel — 15/11/2026
+- Auditoria do projeto `meaprovae` mostrou deploys de preview para cada push da branch de trabalho, inclusive documentação e testes; vários previews foram cancelados por pushes posteriores.
+- A configuração `previewDeploymentsDisabled=true` foi aplicada via API Vercel para suspender previews automáticos enquanto a PR #51 está em desenvolvimento. **Não** foi alterada a branch de produção, proteção SSO ou domínios.
+- GitHub Actions é a fonte primária de validação (typecheck, testes, builds Nitro e PostgreSQL). Antes de liberar a PR, reabilitar previews de forma controlada, criar um único preview do HEAD aprovado e executar smoke/E2E autenticado.
+- Esta configuração é temporária e deve ser reavaliada quando o limite de builds for normalizado; não confundir deployment READY com validação de integrações.
