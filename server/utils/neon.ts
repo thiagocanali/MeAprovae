@@ -38,7 +38,7 @@ function neonAuthUrl(event: H3Event) {
 
 export async function requestNeonAuth(
   event: H3Event,
-  endpoint: 'get-session' | 'sign-in/email' | 'sign-up/email' | 'sign-out' | 'request-password-reset' | 'reset-password',
+  endpoint: 'get-session' | 'token' | 'sign-in/email' | 'sign-up/email' | 'sign-out' | 'request-password-reset' | 'reset-password',
   options: { body?: Record<string, unknown>, forwardCookies?: boolean } = {},
 ): Promise<ManagedAuthResponse> {
   const base = neonAuthUrl(event)
@@ -80,8 +80,11 @@ async function readNeonSession(event: H3Event): Promise<ManagedSession | null> {
   if (!response.ok) throw createError({ statusCode: 503, statusMessage: 'Não foi possível verificar sua sessão.' })
   const user = response.data.user as ManagedUser
   if (!isUuid(user?.id)) return null
-  const jwt = response.jwt?.replace(/^Bearer\s+/i, '').trim()
-  if (!jwt || jwt.split('.').length !== 3) {
+  // Managed Better Auth exposes short-lived Data API JWTs through its token
+  // endpoint. The get-session response is not guaranteed to include a JWT.
+  const jwtResponse = await requestNeonAuth(event, 'token')
+  const jwt = typeof jwtResponse.data?.token === 'string' ? jwtResponse.data.token.trim() : ''
+  if (!jwtResponse.ok || jwt.split('.').length !== 3) {
     throw createError({ statusCode: 503, statusMessage: 'Neon Auth não retornou um token de sessão válido.' })
   }
   return { user: { id: user.id, email: user.email, name: user.name }, jwt }
@@ -108,7 +111,7 @@ export async function ensureNeonAccount(event: H3Event): Promise<ManagedUser | n
       const config = useRuntimeConfig(event)
       const base = String(config.neonDataApiUrl || '')
       if (!base) throw createError({ statusCode: 503, statusMessage: 'Neon Data API não configurado.' })
-      const response = await fetch(`${base.replace(/\/$/, '')}/rpc/ensure_neon_student_account`, {
+      const response = await fetchNeonData(event, `${base.replace(/\/$/, '')}/rpc/ensure_neon_student_account`, {
         method: 'POST',
         headers: { authorization: `Bearer ${session.jwt}`, 'content-type': 'application/json' },
         body: JSON.stringify({ p_display_name: session.user.name || null }),
@@ -134,7 +137,7 @@ export async function fetchNeonData(event: H3Event, input: RequestInfo | URL, in
   } catch {
     throw createError({ statusCode: 503, statusMessage: 'Neon Data API não configurado.' })
   }
-  if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password ||
+  if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash ||
       target.origin !== endpoint.origin ||
       !(target.pathname === endpoint.pathname || target.pathname.startsWith(`${endpoint.pathname.replace(/\/$/, '')}/`))) {
     throw createError({ statusCode: 503, statusMessage: 'Consulta encaminhada para destino inesperado.' })
