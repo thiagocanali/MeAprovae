@@ -96,7 +96,7 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
     <section class="study-content">
       <p v-if="pending && !session" role="status" aria-live="polite">Carregando simulado…</p>
       <div v-if="error" class="study-error" role="alert">Não foi possível carregar este simulado. Ele deve pertencer à sua conta. <button type="button" class="study-secondary-button" :disabled="synchronizing" @click="synchronize()">{{ synchronizing ? 'Sincronizando…' : 'Tentar novamente' }}</button></div>
-      <template v-if="session">
+      <template v-if="session && !error">
         <template v-if="session.status === 'active' && current">
           <div class="study-exam-top"><h1>Questão {{ currentIndex + 1 }} de {{ session.questionCount }}</h1><span class="study-exam-timer" aria-label="Tempo restante">{{ timeLabel }}</span></div>
           <p class="study-muted">Modo estudo · {{ session.answeredCount }} respostas salvas. O prazo continua contando ao sair.</p>
@@ -113,7 +113,7 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
             </fieldset>
             <button v-if="!current.result" class="study-primary-button" :disabled="saving || synchronizing || !selectedOptionId || remainingSeconds === 0" @click="submitAnswer">{{ saving ? 'Salvando…' : 'Confirmar resposta' }}</button>
             <section v-else class="study-result" aria-live="polite"><h3>{{ current.result.isCorrect ? 'Resposta correta!' : 'Resposta incorreta.' }}</h3><p>{{ current.result.explanation || 'Esta questão ainda não possui explicação cadastrada.' }}</p><p>Resposta salva na sua conta.</p></section>
-            <div class="study-actions"><button v-if="currentIndex > 0" class="study-secondary-button" :disabled="saving || synchronizing" @click="changeQuestion(currentIndex - 1)">Anterior</button><button v-if="currentIndex < session.questionCount - 1" class="study-secondary-button" :disabled="saving" @click="changeQuestion(currentIndex + 1)">Próxima questão</button></div>
+            <div class="study-actions"><button v-if="currentIndex > 0" type="button" class="study-secondary-button" :disabled="saving || synchronizing" @click="changeQuestion(currentIndex - 1)">Anterior</button><button v-if="currentIndex < session.questions.length - 1" type="button" class="study-secondary-button" :disabled="saving || synchronizing" @click="changeQuestion(currentIndex + 1)">Próxima questão</button></div>
           </article>
           <div class="study-card"><p>{{ unansweredCount }} questão(ões) sem resposta. Ao finalizar, elas permanecerão sem acerto na nota.</p><p v-if="confirmFinish" class="study-error" role="alert">Confirma a finalização? As {{ unansweredCount }} questões sem resposta serão contabilizadas na nota e você não poderá responder depois.</p><div class="study-actions"><button v-if="confirmFinish" type="button" class="study-secondary-button" :disabled="saving || synchronizing" @click="confirmFinish = false">Continuar respondendo</button><button type="button" class="study-primary-button" :disabled="saving || synchronizing" @click="finishExam">{{ saving ? 'Finalizando…' : confirmFinish ? 'Confirmar finalização' : unansweredCount ? `Finalizar com ${unansweredCount} sem resposta` : 'Finalizar simulado' }}</button></div></div>
         </template>
