@@ -17,12 +17,12 @@ end $$;
 create trigger atomic_test_detail_failure before update on public.study_question_editorial_details
 for each row execute function pg_temp.reject_detail_update();
 set local role anon;
-do $ begin
+do $$ begin
   begin
     perform public.create_editorial_question('{}'::jsonb);
     raise exception 'Anonymous RPC execution succeeded';
   exception when insufficient_privilege then null; end;
-end $;
+end $$;
 set local role authenticated;
 select set_config('request.jwt.claim.sub','a2222222-2222-4222-8222-222222222222',true);
 do $$ begin
