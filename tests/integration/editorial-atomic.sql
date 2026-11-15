@@ -45,11 +45,20 @@ begin
   if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.'
     or (select explanation from public.study_question_editorial_details where question_id=v_id) <> 'Updated explanation.' then
     raise exception 'Atomic update failed'; end if;
-  -- A failure in the second write must roll back the preceding question update.
+  -- Force a failure during the second write, after the first UPDATE succeeded.
+  execute 'create function pg_temp.reject_detail_update() returns trigger language plpgsql as $f$ begin raise exception using errcode = ''23514'', message = ''Injected detail failure''; end $f
+  if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.' then
+    raise exception 'Partial update persisted'; end if;
+end $$;
+reset role;
+rollback;
+;
+  execute 'create trigger atomic_test_detail_failure before update on public.study_question_editorial_details for each row execute function pg_temp.reject_detail_update()';
   begin
-    perform public.update_editorial_question(v_id, '{"statement":"Must not persist."}'::jsonb, repeat('y',12001));
-    raise exception 'Invalid details accepted';
-  exception when invalid_parameter_value then null; end;
+    perform public.update_editorial_question(v_id, '{"statement":"Must not persist."}'::jsonb, 'Rejected explanation.');
+    raise exception 'Injected detail failure was ignored';
+  exception when check_violation then null; end;
+  execute 'drop trigger atomic_test_detail_failure on public.study_question_editorial_details';
   if (select statement from public.study_questions where id=v_id) <> 'Atomic updated statement.' then
     raise exception 'Partial update persisted'; end if;
 end $$;
