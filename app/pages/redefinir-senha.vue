@@ -5,6 +5,7 @@ import authMiddleware from '~/middleware/auth'
 definePageMeta({ layout: false, middleware: authMiddleware })
 useSeoMeta({ title: 'Definir nova senha | Me Aprovaê' })
 
+const route = useRoute()
 const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
@@ -25,7 +26,7 @@ async function submit() {
   try {
     await $fetch('/api/auth/update-password', {
       method: 'POST',
-      body: { password: password.value },
+      body: { password: password.value, token: typeof route.query.token === 'string' ? route.query.token : undefined },
     })
     successMessage.value = 'Senha atualizada. Você já pode continuar seus estudos.'
     password.value = ''
