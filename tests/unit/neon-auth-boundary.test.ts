@@ -184,4 +184,34 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
+  it('rejects redirects from Managed Auth without forwarding cookies', async () => {
+    const upstream = new Response(null, {
+      status: 302,
+      headers: {
+        location: 'https://evil.example.test',
+        'set-cookie': 'better-auth.session_token=stolen; Secure; Path=/',
+      },
+    })
+    const fetchMock = vi.fn(async () => upstream)
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session', { forwardCookies: true }))
+      .rejects.toMatchObject({ statusCode: 503 })
+    expect(vi.mocked(appendResponseHeader)).not.toHaveBeenCalled()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('fails closed if Data API request cannot be completed and never follows redirects', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, options?: RequestInit) => {
+      if (String(input).endsWith('/get-session')) return data({ user: { id: userId } })
+      if (String(input).endsWith('/token')) return data({ token: jwt })
+      expect(options?.redirect).toBe('error')
+      expect(options?.signal).toBeDefined()
+      throw new Error('network unreachable')
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(fetchNeonData({} as Parameters<typeof fetchNeonData>[0], `${apiUrl}/study_questions`))
+      .rejects.toMatchObject({ statusCode: 503 })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
 })
