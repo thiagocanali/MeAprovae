@@ -118,4 +118,20 @@ describe('Neon Auth API endpoints', () => {
     expect(mocks.createSupabaseServerClient).not.toHaveBeenCalled()
   })
 
+  it('rejects successful responses from Neon Auth without a valid UUID', async () => {
+    mocks.readBody.mockResolvedValue({ email: 'student@example.com', password: 'test-password' })
+    mocks.requestNeonAuth.mockResolvedValue({
+      ok: true, status: 200, data: { user: { id: 'invalid-id', email: 'student@example.com' } },
+    })
+    await expect(login(event)).rejects.toMatchObject({ statusCode: 401 })
+  })
+
+  it('rejects an inconsistent signup response instead of falsely reporting success', async () => {
+    mocks.readBody.mockResolvedValue({
+      email: 'student@example.com', password: 'test-password', displayName: 'Estudante A',
+    })
+    mocks.requestNeonAuth.mockResolvedValue({ ok: true, status: 200, data: { user: null } })
+    await expect(register(event)).rejects.toMatchObject({ statusCode: 503 })
+  })
+
 })
