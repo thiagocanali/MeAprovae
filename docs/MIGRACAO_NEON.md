@@ -79,6 +79,18 @@ Em `migration-app-staging` o Neon Data API foi confirmado ativo com `auth_provid
 - Os testes SQL do banco descartável passaram a exercitar o RPC `set_student_study_goal` com duas identidades distintas e verificar que cada usuário só enxerga sua própria meta ativa.
 - A verificação funcional de autenticação no **navegador com cookies reais** continua pendente, assim como a confirmação de compatibilidade de todos os recursos com os endpoints Managed Auth. Não expor credenciais, desabilitar proteções, iniciar preview automático nem promover migração antes dessa etapa.
 
+## Novo lote — autenticação e APIs (16/11/2026)
+
+Este lote tratou cinco frentes de implementação sem modificar a produção:
+
+1. **Respostas do Neon Auth:** redirects inesperados (3xx) são rejeitados sem retransmitir cookies; respostas que não sejam JSON não são interpretadas como sessões válidas.
+2. **Neon Data API:** timeout de 15 segundos, sem seguir redirecionamentos nem expor JWT a outros destinos.
+3. **Criação de perfis:** o nome exibido é lido no próprio banco Neon Auth pelo RPC, evitando inconsistências e limites de tamanho entre a sessão e o banco.
+4. **Rotas da aplicação:** testes unitários simulados para login, cadastro, logout, recuperação e redefinição de senha, verificando que o modo Neon não recorre ao Supabase.
+5. **Identidade consistente:** após o RPC de criação do perfil, o backend compara o UUID validado pelo JWT da Data API com o UUID da sessão Neon Auth; discrepâncias são rejeitadas.
+
+Atenção: testes com mocks e PostgreSQL descartável **não** substituem uma verificação real no navegador. O banco `migration-app-staging` não recebeu contas pessoais nem importação de dados. Qualquer aprovação para produção ainda depende de E2E com contas de homologação, SMTP, segurança e rollback.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
