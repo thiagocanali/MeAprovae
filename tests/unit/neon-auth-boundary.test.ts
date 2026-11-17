@@ -8,7 +8,7 @@ vi.mock('h3', () => ({
   getRequestURL: () => new URL('http://localhost:3000/'),
 }))
 
-import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, ensureNeonAuthAvailability, requestNeonAuth } from '../../server/utils/neon'
+import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, ensureNeonAuthAvailability, getNeonAppOrigin, requestNeonAuth } from '../../server/utils/neon'
 import { appendResponseHeader } from 'h3'
 
 const authUrl = 'https://ep-staging.neonauth.c-2.sa-east-1.aws.neon.tech/meaprovae/auth'
@@ -241,5 +241,37 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     await expect(ensureNeonAccount({} as Parameters<typeof ensureNeonAccount>[0]))
       .rejects.toMatchObject({ statusCode: 401 })
   })
+
+  it('uses a configured canonical origin, never the untrusted request Host', async () => {
+    const event = {} as Parameters<typeof getNeonAppOrigin>[0]
+    expect(getNeonAppOrigin(event)).toBe('http://localhost:3000')
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      backendProvider: 'neon',
+      neonAuthBaseUrl: authUrl,
+      neonDataApiUrl: apiUrl,
+      neonAppOrigin: 'https://staging.example.test',
+    }))
+    expect(getNeonAppOrigin(event)).toBe('https://staging.example.test')
+    const fetchMock = vi.fn(async () => data({ user: null }))
+    vi.stubGlobal('fetch', fetchMock)
+    await requestNeonAuth(event, 'get-session')
+    expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get('origin'))
+      .toBe('https://staging.example.test')
+  })
+
+  it.each(['', 'http://remote.example.test', 'https://staging.example.test/extra',
+    'https://staging.example.test/?a=1', 'https://staging.example.test#fragment',
+    'https://evil@staging.example.test'])(
+    'rejects unsafe Neon redirect origin %s', (candidate) => {
+      vi.stubGlobal('useRuntimeConfig', () => ({
+        backendProvider: 'neon',
+        neonAuthBaseUrl: authUrl,
+        neonDataApiUrl: apiUrl,
+        neonAppOrigin: candidate,
+      }))
+      expect(() => getNeonAppOrigin({} as Parameters<typeof getNeonAppOrigin>[0]))
+        .toThrowError()
+    },
+  )
 
 })
