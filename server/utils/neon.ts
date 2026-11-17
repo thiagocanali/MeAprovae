@@ -194,7 +194,9 @@ export async function ensureNeonAccount(event: H3Event): Promise<ManagedUser | n
       const response = await fetchNeonData(event, `${base.replace(/\/$/, '')}/rpc/ensure_neon_student_account`, {
         method: 'POST',
         headers: { authorization: `Bearer ${session.jwt}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ p_display_name: session.user.name || null }),
+        // Resolve display name from the Neon Auth database, not a forwarded
+        // session field whose length or freshness might be inconsistent.
+        body: JSON.stringify({ p_display_name: null }),
         cache: 'no-store',
       }).catch(() => null)
       if (!response?.ok) {
