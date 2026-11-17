@@ -202,6 +202,12 @@ export async function ensureNeonAccount(event: H3Event): Promise<ManagedUser | n
       if (!response?.ok) {
         throw createError({ statusCode: 503, statusMessage: 'Não foi possível preparar seu perfil.' })
       }
+      const account = await response.json().catch(() => null) as { id?: unknown } | null
+      // Session and JWT are fetched separately. The signed JWT must resolve
+      // to exactly the same user as the validated session cookie.
+      if (account?.id !== session.user.id) {
+        throw createError({ statusCode: 401, statusMessage: 'Sessão inconsistente. Entre novamente.' })
+      }
     })()
     synchronized.set(event, pending)
   }
