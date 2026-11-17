@@ -1,4 +1,4 @@
-import { appendResponseHeader, createError, getHeader, getRequestURL, type H3Event } from 'h3'
+import { appendResponseHeader, createError, getHeader, type H3Event } from 'h3'
 import { isUuid } from '../../shared/domain/common/uuid'
 
 interface ManagedUser {
@@ -93,6 +93,21 @@ function neonAuthUrl(event: H3Event) {
   return url.toString().replace(/\/$/, '')
 }
 
+/** Canonical origin for Neon authentication redirects, never derived from Host. */
+export function getNeonAppOrigin(event: H3Event): string {
+  const raw = String(useRuntimeConfig(event).neonAppOrigin || '')
+  let url: URL
+  try { url = new URL(raw) }
+  catch { throw createError({ statusCode: 503, statusMessage: 'NEON_APP_ORIGIN não configurada.' }) }
+  const local = url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+  if ((!local && url.protocol !== 'https:') ||
+      (local && url.protocol !== 'http:' && url.protocol !== 'https:') ||
+      url.username || url.password || url.pathname !== '/' || url.search || url.hash) {
+    throw createError({ statusCode: 503, statusMessage: 'NEON_APP_ORIGIN inválida.' })
+  }
+  return url.origin
+}
+
 export function ensureNeonAuthAvailability(response: Pick<ManagedAuthResponse, 'status'>): void {
   if (response.status === 429) {
     throw createError({ statusCode: 429, statusMessage: 'Muitas tentativas. Aguarde antes de tentar novamente.' })
@@ -108,7 +123,7 @@ export async function requestNeonAuth(
   options: { body?: Record<string, unknown>, forwardCookies?: boolean } = {},
 ): Promise<ManagedAuthResponse> {
   const base = neonAuthUrl(event)
-  const headers = new Headers({ 'content-type': 'application/json', origin: getRequestURL(event).origin })
+  const headers = new Headers({ 'content-type': 'application/json', origin: getNeonAppOrigin(event) })
   const cookie = getHeader(event, 'cookie')
   const scopedCookie = filterNeonRequestCookies(cookie)
   if (scopedCookie) headers.set('cookie', scopedCookie)
