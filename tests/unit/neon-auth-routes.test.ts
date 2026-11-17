@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   readBody: vi.fn(),
   requestNeonAuth: vi.fn(),
   usingNeon: vi.fn(() => true),
+  getNeonAppOrigin: vi.fn(() => 'https://staging.example.test'),
   createSupabaseServerClient: vi.fn(),
 }))
 
@@ -20,6 +21,7 @@ vi.mock('../../server/utils/supabase', () => ({
 }))
 vi.mock('../../server/utils/neon', () => ({
   requestNeonAuth: mocks.requestNeonAuth,
+  getNeonAppOrigin: mocks.getNeonAppOrigin,
   usingNeon: mocks.usingNeon,
   ensureNeonAuthAvailability: (result: { status: number }) => {
     if (result.status === 429 || result.status >= 500) {
@@ -94,7 +96,7 @@ describe('Neon Auth API endpoints', () => {
     mocks.requestNeonAuth.mockResolvedValue({ ok: true, status: 200, data: {} })
     await expect(recover(event)).resolves.toEqual({ success: true })
     expect(mocks.requestNeonAuth).toHaveBeenCalledWith(event, 'request-password-reset', {
-      body: { email: 'student@example.com', redirectTo: 'http://localhost:3000/redefinir-senha' },
+      body: { email: 'student@example.com', redirectTo: 'https://staging.example.test/redefinir-senha' },
     })
     expect(mocks.createSupabaseServerClient).not.toHaveBeenCalled()
   })
