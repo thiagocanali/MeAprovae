@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     backendProvider: environment.DATABASE_PROVIDER ?? 'supabase',
     neonAuthBaseUrl: environment.NEON_AUTH_BASE_URL ?? '',
     neonDataApiUrl: environment.NEON_DATA_API_URL ?? '',
+    neonAppOrigin: environment.NEON_APP_ORIGIN ?? '',
   },
   typescript: {
     strict: true,
