@@ -126,6 +126,15 @@ export async function requestNeonAuth(
     throw createError({ statusCode: 503, statusMessage: 'Serviço de autenticação temporariamente indisponível.' })
   }
 
+  // A 3xx response from Managed Auth is unexpected for JSON API routes.
+  // Never follow redirects or forward their Set-Cookie values.
+  if (response.status >= 300 && response.status < 400) {
+    throw createError({ statusCode: 503, statusMessage: 'Resposta inesperada do serviço de autenticação.' })
+  }
+  if (response.status === 429 || response.status >= 500) {
+    ensureNeonAuthAvailability({ status: response.status })
+  }
+
   // Neon Auth cookies are relayed as first-party HttpOnly cookies. Strip a
   // provider Domain attribute; no cookie value is ever logged or returned in JSON.
   if (options.forwardCookies) {
@@ -134,7 +143,8 @@ export async function requestNeonAuth(
       if (firstParty) appendResponseHeader(event, 'set-cookie', firstParty)
     }
   }
-  const data = await response.json().catch(() => null)
+  const contentType = response.headers.get('content-type') || ''
+  const data = contentType.includes('application/json') ? await response.json().catch(() => null) : null
   return {
     ok: response.ok,
     status: response.status,
@@ -218,5 +228,12 @@ export async function fetchNeonData(event: H3Event, input: RequestInfo | URL, in
   headers.delete('apikey')
   if (session) headers.set('authorization', `Bearer ${session.jwt}`)
   // Never follow a Data API redirect while holding an authenticated JWT.
-  return fetch(input, { ...init, headers, cache: 'no-store', redirect: 'error' })
+  try {
+    return await fetch(input, {
+      ...init, headers, cache: 'no-store', redirect: 'error',
+      signal: init?.signal ?? AbortSignal.timeout(15000),
+    })
+  } catch {
+    throw createError({ statusCode: 503, statusMessage: 'Neon Data API temporariamente indisponível.' })
+  }
 }
