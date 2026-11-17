@@ -214,4 +214,30 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(fetchMock).toHaveBeenCalledTimes(3)
   })
 
+  it('rejects a session whose verified Data API JWT resolves to a different user', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).endsWith('/get-session')) return data({ user: { id: userId } })
+      if (String(input).endsWith('/token')) return data({ token: jwt })
+      if (String(input).endsWith('/rpc/ensure_neon_student_account')) {
+        return data({ id: '550e8400-e29b-41d4-a716-446655440099' })
+      }
+      return data({}, 404)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(ensureNeonAccount({} as Parameters<typeof ensureNeonAccount>[0]))
+      .rejects.toMatchObject({ statusCode: 401 })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
+  it('rejects an unusable provisioning response rather than guessing user identity', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).endsWith('/get-session')) return data({ user: { id: userId } })
+      if (String(input).endsWith('/token')) return data({ token: jwt })
+      return new Response('not JSON', { status: 200, headers: { 'content-type': 'text/plain' } })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(ensureNeonAccount({} as Parameters<typeof ensureNeonAccount>[0]))
+      .rejects.toMatchObject({ statusCode: 401 })
+  })
+
 })
