@@ -33,6 +33,8 @@ vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
 const { default: login } = await import('../../server/api/auth/login.post')
 const { default: register } = await import('../../server/api/auth/register.post')
 const { default: logout } = await import('../../server/api/auth/logout.post')
+const { default: recover } = await import('../../server/api/auth/recover.post')
+const { default: resetPassword } = await import('../../server/api/auth/update-password.post')
 
 const event = {} as Parameters<typeof login>[0]
 beforeEach(() => {
@@ -87,4 +89,31 @@ describe('Neon Auth API endpoints', () => {
     expect(mocks.requestNeonAuth).toHaveBeenCalledWith(event, 'sign-out', { body: {}, forwardCookies: true })
     expect(mocks.createSupabaseServerClient).not.toHaveBeenCalled()
   })
+  it('requests password recovery only through Neon Managed Auth', async () => {
+    mocks.readBody.mockResolvedValue({ email: 'Student@Example.com' })
+    mocks.requestNeonAuth.mockResolvedValue({ ok: true, status: 200, data: {} })
+    await expect(recover(event)).resolves.toEqual({ success: true })
+    expect(mocks.requestNeonAuth).toHaveBeenCalledWith(event, 'request-password-reset', {
+      body: { email: 'student@example.com', redirectTo: 'http://localhost:3000/redefinir-senha' },
+    })
+    expect(mocks.createSupabaseServerClient).not.toHaveBeenCalled()
+  })
+
+  it('rejects resetting a Neon password without a one-time token', async () => {
+    mocks.readBody.mockResolvedValue({ password: 'a-new-password' })
+    await expect(resetPassword(event)).rejects.toMatchObject({ statusCode: 400 })
+    expect(mocks.requestNeonAuth).not.toHaveBeenCalled()
+  })
+
+  it('resets passwords through Neon and never through legacy Supabase Auth', async () => {
+    mocks.readBody.mockResolvedValue({ password: 'a-new-password', token: 'one-time-token' })
+    mocks.requestNeonAuth.mockResolvedValue({ ok: true, status: 200, data: {} })
+    await expect(resetPassword(event)).resolves.toEqual({ success: true })
+    expect(mocks.requestNeonAuth).toHaveBeenCalledWith(event, 'reset-password', {
+      body: { token: 'one-time-token', newPassword: 'a-new-password' },
+      forwardCookies: true,
+    })
+    expect(mocks.createSupabaseServerClient).not.toHaveBeenCalled()
+  })
+
 })
