@@ -1,3 +1,4 @@
+import { isUuid } from '../../../shared/domain/common/uuid'
 import { createError, getRequestURL, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
 import { ensureNeonAuthAvailability, requestNeonAuth, usingNeon } from '../../utils/neon'
@@ -21,6 +22,9 @@ export default defineEventHandler(async (event) => {
     ensureNeonAuthAvailability(result)
     if (!result.ok) {
       throw createError({ statusCode: 400, statusMessage: 'Não foi possível criar a conta. Confira os dados e tente novamente.' })
+    }
+    if (!isUuid(result.data?.user?.id)) {
+      throw createError({ statusCode: 503, statusMessage: 'Neon Auth retornou cadastro inconsistente.' })
     }
     return {
       user: result.data?.user ? { id: result.data.user.id, email: result.data.user.email } : null,
