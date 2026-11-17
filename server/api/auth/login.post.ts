@@ -1,3 +1,4 @@
+import { isUuid } from '../../../shared/domain/common/uuid'
 import { createError, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
 import { ensureNeonAuthAvailability, requestNeonAuth, usingNeon } from '../../utils/neon'
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
       body: { email, password }, forwardCookies: true,
     })
     ensureNeonAuthAvailability(result)
-    if (!result.ok || !result.data?.user?.id) {
+    if (!result.ok || !isUuid(result.data?.user?.id)) {
       throw createError({ statusCode: 401, statusMessage: 'E-mail ou senha inválidos.' })
     }
     return { user: { id: result.data.user.id, email: result.data.user.email } }
