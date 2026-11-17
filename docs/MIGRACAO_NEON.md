@@ -91,6 +91,16 @@ Este lote tratou cinco frentes de implementação sem modificar a produção:
 
 Atenção: testes com mocks e PostgreSQL descartável **não** substituem uma verificação real no navegador. O banco `migration-app-staging` não recebeu contas pessoais nem importação de dados. Qualquer aprovação para produção ainda depende de E2E com contas de homologação, SMTP, segurança e rollback.
 
+
+## Ciclo adicional — origem confiável, sessão e contratos de API (16/11/2026)
+
+- O backend Neon **não utiliza mais o cabeçalho Host para definir links de recuperação nem Origin para autenticação**. Exige `NEON_APP_ORIGIN` configurada com a origem pública canônica da aplicação (HTTPS, ou HTTP somente para localhost) e rejeita caminho, credenciais, query e fragmentos.
+- A configuração `NEON_APP_ORIGIN` é privada; não habilitar `DATABASE_PROVIDER=neon` em homologação ou produção sem definir essa variável e registrar a mesma origem nas configurações de Neon Auth.
+- Cadastro e login rejeitam UUIDs inválidos ou respostas incompletas do serviço de autenticação, em vez de retornar sucesso aparente.
+- Os testes de contrato das APIs cobrem catálogo vazio, falhas do provedor, autenticação obrigatória, idempotência de respostas e mapeamento de erros SQL.
+- A inspeção SQL **somente leitura** na `migration-app-staging` confirmou: 0 usuários Auth, 0 perfis, 0 questões, 45 políticas RLS e 69 índices.
+- Essas verificações unitárias/SQL não demonstram o fluxo de navegador com cookies reais, entrega de e-mail e funcionamento de todas as funcionalidades em hospedagem. Validar esses pontos antes de qualquer alteração na produção.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
