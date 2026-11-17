@@ -25,6 +25,7 @@ beforeEach(() => {
     backendProvider: 'neon',
     neonAuthBaseUrl: authUrl,
     neonDataApiUrl: apiUrl,
+    neonAppOrigin: 'http://localhost:3000',
   }))
 })
 
@@ -178,6 +179,7 @@ describe('Neon Auth -> Data API authentication boundary', () => {
       backendProvider: 'neon',
       neonAuthBaseUrl: authUrl,
       neonDataApiUrl: apiUrl.replace('ep-staging', 'ep-production'),
+      neonAppOrigin: 'http://localhost:3000',
     }))
     await expect(requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session'))
       .rejects.toMatchObject({ statusCode: 503 })
