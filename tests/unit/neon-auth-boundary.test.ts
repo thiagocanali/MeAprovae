@@ -9,7 +9,7 @@ vi.mock('h3', () => ({
   getRequestURL: () => new URL('http://localhost:3000/'),
 }))
 
-import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, ensureNeonAuthAvailability, getNeonAppOrigin, requestNeonAuth } from '../../server/utils/neon'
+import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, ensureNeonAuthAvailability, getNeonAppOrigin, requestNeonAuth, usingNeon } from '../../server/utils/neon'
 import { appendResponseHeader, setResponseHeader } from 'h3'
 
 const authUrl = 'https://ep-staging.neonauth.c-2.sa-east-1.aws.neon.tech/meaprovae/auth'
@@ -36,6 +36,17 @@ afterEach(() => {
 })
 
 describe('Neon Auth -> Data API authentication boundary', () => {
+  it('rejects unknown DATABASE_PROVIDER values rather than silently using Supabase', () => {
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      backendProvider: 'neonn',
+      neonAuthBaseUrl: authUrl,
+      neonDataApiUrl: apiUrl,
+      neonAppOrigin: 'http://localhost:3000',
+    }))
+    expect(() => usingNeon({} as Parameters<typeof usingNeon>[0]))
+      .toThrowError()
+  })
+
   it('does not provision users or attach bearer tokens without a verified session', async () => {
     const fetchMock = vi.fn(async (_input: RequestInfo | URL, _options?: RequestInit) => data({ user: null }))
     vi.stubGlobal('fetch', fetchMock)
