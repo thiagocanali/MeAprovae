@@ -12,7 +12,7 @@ importers:
         specifier: ^0.12.7
         version: 0.12.7(@supabase/supabase-js@2.119.0)
       '@supabase/supabase-js':
-        specifier: ^2.119.0
+        specifier: 2.119.0
         version: 2.119.0
       h3:
         specifier: 1.15.11
