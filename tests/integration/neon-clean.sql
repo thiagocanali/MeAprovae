@@ -14,6 +14,29 @@ begin
       where n.nspname='public' and not t.tgisinternal) <> 34 then
     raise exception 'Signup and domain triggers are missing';
   end if;
+  if exists (
+    select 1 from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind in ('r','p')
+      and not c.relrowsecurity
+  ) then
+    raise exception 'Every public application table must enable RLS';
+  end if;
+  if not exists (
+    select 1 from pg_policies
+    where schemaname='public' and tablename='student_question_favorites'
+      and cmd='SELECT' and qual like '%auth.uid()%'
+  ) or not exists (
+    select 1 from pg_policies
+    where schemaname='public' and tablename='student_question_favorites'
+      and cmd='INSERT' and with_check like '%auth.uid()%'
+  ) or not exists (
+    select 1 from pg_policies
+    where schemaname='public' and tablename='student_question_favorites'
+      and cmd='DELETE' and qual like '%auth.uid()%'
+  ) then
+    raise exception 'Favorites policies must enforce the verified user identity';
+  end if;
   if not (select relrowsecurity from pg_class where oid='public.auth_users'::regclass) then
     raise exception 'Auth bridge must have RLS enabled';
   end if;
