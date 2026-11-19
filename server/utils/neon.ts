@@ -1,4 +1,4 @@
-import { appendResponseHeader, createError, getHeader, type H3Event } from 'h3'
+import { appendResponseHeader, createError, getHeader, setResponseHeader, type H3Event } from 'h3'
 import { isUuid } from '../../shared/domain/common/uuid'
 
 interface ManagedUser {
@@ -23,7 +23,7 @@ interface ManagedAuthResponse {
  * them, the browser needs host-only cookies scoped to the entire application.
  * Never expose a provider cookie without HttpOnly or retain its Domain.
  */
-export function normalizeNeonSetCookie(raw: string): string | null {
+export function normalizeNeonSetCookie(raw: string, requireSecure = false): string | null {
   if (!raw || /[\r\n]/.test(raw) || !/^[^=;\s]+=[^;]*/.test(raw)) return null
   const parts = raw.split(';').map((part) => part.trim()).filter(Boolean)
   const firstCookie = parts[0]
@@ -40,6 +40,9 @@ export function normalizeNeonSetCookie(raw: string): string | null {
     !/^(?:domain|path|httponly|samesite|partitioned)(?:=|$)/i.test(part))
   // The upstream sends SameSite=None; Partitioned for a third-party origin.
   // The application has a first-party proxy, so use Lax and strip Partitioned.
+  if (requireSecure && !attributes.some((attribute) => /^Secure$/i.test(attribute))) {
+    attributes.push('Secure')
+  }
   return [firstCookie, 'Path=/', ...attributes, 'SameSite=Lax', 'HttpOnly'].join('; ')
 }
 
@@ -137,6 +140,9 @@ export async function requestNeonAuth(
   options: { body?: Record<string, unknown>, forwardCookies?: boolean } = {},
 ): Promise<ManagedAuthResponse> {
   const base = neonAuthUrl(event)
+  // Authentication responses must never be cached by browsers or proxies.
+  setResponseHeader(event, 'cache-control', 'private, no-store')
+  setResponseHeader(event, 'pragma', 'no-cache')
   // Browser cross-site form/fetch requests send Origin. Reject them before
   // forwarding any authentication or session mutation to Managed Auth.
   if (options.body !== undefined) {
@@ -180,7 +186,7 @@ export async function requestNeonAuth(
   // provider Domain attribute; no cookie value is ever logged or returned in JSON.
   if (options.forwardCookies) {
     for (const cookieValue of response.headers.getSetCookie()) {
-      const firstParty = normalizeNeonSetCookie(cookieValue)
+      const firstParty = normalizeNeonSetCookie(cookieValue, getNeonAppOrigin(event).startsWith('https://'))
       if (firstParty) appendResponseHeader(event, 'set-cookie', firstParty)
     }
   }
