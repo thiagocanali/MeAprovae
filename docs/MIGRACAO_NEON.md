@@ -150,6 +150,15 @@ A branch `migration-app-staging` permanece o único ambiente Neon destinado a te
 
 **Limitação atual:** ainda não foi realizado um teste de login/cadastro em navegador com as duas sessões reais necessárias. Uma origem HTTPS de homologação separada da produção e o respectivo cadastro em Neon Auth continuam pendentes.
 
+## Ciclo de testes funcionais de autorização — 19/11/2026
+
+- `tests/unit/neon-admin-authorization.test.ts` foi adicionado para verificar a fronteira administrativa: identidade obrigatória (401), papel não autorizado (403), falha da RPC (503), rejeição de valores ambíguos e uso da RPC `has_platform_role('editor')` sem papel enviado pelo cliente.
+- Os testes PostgreSQL descartáveis em `tests/integration/neon-clean.sql` agora geram **uma questão publicada real**, respeitando as regras de publicação de edital, associação de disciplinas, opções e gabarito. As duas identidades isoladas salvam a mesma questão em favoritas, mas não conseguem ler, inserir ou excluir o registro da outra.
+- As fixtures de teste não são migradas para Neon: o script `neon-clean.sql` executa em transação descartável e termina com `ROLLBACK`.
+- A suíte detectou e ajudou a corrigir regras importantes da aplicação: disciplinas de um edital precisam ser atribuídas **antes** da publicação, e a posição das opções começa em **1**.
+- Os objetos SQL reais da branch `migration-app-staging` foram inspecionados em modo somente leitura para conferir a função de criação de perfis, papéis de API e permissões do vínculo `public.auth_users`.
+- A validação real em navegador/Neon Auth ainda depende de homologação com origem HTTPS confiável, duas contas temporárias e entrega de e-mails. Não promover a produção apenas com testes simulados.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
