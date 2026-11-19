@@ -130,6 +130,12 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     )
   })
 
+  it('deduplicates incoming session cookie names and rejects oversized input', () => {
+    const cookies = 'better-auth.session_token=first; better-auth.session_token=second; neon-auth.session_data=third'
+    expect(filterNeonRequestCookies(cookies)).toBe('better-auth.session_token=first; neon-auth.session_data=third')
+    expect(filterNeonRequestCookies('neon-auth.session_token=' + 'a'.repeat(9000))).toBe('')
+  })
+
   it('forwards only Neon Auth session cookies upstream, not unrelated app cookies', async () => {
     const raw = 'session=other-service; theme=dark; __Secure-neon-auth.session_token=valid; better-auth.session_data=cached'
     expect(filterNeonRequestCookies(raw)).toBe('__Secure-neon-auth.session_token=valid; better-auth.session_data=cached')
