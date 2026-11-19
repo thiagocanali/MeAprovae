@@ -204,6 +204,9 @@ async function readNeonSession(event: H3Event): Promise<ManagedSession | null> {
   // Managed Better Auth exposes short-lived Data API JWTs through its token
   // endpoint. The get-session response is not guaranteed to include a JWT.
   const jwtResponse = await requestNeonAuth(event, 'token')
+  if (jwtResponse.status === 401 || jwtResponse.status === 403) {
+    throw createError({ statusCode: 401, statusMessage: 'Sua sessão expirou. Entre novamente.' })
+  }
   const jwt = typeof jwtResponse.data?.token === 'string' ? jwtResponse.data.token.trim() : ''
   if (!jwtResponse.ok || jwt.split('.').length !== 3) {
     throw createError({ statusCode: 503, statusMessage: 'Neon Auth não retornou um token de sessão válido.' })
