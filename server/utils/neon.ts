@@ -31,6 +31,11 @@ export function normalizeNeonSetCookie(raw: string): string | null {
   const name = firstCookie.slice(0, firstCookie.indexOf('='))
   // Only relay cookies belonging to the managed identity provider.
   if (!/^(?:__(?:Secure|Host)-)?(?:neon-auth|better-auth)\.[a-zA-Z0-9_.-]+$/.test(name)) return null
+  // Cookie prefix invariants are enforced by browsers. Fail closed when an
+  // upstream cookie claims __Host-/__Secure- without the Secure attribute.
+  if (name.startsWith('__Host-') || name.startsWith('__Secure-')) {
+    if (!parts.slice(1).some((part) => /^Secure$/i.test(part))) return null
+  }
   const attributes = parts.slice(1).filter((part) =>
     !/^(?:domain|path|httponly|samesite|partitioned)(?:=|$)/i.test(part))
   // The upstream sends SameSite=None; Partitioned for a third-party origin.
