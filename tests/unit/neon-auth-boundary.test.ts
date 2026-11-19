@@ -134,7 +134,7 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(normalizeNeonSetCookie('__Secure-neon-auth.session_token=abc; SameSite=None')).toBeNull()
     expect(normalizeNeonSetCookie('__Host-neon-auth.session_token=abc; Path=/')).toBeNull()
     expect(normalizeNeonSetCookie('better-auth.session_token=abc; Path=/; SameSite=None', true))
-      .toBe('better-auth.session_token=abc; Path=/; SameSite=Lax; HttpOnly; Secure')
+      .toBe('better-auth.session_token=abc; Path=/; Secure; SameSite=Lax; HttpOnly')
     expect(normalizeNeonSetCookie('neon-auth.session_token=abc\r\nSet-Cookie: other=unsafe')).toBeNull()
   })
 
