@@ -35,7 +35,8 @@ describe('Neon editorial authorization boundary', () => {
     const client = { rpc }
     mocks.createSupabaseServerClient.mockReturnValue(client)
     await expect(requirePlatformEditor(event)).resolves.toEqual({ user, supabase: client })
-    expect(rpc).toHaveBeenCalledExactlyOnceWith('has_platform_role', {
+    expect(rpc).toHaveBeenCalledTimes(1)
+    expect(rpc).toHaveBeenCalledWith('has_platform_role', {
       p_required_role: 'editor',
     })
   })
