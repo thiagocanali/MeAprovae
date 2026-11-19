@@ -117,6 +117,18 @@ Atenção: testes com mocks e PostgreSQL descartável **não** substituem uma ve
 - Não foram criadas contas, importados registros ou implantadas alterações na Vercel.
 - Requer validação de cadastro/login/logout, cookies, JWT, RLS e recuperação de senha usando ambiente isolado e contas temporárias reais antes de declarar a migração concluída.
 
+## Ciclo — 19/11/2026: reconciliação de favoritas e testes
+
+- A PR #51 foi comparada com `main`. Dois commits da base introduziram correções na página de favoritas e documentos de isolamento. A navegação padronizada `StudentNavigation` da PR foi mantida e o fluxo de **Resolver questão** (`/app/questoes?questionId=UUID`) foi incorporado, junto do estado de questão indisponível e mensagem de erro orientada ao estudante.
+- Os documentos `docs/DATA_ISOLATION_2026-11-13.md` e `docs/FAVORITE_PRACTICE.md` foram copiados integralmente de `main` para a branch da PR, sem alterar a base ou executar merge.
+- Novo `tests/unit/neon-favorites-routes.test.ts` cobre login obrigatório, listagem limitada à identidade validada, upsert idempotente, remoção apenas da própria favorita, UUIDs inválidos e falhas do provedor.
+- O job `neon-database` agora exige RLS habilitada para **todas** as tabelas públicas e políticas de SELECT/INSERT/DELETE de favoritas vinculadas a `auth.uid()`.
+- A compatibilidade dos testes em PostgreSQL descartável não substitui navegador com JWT real. A homologação Neon continua sem dados antigos; nenhuma alteração de produção ou deploy de preview foi feita.
+
+### Condição para encerramento da migração
+
+Antes de alterar `DATABASE_PROVIDER` fora da homologação, validar duas identidades temporárias reais, cadastro, sessão, favoritos, simulados, recuperação de senha e administração editorial com URLs de autenticação e Data API correspondentes à mesma branch. Confirmar que a origem de homologação está na lista confiável Neon Auth, sem reutilizar o domínio de produção. Não mesclar a PR sem reconciliar a base e revisar CI.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
