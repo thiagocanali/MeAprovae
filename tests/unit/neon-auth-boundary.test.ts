@@ -87,6 +87,16 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
+  it('blocks URLs with embedded credentials or fragments before calling Data API', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const event = {} as Parameters<typeof fetchNeonData>[0]
+    const credentialUrl = apiUrl.replace('https://', 'https://user:pass@') + '/study_questions'
+    await expect(fetchNeonData(event, credentialUrl)).rejects.toMatchObject({ statusCode: 503 })
+    await expect(fetchNeonData(event, apiUrl + '/study_questions#unexpected')).rejects.toMatchObject({ statusCode: 503 })
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('does not trust a malformed or missing token returned by upstream', async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL) =>
       String(input).endsWith('/get-session') ? data({ user: { id: userId } }) : data({ token: 'invalid' }))
