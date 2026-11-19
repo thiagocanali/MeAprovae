@@ -129,6 +129,17 @@ Atenção: testes com mocks e PostgreSQL descartável **não** substituem uma ve
 
 Antes de alterar `DATABASE_PROVIDER` fora da homologação, validar duas identidades temporárias reais, cadastro, sessão, favoritos, simulados, recuperação de senha e administração editorial com URLs de autenticação e Data API correspondentes à mesma branch. Confirmar que a origem de homologação está na lista confiável Neon Auth, sem reutilizar o domínio de produção. Não mesclar a PR sem reconciliar a base e revisar CI.
 
+## Ciclo de endurecimento do gateway — 19/11/2026
+
+- Endpoints de autenticação que modificam sessão ou credenciais rejeitam `Sec-Fetch-Site: cross-site` mesmo quando o navegador não envia um cabeçalho `Origin`. A validação canônica de origem continua habilitada.
+- A Data API não recebe solicitações com URLs contendo credenciais embutidas ou fragmentos, além das restrições de esquema, host e prefixo de caminho previamente implementadas.
+- Cookies entrantes de Neon Auth / Better Auth são limitados a 8 KiB e têm nomes duplicados eliminados, preservando o primeiro valor para reduzir ambiguidade de sessão entre intermediários.
+- Quando a consulta ao endpoint de token do Neon responde `401` ou `403`, a aplicação identifica a sessão como expirada, em vez de relatar uma indisponibilidade geral da infraestrutura.
+- Os testes automatizados foram ampliados para cobrir CSRF via Fetch Metadata, URLs inválidas, cookies duplicados/excessivos e JWT expirado.
+- O sistema original Supabase segue como padrão; nenhum deploy, dado real, conta pessoal ou alteração de produção foi realizado.
+
+A branch `migration-app-staging` permanece o único ambiente Neon destinado a testes da aplicação. A aprovação do CI comprova os testes existentes, mas **não substitui** a validação E2E com duas contas e cookies reais em uma origem de homologação autorizada.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
