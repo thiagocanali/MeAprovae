@@ -50,6 +50,16 @@ describe('Neon editorial authorization boundary', () => {
     }
   })
 
+  it('returns a controlled service error when the role check throws a transport exception', async () => {
+    const rpc = vi.fn().mockRejectedValue(new Error('private database connection details'))
+    mocks.createSupabaseServerClient.mockReturnValue({ rpc })
+    await expect(requirePlatformEditor(event)).rejects.toMatchObject({
+      statusCode: 503,
+      message: 'Não foi possível validar suas permissões administrativas. Verifique a migração editorial.',
+    })
+    expect(rpc).toHaveBeenCalledTimes(1)
+  })
+
   it('fails closed when the privilege RPC cannot be checked', async () => {
     mocks.createSupabaseServerClient.mockReturnValue({
       rpc: vi.fn(async () => ({ data: null, error: { code: 'PGRST000' } })),
