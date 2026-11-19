@@ -65,6 +65,27 @@ insert into neon_auth."user"(id,name) values
 insert into public.study_contests (id,slug,title,status)
 values ('44444444-4444-4444-8444-444444444444','neon-rls-fixture','Teste de isolamento Neon','published');
 
+-- A published question with two options and an answer key exercises the
+-- actual favorite insert policy; a draft question would be rejected.
+insert into public.study_subjects (id,name)
+values ('55555555-5555-4555-8555-555555555555','Disciplina de teste Neon');
+insert into public.study_notices (id,contest_id,title,status)
+values ('66666666-6666-4666-8666-666666666666','44444444-4444-4444-8444-444444444444','Edital de teste Neon','published');
+insert into public.study_notice_subjects (notice_id,subject_id)
+values ('66666666-6666-4666-8666-666666666666','55555555-5555-4555-8555-555555555555');
+insert into public.study_questions (id,notice_id,subject_id,statement,status)
+values ('77777777-7777-4777-8777-777777777777','66666666-6666-4666-8666-666666666666',
+        '55555555-5555-4555-8555-555555555555','Questão publicada de teste Neon', 'draft');
+insert into public.study_question_options (id,question_id,option_label,content,position)
+values
+ ('88888888-8888-4888-8888-888888888888','77777777-7777-4777-8777-777777777777','A','Primeira alternativa',0),
+ ('99999999-9999-4999-8999-999999999999','77777777-7777-4777-8777-777777777777','B','Segunda alternativa',1);
+insert into public.study_question_answer_keys (question_id,correct_option_id)
+values ('77777777-7777-4777-8777-777777777777','88888888-8888-4888-8888-888888888888');
+update public.study_questions set status='published'
+where id='77777777-7777-4777-8777-777777777777';
+
+
 set local role anonymous;
 do $anonymous$
 begin
@@ -82,6 +103,10 @@ select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111'
 select public.ensure_neon_student_account('Estudante A');
 select public.ensure_neon_student_account('Estudante A');
 select public.set_student_study_goal('44444444-4444-4444-8444-444444444444');
+insert into public.student_question_favorites (user_id,question_id)
+values ('11111111-1111-4111-8111-111111111111','77777777-7777-4777-8777-777777777777');
+
+
 
 do $first$
 begin
@@ -116,6 +141,17 @@ begin
   if (select count(*) from public.study_goals) <> 0 then
     raise exception 'Student B can read student A goal';
   end if;
+  if (select count(*) from public.student_question_favorites) <> 0 then
+    raise exception 'Student B can read student A favorites';
+  end if;
+  begin
+    insert into public.student_question_favorites (user_id,question_id)
+    values ('11111111-1111-4111-8111-111111111111','77777777-7777-4777-8777-777777777777')
+    on conflict do nothing;
+    raise exception 'Student B can write student A favorites';
+  exception when insufficient_privilege then null;
+  end;
+
   if (select display_name from public.student_profiles) <> 'Estudante B' then
     raise exception 'Wrong isolated profile';
   end if;
@@ -126,6 +162,21 @@ begin
   end;
 end
 $second$;
+
+-- Student B can favorite the same question without seeing or modifying A's record.
+insert into public.student_question_favorites (user_id,question_id)
+values ('22222222-2222-4222-8222-222222222222','77777777-7777-4777-8777-777777777777');
+do $favorite_isolation$
+begin
+  if (select count(*) from public.student_question_favorites) <> 1 then
+    raise exception 'Student B favorites are not isolated';
+  end if;
+  if (select count(*) from public.student_question_favorites
+      where user_id='11111111-1111-4111-8111-111111111111') <> 0 then
+    raise exception 'Student B can list student A favorites';
+  end if;
+end
+$favorite_isolation$;
 
 -- Student B may create their own goal, without changing student A's goal.
 select public.set_student_study_goal('44444444-4444-4444-8444-444444444444');
