@@ -140,6 +140,16 @@ Antes de alterar `DATABASE_PROVIDER` fora da homologação, validar duas identid
 
 A branch `migration-app-staging` permanece o único ambiente Neon destinado a testes da aplicação. A aprovação do CI comprova os testes existentes, mas **não substitui** a validação E2E com duas contas e cookies reais em uma origem de homologação autorizada.
 
+## Ciclo: configuração estrita e sessão segura (19/11/2026)
+
+1. A proxy de autenticação define `Cache-Control: private, no-store` e `Pragma: no-cache` em respostas do Neon Auth, evitando armazenamento intermediário de respostas de sessão. Cookies recebidos em uma origem HTTPS recebem o atributo `Secure`, mesmo quando o upstream não o informou para um nome sem prefixo.
+2. O seletor privado `DATABASE_PROVIDER` aceita apenas `supabase` e `neon`. Um erro de digitação agora falha fechado (503) em vez de redirecionar silenciosamente chamadas para o Supabase original.
+3. A rota `/auth/callback`, exclusiva de troca de código PKCE do Supabase, é desabilitada no modo Neon para evitar a execução da autenticação legada com um backend incompatível. O fluxo Supabase permanece preservado.
+4. Testes unitários adicionais verificam atributos seguros dos cookies, cabeçalhos anti-cache, rejeição de provider inválido, bloqueio de callback antigo em Neon e compatibilidade do callback Supabase.
+5. Auditoria somente leitura da branch `migration-app-staging`: funções `SECURITY DEFINER` identificadas; `anonymous` não executa `ensure_neon_student_account`, `authenticated` pode executá-la, e a tabela `auth_users` não expõe leitura direta a esses papéis.
+
+**Limitação atual:** ainda não foi realizado um teste de login/cadastro em navegador com as duas sessões reais necessárias. Uma origem HTTPS de homologação separada da produção e o respectivo cadastro em Neon Auth continuam pendentes.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
