@@ -70,9 +70,11 @@ values ('44444444-4444-4444-8444-444444444444','neon-rls-fixture','Teste de isol
 insert into public.study_subjects (id,name)
 values ('55555555-5555-4555-8555-555555555555','Disciplina de teste Neon');
 insert into public.study_notices (id,contest_id,title,status)
-values ('66666666-6666-4666-8666-666666666666','44444444-4444-4444-8444-444444444444','Edital de teste Neon','published');
+values ('66666666-6666-4666-8666-666666666666','44444444-4444-4444-8444-444444444444','Edital de teste Neon','draft');
 insert into public.study_notice_subjects (notice_id,subject_id)
 values ('66666666-6666-4666-8666-666666666666','55555555-5555-4555-8555-555555555555');
+-- Assign subjects while the notice is still a draft, then publish it.
+update public.study_notices set status='published' where id='66666666-6666-4666-8666-666666666666';
 insert into public.study_questions (id,notice_id,subject_id,statement,status)
 values ('77777777-7777-4777-8777-777777777777','66666666-6666-4666-8666-666666666666',
         '55555555-5555-4555-8555-555555555555','Questão publicada de teste Neon', 'draft');
