@@ -123,6 +123,14 @@ export async function requestNeonAuth(
   options: { body?: Record<string, unknown>, forwardCookies?: boolean } = {},
 ): Promise<ManagedAuthResponse> {
   const base = neonAuthUrl(event)
+  // Browser cross-site form/fetch requests send Origin. Reject them before
+  // forwarding any authentication or session mutation to Managed Auth.
+  if (options.body !== undefined) {
+    const incomingOrigin = getHeader(event, 'origin')
+    if (incomingOrigin && incomingOrigin !== getNeonAppOrigin(event)) {
+      throw createError({ statusCode: 403, statusMessage: 'Origem da requisição não autorizada.' })
+    }
+  }
   const headers = new Headers({ 'content-type': 'application/json', origin: getNeonAppOrigin(event) })
   const cookie = getHeader(event, 'cookie')
   const scopedCookie = filterNeonRequestCookies(cookie)
