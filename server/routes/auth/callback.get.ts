@@ -1,7 +1,13 @@
 import { createError, getQuery, sendRedirect } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
+import { usingNeon } from '../../utils/neon'
 
 export default defineEventHandler(async (event) => {
+  // Supabase PKCE codes cannot be exchanged with Neon Managed Auth.
+  // Keep legacy callback only for the Supabase environment.
+  if (usingNeon(event)) {
+    throw createError({ statusCode: 404, statusMessage: 'Fluxo de autenticação indisponível neste ambiente.' })
+  }
   const query = getQuery(event)
   const code = typeof query.code === 'string' ? query.code : null
 
