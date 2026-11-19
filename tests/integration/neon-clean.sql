@@ -80,8 +80,8 @@ values ('77777777-7777-4777-8777-777777777777','66666666-6666-4666-8666-66666666
         '55555555-5555-4555-8555-555555555555','Questão publicada de teste Neon', 'draft');
 insert into public.study_question_options (id,question_id,option_label,content,position)
 values
- ('88888888-8888-4888-8888-888888888888','77777777-7777-4777-8777-777777777777','A','Primeira alternativa',0),
- ('99999999-9999-4999-8999-999999999999','77777777-7777-4777-8777-777777777777','B','Segunda alternativa',1);
+ ('88888888-8888-4888-8888-888888888888','77777777-7777-4777-8777-777777777777','A','Primeira alternativa',1),
+ ('99999999-9999-4999-8999-999999999999','77777777-7777-4777-8777-777777777777','B','Segunda alternativa',2);
 insert into public.study_question_answer_keys (question_id,correct_option_id)
 values ('77777777-7777-4777-8777-777777777777','88888888-8888-4888-8888-888888888888');
 update public.study_questions set status='published'
