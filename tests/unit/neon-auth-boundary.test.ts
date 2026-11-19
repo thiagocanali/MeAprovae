@@ -4,7 +4,7 @@ vi.mock('h3', () => ({
   appendResponseHeader: vi.fn(),
   createError: ({ statusCode, statusMessage }: { statusCode: number, statusMessage: string }) =>
     Object.assign(new Error(statusMessage), { statusCode }),
-  getHeader: (_event: unknown, name: string) => name === 'origin' ? 'http://localhost:3000' : 'session=trusted-cookie',
+  getHeader: (_event: { fetchSite?: string }, name: string) => name === 'origin' ? 'http://localhost:3000' : name === 'sec-fetch-site' ? _event?.fetchSite : 'session=trusted-cookie',
   getRequestURL: () => new URL('http://localhost:3000/'),
 }))
 
@@ -242,6 +242,15 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     vi.stubGlobal('fetch', fetchMock)
     await expect(ensureNeonAccount({} as Parameters<typeof ensureNeonAccount>[0]))
       .rejects.toMatchObject({ statusCode: 401 })
+  })
+
+  it('rejects cross-site Fetch Metadata even if Origin looks trustworthy', async () => {
+    const event = { fetchSite: 'cross-site' } as Parameters<typeof requestNeonAuth>[0]
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(requestNeonAuth(event, 'sign-out', { body: {}, forwardCookies: true }))
+      .rejects.toMatchObject({ statusCode: 403 })
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('rejects cross-origin mutations before making any upstream Auth request', async () => {
