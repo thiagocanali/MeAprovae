@@ -19,10 +19,7 @@ const { data, pending, error, refresh } = await useFetch<{ contests: Contest[] }
 
 <template>
   <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/provas">Simulados</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
-    </header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">SEU OBJETIVO</p>
       <h1>Concursos públicos</h1>

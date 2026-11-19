@@ -373,15 +373,7 @@ const label = (table: string) => ({
 
 <template>
   <main class="student-home">
-    <header class="student-header">
-      <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
-      <nav class="admin-nav">
-        <NuxtLink class="study-link" to="/admin/revisao">Fila de revisão</NuxtLink>
-        <NuxtLink class="study-link" to="/admin/acervo">Acervo em revisão</NuxtLink>
-        <NuxtLink class="study-link" to="/admin/importar">Importar questões</NuxtLink>
-        <NuxtLink class="study-link" to="/app">Área do estudante</NuxtLink>
-      </nav>
-    </header>
+    <AdminNavigation />
 
     <section class="student-welcome">
       <p class="auth-eyebrow">PAINEL ADMINISTRATIVO · {{ data?.role === 'owner' ? 'PROPRIETÁRIO' : 'EDITOR' }}</p>

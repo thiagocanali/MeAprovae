@@ -19,7 +19,7 @@ async function openRelease(release: Release) {
 </script>
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><nav><NuxtLink to="/admin/revisao">Fila de revisão</NuxtLink><NuxtLink to="/admin">Gestão</NuxtLink><NuxtLink to="/admin/importar">Importar</NuxtLink></nav></header>
+    <AdminNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">CONTEÚDO ORIGINAL VERSIONADO</p><h1>Acervo em revisão</h1>
       <p class="auth-description">Acompanhe os últimos 50 lotes originais instalados a partir do repositório. Conferência automática de cálculos não substitui revisão editorial de enunciados, explicações, direitos e dificuldade.</p>

@@ -39,16 +39,7 @@ async function logout() {
 
 <template>
   <main class="student-home">
-    <header class="student-header">
-      <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
-      <nav class="student-nav" aria-label="Navegação do estudante">
-        <NuxtLink to="/app">Início</NuxtLink>
-        <NuxtLink to="/app/concursos">Concursos</NuxtLink>
-        <NuxtLink to="/app/questoes">Questões</NuxtLink>
-        <NuxtLink to="/app/desempenho">Desempenho</NuxtLink>
-      </nav>
-      <button class="logout-button" :disabled="pending" @click="logout">{{ pending ? 'Saindo…' : 'Sair' }}</button>
-    </header>
+    <StudentNavigation :show-logout="true" :logout-pending="pending" @logout="logout" />
     <section class="student-welcome">
       <p class="auth-eyebrow">ÁREA DO ESTUDANTE</p>
       <h1>Seu próximo passo começa aqui.</h1>

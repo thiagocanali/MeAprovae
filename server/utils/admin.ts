@@ -8,9 +8,19 @@ export async function requirePlatformEditor(event: H3Event) {
   }
 
   const supabase = createSupabaseServerClient(event)
-  const { data: allowed, error } = await supabase.rpc('has_platform_role', {
-    p_required_role: 'editor',
-  })
+  let roleCheck: Awaited<ReturnType<typeof supabase.rpc>>
+  try {
+    roleCheck = await supabase.rpc('has_platform_role', {
+      p_required_role: 'editor',
+    })
+  } catch {
+    // Fail closed on transport errors without exposing provider details.
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'Não foi possível validar suas permissões administrativas. Verifique a migração editorial.',
+    })
+  }
+  const { data: allowed, error } = roleCheck
 
   if (error) {
     throw createError({

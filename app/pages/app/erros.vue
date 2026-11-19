@@ -18,10 +18,7 @@ const { data, pending, error, refresh } = await useFetch<{ questions: ReviewQues
 
 <template>
   <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/historico">Histórico</NuxtLink></nav>
-    </header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">REVISÃO DE ERROS</p>
       <h1>Questões para revisar</h1>

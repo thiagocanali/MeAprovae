@@ -25,7 +25,7 @@ async function participate(enabled: boolean) {
 
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/desempenho">Meu desempenho</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink></nav></header>
+    <StudentNavigation />
     <section class="study-content">
       <p class="auth-eyebrow">REFERÊNCIA DE PRÁTICA</p><h1>Comparar minha prática</h1>
       <p class="auth-description">Uma referência agregada de perfis que escolheram o mesmo concurso e responderam às mesmas 20 questões no mês. Não há nomes, posições individuais ou previsão de aprovação.</p>

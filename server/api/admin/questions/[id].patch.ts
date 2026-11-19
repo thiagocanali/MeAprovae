@@ -55,43 +55,16 @@ export default defineEventHandler(async (event) => {
   }
   if(!Object.keys(updates).length && explanation===undefined) throw createError({statusCode:400,statusMessage:'Nenhuma alteração informada.'})
 
-  let questionData: {
-    id: string
-    notice_id: string
-    subject_id: string
-    topic_id: string | null
-    difficulty: string
-    difficulty_reviewed: boolean
-    statement: string
-    source_label: string | null
-    source_url: string | null
-    source_year: number | null
-    status: string
-    created_at: string
-  } | null = null
-  if (Object.keys(updates).length) {
-    const { data, error } = await supabase.from('study_questions').update(updates).eq('id',id)
-      .select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, status, created_at').maybeSingle()
-    if(error?.code==='23514') throw createError({statusCode:409,statusMessage:'A regra de publicação ou o histórico de respostas impede esta alteração.'})
-    if(error?.code==='23522'||error?.code==='23503') throw createError({statusCode:400,statusMessage:'Disciplina ou assunto incompatível com a questão.'})
-    if(error) throw createError({statusCode:503,statusMessage:'Não foi possível atualizar a questão.'})
-    if(!data) throw createError({statusCode:404,statusMessage:'Questão não encontrada.'})
-    questionData=data
-  } else {
-    const { data, error } = await supabase.from('study_questions')
-      .select('id, notice_id, subject_id, topic_id, difficulty, difficulty_reviewed, statement, source_label, source_url, source_year, status, created_at')
-      .eq('id',id).maybeSingle()
-    if(error) throw createError({statusCode:503,statusMessage:'Não foi possível carregar a questão.'})
-    if(!data) throw createError({statusCode:404,statusMessage:'Questão não encontrada.'})
-    questionData=data
-  }
+  const { data, error } = await supabase.rpc('update_editorial_question', {
+    p_question_id: id,
+    p_updates: updates,
+    p_explanation: explanation ?? null,
+  })
+  if (error?.code === 'P0002') throw createError({ statusCode: 404, statusMessage: 'Questão não encontrada.' })
+  if (error?.code === '23514') throw createError({ statusCode: 409, statusMessage: 'A regra de publicação ou o histórico de respostas impede esta alteração.' })
+  if (error?.code === '23522' || error?.code === '23503') throw createError({ statusCode: 400, statusMessage: 'Disciplina ou assunto incompatível com a questão.' })
+  if (error?.code === '42501') throw createError({ statusCode: 403, statusMessage: 'Sem permissão editorial.' })
+  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível atualizar a questão e sua explicação.' })
 
-  if (explanation !== undefined) {
-    const { error } = await supabase.from('study_question_editorial_details')
-      .upsert({ question_id: id, explanation }, { onConflict: 'question_id' })
-    if(error?.code==='23514') throw createError({statusCode:409,statusMessage:'O histórico de respostas impede a alteração da explicação.'})
-    if(error) throw createError({statusCode:503,statusMessage:'Não foi possível atualizar a explicação editorial.'})
-  }
-
-  return { question: { ...questionData, ...(explanation === undefined ? {} : { explanation }) } }
+  return { question: { ...data, ...(explanation === undefined ? {} : { explanation }) } }
 })

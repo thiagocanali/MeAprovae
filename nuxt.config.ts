@@ -3,10 +3,14 @@ const environment = (globalThis as { process?: { env?: Record<string, string | u
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-04',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css', '~/assets/css/auth.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/auth.css', '~/assets/css/design-system.css'],
   runtimeConfig: {
     supabaseUrl: environment.SUPABASE_URL ?? '',
     supabaseAnonKey: environment.SUPABASE_ANON_KEY ?? '',
+    backendProvider: environment.DATABASE_PROVIDER ?? 'supabase',
+    neonAuthBaseUrl: environment.NEON_AUTH_BASE_URL ?? '',
+    neonDataApiUrl: environment.NEON_DATA_API_URL ?? '',
+    neonAppOrigin: environment.NEON_APP_ORIGIN ?? '',
   },
   typescript: {
     strict: true,

@@ -47,7 +47,7 @@ async function submit() {
 
 <template>
   <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><NuxtLink to="/admin">Voltar à gestão</NuxtLink></header>
+    <AdminNavigation />
     <section class="study-content">
       <h1>Importar questões em lote</h1>
       <div v-if="accessError" class="study-error" role="alert">A importação exige acesso editorial. <NuxtLink to="/app">Voltar aos estudos</NuxtLink></div>
