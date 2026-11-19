@@ -36,6 +36,12 @@ export function normalizeNeonSetCookie(raw: string, requireSecure = false): stri
   if (name.startsWith('__Host-') || name.startsWith('__Secure-')) {
     if (!parts.slice(1).some((part) => /^Secure$/i.test(part))) return null
   }
+  // A __Host- cookie must already be host-only and rooted at / upstream.
+  // Do not silently turn an invalid or narrowly scoped provider cookie into
+  // a valid root-scoped application cookie.
+  if (name.startsWith('__Host-') &&
+    (parts.slice(1).some((part) => /^Domain(?:=|$)/i.test(part)) ||
+      !parts.slice(1).some((part) => /^Path=\/$/i.test(part)))) return null
   const attributes = parts.slice(1).filter((part) =>
     !/^(?:domain|path|httponly|samesite|partitioned)(?:=|$)/i.test(part))
   // The upstream sends SameSite=None; Partitioned for a third-party origin.
