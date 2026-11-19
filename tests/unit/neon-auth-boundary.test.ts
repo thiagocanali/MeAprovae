@@ -77,6 +77,15 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(fetchMock).toHaveBeenCalledTimes(4)
   })
 
+  it('reports a revoked token session as unauthorized, not a service outage', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) =>
+      String(input).endsWith('/get-session') ? data({ user: { id: userId } }) : data({ error: 'expired' }, 401))
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(getNeonSession({} as Parameters<typeof getNeonSession>[0]))
+      .rejects.toMatchObject({ statusCode: 401 })
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
   it('rejects an unexpected database host before forwarding a JWT', async () => {
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
