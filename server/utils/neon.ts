@@ -69,7 +69,11 @@ const sessions = new WeakMap<H3Event, Promise<ManagedSession | null>>()
 const synchronized = new WeakMap<H3Event, Promise<void>>()
 
 export function usingNeon(event: H3Event): boolean {
-  return useRuntimeConfig(event).backendProvider === 'neon'
+  const provider = String(useRuntimeConfig(event).backendProvider || 'supabase')
+  if (provider !== 'neon' && provider !== 'supabase') {
+    throw createError({ statusCode: 503, statusMessage: 'DATABASE_PROVIDER inválido.' })
+  }
+  return provider === 'neon'
 }
 
 
