@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('h3', () => ({
   appendResponseHeader: vi.fn(),
+  setResponseHeader: vi.fn(),
   createError: ({ statusCode, statusMessage }: { statusCode: number, statusMessage: string }) =>
     Object.assign(new Error(statusMessage), { statusCode }),
   getHeader: (_event: { fetchSite?: string }, name: string) => name === 'origin' ? 'http://localhost:3000' : name === 'sec-fetch-site' ? _event?.fetchSite : 'session=trusted-cookie',
@@ -9,7 +10,7 @@ vi.mock('h3', () => ({
 }))
 
 import { ensureNeonAccount, fetchNeonData, getNeonSession, neonServicesMatch, normalizeNeonSetCookie, filterNeonRequestCookies, ensureNeonAuthAvailability, getNeonAppOrigin, requestNeonAuth } from '../../server/utils/neon'
-import { appendResponseHeader } from 'h3'
+import { appendResponseHeader, setResponseHeader } from 'h3'
 
 const authUrl = 'https://ep-staging.neonauth.c-2.sa-east-1.aws.neon.tech/meaprovae/auth'
 const apiUrl = 'https://ep-staging.apirest.c-2.sa-east-1.aws.neon.tech/meaprovae/rest/v1'
@@ -121,7 +122,16 @@ describe('Neon Auth -> Data API authentication boundary', () => {
       .toBe('__Host-neon-auth.session_token=abc; Path=/; Secure; SameSite=Lax; HttpOnly')
     expect(normalizeNeonSetCookie('__Secure-neon-auth.session_token=abc; SameSite=None')).toBeNull()
     expect(normalizeNeonSetCookie('__Host-neon-auth.session_token=abc; Path=/')).toBeNull()
+    expect(normalizeNeonSetCookie('better-auth.session_token=abc; Path=/; SameSite=None', true))
+      .toBe('better-auth.session_token=abc; Path=/; SameSite=Lax; HttpOnly; Secure')
     expect(normalizeNeonSetCookie('neon-auth.session_token=abc\r\nSet-Cookie: other=unsafe')).toBeNull()
+  })
+
+  it('prevents browser and proxy caching of authentication responses', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => data({ user: null })))
+    await requestNeonAuth({} as Parameters<typeof requestNeonAuth>[0], 'get-session')
+    expect(vi.mocked(setResponseHeader)).toHaveBeenCalledWith(expect.anything(), 'cache-control', 'private, no-store')
+    expect(vi.mocked(setResponseHeader)).toHaveBeenCalledWith(expect.anything(), 'pragma', 'no-cache')
   })
 
   it('relays only valid first-party HttpOnly cookies from Neon Auth', async () => {
