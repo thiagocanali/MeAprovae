@@ -146,6 +146,12 @@ begin
   if (select count(*) from public.student_question_favorites) <> 0 then
     raise exception 'Student B can read student A favorites';
   end if;
+  delete from public.student_question_favorites
+  where user_id='11111111-1111-4111-8111-111111111111'
+    and question_id='77777777-7777-4777-8777-777777777777';
+  if found then
+    raise exception 'Student B deleted student A favorite';
+  end if;
   begin
     insert into public.student_question_favorites (user_id,question_id)
     values ('11111111-1111-4111-8111-111111111111','77777777-7777-4777-8777-777777777777')
@@ -192,6 +198,17 @@ begin
   end if;
 end
 $goal_isolation$;
+
+-- Verify A's record survived the unauthorized delete and B's separate save.
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+do $favorite_owner$
+begin
+  if (select count(*) from public.student_question_favorites
+      where user_id='11111111-1111-4111-8111-111111111111') <> 1 then
+    raise exception 'Student A favorite missing after cross-user mutation attempt';
+  end if;
+end
+$favorite_owner$;
 
 select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',true);
 do $missing$
