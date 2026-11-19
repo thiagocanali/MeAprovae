@@ -44,13 +44,22 @@ export function normalizeNeonSetCookie(raw: string): string | null {
 }
 
 export function filterNeonRequestCookies(raw: string | undefined): string {
-  if (!raw) return ''
-  return raw.split(';').map((part) => part.trim()).filter((part) => {
+  if (!raw || raw.length > 8192 || /[\r\n]/.test(raw)) return ''
+  const names = new Set<string>()
+  const selected: string[] = []
+  for (const entry of raw.split(';')) {
+    const part = entry.trim()
     const separator = part.indexOf('=')
-    if (separator < 1) return false
+    if (separator < 1) continue
     const name = part.slice(0, separator)
-    return /^(?:__(?:Secure|Host)-)?(?:neon-auth|better-auth)\.[a-zA-Z0-9_.-]+$/.test(name)
-  }).join('; ')
+    if (!/^(?:__(?:Secure|Host)-)?(?:neon-auth|better-auth)\.[a-zA-Z0-9_.-]+$/.test(name)) continue
+    // Reject ambiguity: the first occurrence wins, rather than forwarding
+    // duplicate session cookie names that upstream implementations may parse differently.
+    if (names.has(name)) continue
+    names.add(name)
+    selected.push(part)
+  }
+  return selected.join('; ')
 }
 
 const sessions = new WeakMap<H3Event, Promise<ManagedSession | null>>()
