@@ -101,13 +101,29 @@ Atenção: testes com mocks e PostgreSQL descartável **não** substituem uma ve
 - A inspeção SQL **somente leitura** na `migration-app-staging` confirmou: 0 usuários Auth, 0 perfis, 0 questões, 45 políticas RLS e 69 índices.
 - Essas verificações unitárias/SQL não demonstram o fluxo de navegador com cookies reais, entrega de e-mail e funcionamento de todas as funcionalidades em hospedagem. Validar esses pontos antes de qualquer alteração na produção.
 
+## Ciclo de segurança e testes de integração — 19/11/2026
+
+### Alterações implementadas na branch de desenvolvimento
+
+1. **CSRF na autenticação:** os endpoints mutáveis enviados ao Neon Auth rejeitam cabeçalhos `Origin` diferentes da origem canônica configurada em `NEON_APP_ORIGIN`. Requisições de backend sem `Origin` continuam permitidas; o servidor não confia no `Host` encaminhado pelo navegador.
+2. **Cookies de sessão:** rejeição de cookies com prefixos `__Host-` ou `__Secure-` que não tenham atributo `Secure`, além da filtragem de domínio, caminho, HttpOnly, SameSite e Partitioned já implementada.
+3. **Compatibilidade PostgREST:** teste de integração do adaptador `@supabase/ssr` em modo Neon, comprovando a construção de consultas e chamadas RPC para a Data API sem utilizar a URL original do Supabase (requisições interceptadas por mock; não equivale a teste com JWT real).
+4. **Verificação CI:** `validate`, `database` e `neon-database` aprovados no CI #374 para o commit `91c0164`.
+5. **Divergência da PR:** `main` recebeu dois commits que ainda não constam da branch desta PR. Arquivos envolvidos: `app/pages/app/favoritas.vue` e documentação de favoritos/isolamento. A API do GitHub reportou `mergeable=false`; não executar merge, rebase ou force push automaticamente sem reconciliar a evolução do frontend.
+
+### Bloqueio para teste ponta a ponta
+
+- A branch `migration-app-staging` possui Managed Better Auth e Data API ativos, mas a configuração Neon Auth consultada retornou **`trusted_origins: []`** e `allow_localhost=true`. Configurar a origem HTTPS de um ambiente de homologação **real** antes de testar autenticação hospedada. Não utilizar domínio de produção.
+- Não foram criadas contas, importados registros ou implantadas alterações na Vercel.
+- Requer validação de cadastro/login/logout, cookies, JWT, RLS e recuperação de senha usando ambiente isolado e contas temporárias reais antes de declarar a migração concluída.
+
 ## Validação e pendências obrigatórias
 
 - [x] Projeto Neon isolado e branch de homologação funcional
 - [x] Managed Auth + Data API habilitados na `migration-app-staging`
 - [x] Schema limpo aplicado sem dados legados; identidade vinculada ao Neon Auth
 - [x] Migrations e teste PostgreSQL 17 reproduzíveis no GitHub Actions (CI #321)
-- [ ] Conferir CI do último commit da integração Nuxt
+- [x] Conferir CI do último commit da integração Nuxt (CI #374, commit `91c0164`; verificar novamente após novos commits)
 - [ ] Fluxos de cadastro, login, logout, recuperação, sessão após recarregar, cookies `HttpOnly` e E2E autenticado em homologação
 - [ ] Verificar isolamento real com dois usuários, tentativas de leitura indevida, autoria, privilégios editoriais e RLS no Data API
 - [ ] Garantir funcionamento de todas as APIs de catálogo, questões, respostas, simulados e administração
