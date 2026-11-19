@@ -131,6 +131,10 @@ export async function requestNeonAuth(
   // Browser cross-site form/fetch requests send Origin. Reject them before
   // forwarding any authentication or session mutation to Managed Auth.
   if (options.body !== undefined) {
+    // Fetch Metadata protects browsers that omit Origin on some requests.
+    if (getHeader(event, 'sec-fetch-site') === 'cross-site') {
+      throw createError({ statusCode: 403, statusMessage: 'Requisição externa não autorizada.' })
+    }
     const incomingOrigin = getHeader(event, 'origin')
     if (incomingOrigin && incomingOrigin !== getNeonAppOrigin(event)) {
       throw createError({ statusCode: 403, statusMessage: 'Origem da requisição não autorizada.' })
