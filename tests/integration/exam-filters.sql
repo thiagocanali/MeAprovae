@@ -66,6 +66,16 @@ begin
   if (s->>'expiresAt')::timestamptz - (s->>'startedAt')::timestamptz <> interval '6 minutes' then raise exception 'Small exam duration'; end if;
   perform set_config('test.filtered_exam_id', s->>'id', true);
 end $$;
+reset role;
+-- Publishing status can change after a session starts; retry must still recover its snapshot.
+update public.study_contests set status = 'archived' where id = '33333333-3333-4333-8333-333333333333';
+set local role authenticated;
+do $$ declare s public.exam_sessions%rowtype; recovered jsonb; begin
+  select * into s from public.exam_sessions where id = current_setting('test.filtered_exam_id')::uuid;
+  recovered := public.start_filtered_exam_session(s.request_id, s.contest_id, s.subject_id, s.topic_id, s.question_count);
+  if recovered->>'id' <> s.id::text or (recovered->>'expiresAt')::timestamptz <> s.expires_at then raise exception 'Archiving broke idempotent recovery'; end if;
+  begin perform public.get_exam_availability(s.contest_id, s.subject_id, s.topic_id); raise exception 'Archived contest accepts new exam'; exception when invalid_parameter_value then null; end;
+end $$;
 select set_config('request.jwt.claim.sub', '22222222-2222-4222-8222-222222222222', true);
 do $$ begin
   if exists(select 1 from public.exam_sessions) then raise exception 'Cross-account session leak'; end if;

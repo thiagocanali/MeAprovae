@@ -67,7 +67,6 @@ begin
   if p_request_id is null or p_question_count is null or p_question_count not between 1 and 20 then
     raise exception using errcode = '22023', message = 'Invalid session configuration';
   end if;
-  perform exam_private.validate_filters(p_contest_id, p_subject_id, p_topic_id);
   perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_user::text, 428));
   select * into v_session from public.exam_sessions where user_id = v_user and request_id = p_request_id;
   if found then
@@ -77,6 +76,7 @@ begin
     end if;
     return exam_private.get_session(v_session.id);
   end if;
+  perform exam_private.validate_filters(p_contest_id, p_subject_id, p_topic_id);
   update public.exam_sessions set status = 'expired', finished_at = expires_at
     where user_id = v_user and status = 'active' and expires_at <= clock_timestamp();
   if exists(select 1 from public.exam_sessions where user_id = v_user and status = 'active') then
