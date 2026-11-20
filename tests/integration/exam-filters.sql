@@ -68,6 +68,8 @@ begin
 end $$;
 reset role;
 -- Publishing status can change after a session starts; retry must still recover its snapshot.
+update public.study_questions set status = 'archived' where notice_id = '44444444-4444-4444-8444-444444444444';
+update public.study_notices set status = 'archived' where id = '44444444-4444-4444-8444-444444444444';
 update public.study_contests set status = 'archived' where id = '33333333-3333-4333-8333-333333333333';
 set local role authenticated;
 do $$ declare s public.exam_sessions%rowtype; recovered jsonb; begin
