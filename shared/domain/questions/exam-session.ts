@@ -12,6 +12,7 @@ export interface ExamResult {
 }
 export interface ExamSession {
   id: string; status: 'active' | 'completed' | 'expired'; questionCount: number
+  contestId?: string | null; subjectId?: string | null; topicId?: string | null
   startedAt: string; expiresAt: string; finishedAt: string | null; serverNow: string
   answeredCount: number; correctCount: number; score: number
   questions: Array<{ position: number; question: ExamQuestion; result: ExamResult | null }>
