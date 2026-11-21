@@ -45,7 +45,9 @@ begin
     raise exception 'Auth bridge has excessive grants';
   end if;
   if has_function_privilege('anonymous', 'public.create_editorial_question(jsonb)', 'EXECUTE')
-    or has_function_privilege('anonymous', 'public.update_editorial_question(uuid,jsonb,text)', 'EXECUTE') then
+    or has_function_privilege('anonymous', 'public.update_editorial_question(uuid,jsonb,text)', 'EXECUTE')
+    or has_function_privilege('anonymous', 'public.create_editorial_question(jsonb,text)', 'EXECUTE')
+    or has_function_privilege('anonymous', 'public.update_editorial_question(uuid,jsonb,text,boolean)', 'EXECUTE') then
     raise exception 'Anonymous role has editorial mutation privileges';
   end if;
   if has_function_privilege('anonymous', 'public.ensure_neon_student_account(text)', 'EXECUTE') then
@@ -122,8 +124,13 @@ begin
     raise exception 'New student acquired editorial privileges';
   end if;
   begin
-    perform public.create_editorial_question('{}'::jsonb);
-    raise exception 'New student created editorial question';
+    perform public.create_editorial_question(p_payload => '{}'::jsonb);
+    raise exception 'New student created editorial question using the original RPC';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.create_editorial_question(p_fields => '{}'::jsonb);
+    raise exception 'New student created editorial question using the current RPC';
   exception when insufficient_privilege then null;
   end;
   if (select display_name from public.student_profiles) <> 'Estudante A' then
