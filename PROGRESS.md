@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Retomada de 21/11/2026 — estado real e filtros da prática
+
+- Revisão do histórico disponível, código e Git remoto identificou a base local em #45 e a main atual em #61. Entregas intermediárias foram incorporadas sem refazer funcionalidades.
+- Rascunho de filtros na URL preservado e reaplicado; orientações de dificuldade da #47 mantidas. Disciplina/assunto/dificuldade passam a acompanhar navegação e links; limpeza conjunta preserva concurso e questão específica.
+- Consulta somente leitura confirmou 60 questões publicadas e 100 rascunhos; Vercel READY em c044978 antes desta entrega. Expansão editorial e Auth hospedado integral continuam pendentes.
+- Diagnóstico, commits, arquitetura efetiva e limites em docs/RESUMPTION_2026-11-21.md. Evidências finais de testes, CI e deploy no PR.
+- Typecheck, 140 testes unitários, dois checkers editoriais, build Vercel e oito cenários Chromium móvel aprovados localmente. Navegador com APIs simuladas; Auth hospedado não exercitado.
+
 ## Continuação de 12/11/2026 — resolução sem respostas obsoletas
 
 - Troca de filtro, lista ou questão invalida operações anteriores de resposta, favorito e paginação. Resultados, erros e finalizações antigos não afetam a nova visualização.
