@@ -29,6 +29,8 @@ jobs:
         run: npm test
       - name: Verify original question bank calculations
         run: python3 scripts/content/check_math_release.py
+      - name: Verify editorial math proposals
+        run: python3 scripts/content/check_math_review.py
       - name: Production build
         run: npm run build
         env:
