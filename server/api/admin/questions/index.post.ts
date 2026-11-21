@@ -1,5 +1,6 @@
 import { createError, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
+import { editorialQuestionError } from '../../../utils/editorial-question-error'
 import { isUuid } from '../../../../shared/domain/common/uuid'
 import { isQuestionDifficulty } from '../../../../shared/domain/questions/difficulty'
 
@@ -41,17 +42,21 @@ export default defineEventHandler(async (event) => {
   if (sourceUrl && !/^https?:\/\//i.test(sourceUrl)) throw createError({ statusCode: 400, statusMessage: 'A fonte deve usar HTTP ou HTTPS.' })
   if (sourceYear !== null && (!Number.isInteger(sourceYear) || sourceYear < 1900 || sourceYear > 2200)) throw createError({ statusCode: 400, statusMessage: 'Ano da fonte inválido.' })
 
-  const { data, error } = await supabase.rpc('create_editorial_question', { p_payload: {
-    notice_id: noticeId, subject_id: subjectId, topic_id: topicId || null,
-    difficulty, difficulty_reviewed: difficultyReviewed, statement,
-    source_label: sourceLabel || null, source_url: sourceUrl || null,
-    source_year: sourceYear, explanation,
-  } })
-
-  if (error?.code === '23522') throw createError({ statusCode: 400, statusMessage: 'Assunto ou edital incompatível.' })
-  if (error?.code === '23503') throw createError({ statusCode: 400, statusMessage: 'Edital, disciplina ou assunto não encontrado.' })
-  if (error?.code === '42501') throw createError({ statusCode: 403, statusMessage: 'Sem permissão editorial.' })
-  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível criar a questão e sua explicação.' })
-
-  return { question: { ...data, explanation } }
+  const { data, error } = await supabase.rpc('create_editorial_question', {
+    p_fields: {
+      notice_id: noticeId,
+      subject_id: subjectId,
+      topic_id: topicId || null,
+      difficulty,
+      difficulty_reviewed: difficultyReviewed,
+      statement,
+      source_label: sourceLabel || null,
+      source_url: sourceUrl || null,
+      source_year: sourceYear,
+    },
+    p_explanation: explanation,
+  })
+  if (error) throw editorialQuestionError(error)
+  if (!data) throw editorialQuestionError({})
+  return { question: data }
 })

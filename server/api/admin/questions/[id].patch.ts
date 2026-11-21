@@ -1,5 +1,6 @@
 import { createError, getRouterParam, readBody } from 'h3'
 import { requirePlatformEditor } from '../../../utils/admin'
+import { editorialQuestionError } from '../../../utils/editorial-question-error'
 import { isUuid } from '../../../../shared/domain/common/uuid'
 import { isQuestionDifficulty } from '../../../../shared/domain/questions/difficulty'
 
@@ -57,14 +58,11 @@ export default defineEventHandler(async (event) => {
 
   const { data, error } = await supabase.rpc('update_editorial_question', {
     p_question_id: id,
-    p_updates: updates,
+    p_fields: updates,
     p_explanation: explanation ?? null,
+    p_set_explanation: explanation !== undefined,
   })
-  if (error?.code === 'P0002') throw createError({ statusCode: 404, statusMessage: 'Questão não encontrada.' })
-  if (error?.code === '23514') throw createError({ statusCode: 409, statusMessage: 'A regra de publicação ou o histórico de respostas impede esta alteração.' })
-  if (error?.code === '23522' || error?.code === '23503') throw createError({ statusCode: 400, statusMessage: 'Disciplina ou assunto incompatível com a questão.' })
-  if (error?.code === '42501') throw createError({ statusCode: 403, statusMessage: 'Sem permissão editorial.' })
-  if (error) throw createError({ statusCode: 503, statusMessage: 'Não foi possível atualizar a questão e sua explicação.' })
-
-  return { question: { ...data, ...(explanation === undefined ? {} : { explanation }) } }
+  if (error) throw editorialQuestionError(error)
+  if (!data) throw editorialQuestionError({})
+  return { question: data }
 })

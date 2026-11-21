@@ -25,6 +25,22 @@ interface AttemptResult {
 }
 
 const route = useRoute()
+const router = useRouter()
+function updateFilters(filters: Partial<Record<'subjectId' | 'topicId' | 'difficulty', string | undefined>>) {
+  return router.push({ query: { ...route.query, ...filters }, hash: route.hash })
+}
+const selectedSubjectId = computed({
+  get: () => typeof route.query.subjectId === 'string' ? route.query.subjectId : '',
+  set: value => { void updateFilters({ subjectId: value || undefined, topicId: undefined }) },
+})
+const selectedTopicId = computed({
+  get: () => typeof route.query.topicId === 'string' ? route.query.topicId : '',
+  set: value => { void updateFilters({ topicId: value || undefined }) },
+})
+const selectedDifficulty = computed({
+  get: () => typeof route.query.difficulty === 'string' && ['easy', 'medium', 'hard'].includes(route.query.difficulty) ? route.query.difficulty : '',
+  set: value => { void updateFilters({ difficulty: value || undefined }) },
+})
 const query = computed(() => ({
   ...(route.query.contestId ? { contestId: String(route.query.contestId) } : {}),
   ...(route.query.questionId ? { questionId: String(route.query.questionId) } : {}),
@@ -32,12 +48,8 @@ const query = computed(() => ({
   ...(selectedTopicId.value ? { topicId: selectedTopicId.value } : {}),
   ...(selectedDifficulty.value ? { difficulty: selectedDifficulty.value } : {}),
 }))
-const selectedSubjectId = ref(typeof route.query.subjectId === 'string' ? route.query.subjectId : '')
-const selectedTopicId = ref(typeof route.query.topicId === 'string' ? route.query.topicId : '')
-const selectedDifficulty = ref(typeof route.query.difficulty === 'string' && ['easy', 'medium', 'hard'].includes(route.query.difficulty) ? route.query.difficulty : '')
 const { data: catalogData, error: catalogError, refresh: refreshCatalog } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
 const availableTopics = computed(() => catalogData.value?.topics.filter(topic => topic.subject_id === selectedSubjectId.value) ?? [])
-watch(selectedSubjectId, () => { selectedTopicId.value = '' }, { flush: 'sync' })
 const { data, pending, error, refresh } = await useFetch<{ questions: Question[]; page: number; pageSize: number; total: number; hasMore: boolean }>('/api/study/questions', { query })
 const { data: favoritesData, error: favoritesError, refresh: refreshFavorites } = await useFetch<{ favorites: Array<{ question_id: string }> }>('/api/study/favorites')
 const currentIndex = ref(0)
@@ -206,7 +218,7 @@ async function nextQuestion() {
               <option v-for="topic in availableTopics" :key="topic.id" :value="topic.id">{{ topic.name }}</option>
             </select>
           </label>
-          <button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" class="study-secondary-button" @click="selectedSubjectId = ''; selectedTopicId = ''; selectedDifficulty = ''">Limpar filtros</button>
+          <button v-if="selectedSubjectId || selectedTopicId || selectedDifficulty" class="study-secondary-button" @click="updateFilters({ subjectId: undefined, topicId: undefined, difficulty: undefined })">Limpar filtros</button>
           <p id="difficulty-help" class="study-muted">O filtro de dificuldade inclui apenas questões já classificadas após revisão. Para praticar também as que aguardam classificação, mantenha “Todas as dificuldades”.</p>
           <div v-if="catalogError" class="study-error" role="alert">Os filtros não puderam ser carregados. <button type="button" class="study-secondary-button" @click="refreshCatalog()">Tentar novamente</button></div>
         </div>

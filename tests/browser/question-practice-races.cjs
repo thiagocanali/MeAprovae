@@ -4,6 +4,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright')
 const baseURL = process.env.TEST_BASE_URL || 'http://localhost:3000'
 const subjectA = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
 const subjectB = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'
+const topicA = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc'
 const question = id => ({ id, statement: `Enunciado ${id}`, difficulty: null, options: [
   { id: `${id}-a`, option_label: 'A', content: 'Alternativa A', position: 1 },
   { id: `${id}-b`, option_label: 'B', content: 'Alternativa B', position: 2 },
@@ -14,7 +15,7 @@ const tick = page => page.evaluate(() => new Promise(resolve => requestAnimation
 ;(async () => {
   const browser = await chromium.launch({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) })
   const errors = []
-  async function scenario(run) {
+  async function scenario(run, initialPath = '/app/questoes') {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } })
     const page = await context.newPage()
     page.on('pageerror', error => errors.push(error.message))
@@ -24,13 +25,14 @@ const tick = page => page.evaluate(() => new Promise(resolve => requestAnimation
       let body
       let status = 200
       if (url.pathname === '/api/auth/me') body = { user: { id: 'local-fixture' } }
-      else if (url.pathname === '/api/study/catalog') body = { subjects: [{ id: subjectA, name: 'Disciplina A' }, { id: subjectB, name: 'Disciplina B' }], topics: [] }
+      else if (url.pathname === '/api/study/catalog') body = { subjects: [{ id: subjectA, name: 'Disciplina A' }, { id: subjectB, name: 'Disciplina B' }], topics: [{ id: topicA, subject_id: subjectA, name: 'Assunto A' }] }
       else if (url.pathname === '/api/study/favorites') body = { favorites: [] }
       else if (url.pathname === '/api/study/questions') {
         const filtered = url.searchParams.get('subjectId') === subjectB
         const more = url.searchParams.get('page') === '2'
         if (more) { state.moreCalls++; await state.more?.promise; if (state.failMore) status = 400 }
-        body = { questions: [question(filtered ? 'B' : more ? 'A2' : 'A')], page: more ? 2 : 1, pageSize: 20, total: filtered ? 1 : 2, hasMore: !filtered && !more }
+        const difficulty = url.searchParams.has('difficulty')
+        body = { questions: difficulty ? [] : [question(filtered ? 'B' : more ? 'A2' : 'A')], page: more ? 2 : 1, pageSize: 20, total: difficulty ? 0 : filtered ? 1 : 2, hasMore: !difficulty && !filtered && !more }
       } else if (url.pathname === '/api/study/attempts') {
         const request = route.request().postDataJSON()
         const failure = state.failAttempt
@@ -48,7 +50,7 @@ const tick = page => page.evaluate(() => new Promise(resolve => requestAnimation
     try {
       await page.goto(`${baseURL}/login`)
       await page.waitForFunction(() => document.querySelector('#__nuxt')?.__vue_app__?.$nuxt?.isHydrating === false)
-      await page.evaluate(() => document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$router.push('/app/questoes'))
+      await page.evaluate(path => document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$router.push(path), initialPath)
       await page.getByRole('heading', { name: 'Enunciado A', exact: true }).waitFor()
       await run(page, state)
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'mobile overflow')
@@ -116,7 +118,46 @@ const tick = page => page.evaluate(() => new Promise(resolve => requestAnimation
       await page.getByRole('heading', { name: 'Enunciado A2', exact: true }).waitFor()
       assert.equal(state.moreCalls, 1)
     })
+    await scenario(async page => {
+      const filters = page.getByRole('combobox')
+      await filters.nth(0).selectOption(subjectA)
+      await page.waitForURL(url => url.searchParams.get('subjectId') === subjectA)
+      await filters.nth(2).selectOption(topicA)
+      await page.waitForURL(url => url.searchParams.get('topicId') === topicA)
+      await filters.nth(1).selectOption('hard')
+      await page.getByRole('heading', { name: 'Nenhuma questão revisada nesta dificuldade.', exact: true }).waitFor()
+      const saved = new URL(page.url())
+      assert.equal(saved.searchParams.get('difficulty'), 'hard')
+      await page.getByRole('button', { name: 'Ver todas as dificuldades', exact: true }).click()
+      await page.getByRole('heading', { name: 'Enunciado A', exact: true }).waitFor()
+      assert.equal(new URL(page.url()).searchParams.get('topicId'), topicA)
+      await page.goBack()
+      await page.getByRole('heading', { name: 'Nenhuma questão revisada nesta dificuldade.', exact: true }).waitFor()
+      assert.equal(await filters.nth(1).inputValue(), 'hard')
+      await page.goForward()
+      await page.getByRole('heading', { name: 'Enunciado A', exact: true }).waitFor()
+      await page.getByRole('button', { name: 'Limpar filtros', exact: true }).click()
+      await page.waitForURL(url => !url.searchParams.has('subjectId'))
+      for (const name of ['subjectId', 'topicId', 'difficulty']) assert.equal(new URL(page.url()).searchParams.has(name), false)
+      for (const name of ['contestId', 'questionId', 'tracking']) assert.equal(new URL(page.url()).searchParams.get(name), saved.searchParams.get(name))
+      assert.equal(new URL(page.url()).hash, '#study')
+      await page.goBack()
+      await page.waitForURL(url => url.searchParams.get('topicId') === topicA)
+      await page.waitForFunction(subject => document.querySelector('.study-filters select')?.value === subject, subjectA)
+      assert.equal(await filters.nth(0).inputValue(), subjectA)
+      assert.equal(await filters.nth(2).inputValue(), topicA)
+      await changeFilter(page)
+      assert.equal(new URL(page.url()).searchParams.has('topicId'), false, 'subject changed without clearing old topic')
+      // Re-open a copied link in a newly mounted page; no state from the previous page.
+      await page.evaluate(() => document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$router.push('/login'))
+      await page.getByRole('heading', { name: 'Banco de questões', exact: true }).waitFor({ state: 'hidden' })
+      await page.evaluate(path => document.querySelector('#__nuxt').__vue_app__.config.globalProperties.$router.push(path), saved.pathname + saved.search + saved.hash)
+      await page.getByRole('heading', { name: 'Nenhuma questão revisada nesta dificuldade.', exact: true }).waitFor()
+      assert.equal(await filters.nth(0).inputValue(), subjectA)
+      assert.equal(await filters.nth(2).inputValue(), topicA)
+      assert.equal(await filters.nth(1).inputValue(), 'hard')
+    }, '/app/questoes?contestId=dddddddd-dddd-4ddd-8ddd-dddddddddddd&questionId=eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee&tracking=keep#study')
     assert.deepEqual(errors, [])
-    console.log(JSON.stringify({ scenarios: 7, staleAnswerAndError: 'blocked', returnToSameQuestion: 'guarded', currentSubmission: 'remains locked until its own response', stalePaginationAndError: 'blocked', staleFavoriteError: 'blocked', retryIdempotency: 'preserved', mobileOverflow: false, pageErrors: errors }))
+    console.log(JSON.stringify({ scenarios: 8, urlFilters: 'back/forward, copied link, atomic clear, subject/topic and difficulty reset', staleAnswerAndError: 'blocked', returnToSameQuestion: 'guarded', currentSubmission: 'remains locked until its own response', stalePaginationAndError: 'blocked', staleFavoriteError: 'blocked', retryIdempotency: 'preserved', mobileOverflow: false, pageErrors: errors }))
   } finally { await browser.close() }
 })().catch(error => { console.error(error); process.exitCode = 1 })
