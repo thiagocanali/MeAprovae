@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Prioridade de 21/11/2026 — frontend de concursos
+
+- Por orientação do usuário, frontend passa à frente das demais expansões, começando por catálogo/detalhe de concursos. As demais telas ainda precisam de revisão de experiência; não considerar todo o frontend concluído.
+- Catálogo com busca/filtros/paginação na URL, objetivo atual, concursos acompanhados e estados completos. Detalhe com editais, cargos, fontes, disciplinas e ações reais de acompanhamento e objetivo, além de links de estudo contextualizados.
+- Corrigido contrato ausente de cargos no detalhe; APIs pessoais no-store e filtros explícitos de filhos publicados, sem migration ou publicação de conteúdo.
+- 147 testes unitários, typecheck, build Vercel, fluxo Chromium simulado de concursos e oito regressões da prática aprovados. Layout sem overflow em 320/390/768/1440; teclado e capturas conferidos.
+- Escopo, limites de dados/validação e próximos passos em docs/CONTEST_FRONTEND.md; CI e deploy registrados no PR.
+
 ## Retomada de 21/11/2026 — estado real e filtros da prática
 
 - Revisão do histórico disponível, código e Git remoto identificou a base local em #45 e a main atual em #61. Entregas intermediárias foram incorporadas sem refazer funcionalidades.
