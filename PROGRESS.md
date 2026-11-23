@@ -274,3 +274,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Banco/segurança:** migrations 0001–0013 estão versionadas, mas aplicação/ledger, grants efetivos, RLS, RPC e isolamento entre estudante/editor não foram validados em banco real. Nenhum conteúdo real foi confirmado.
 - **Git/CI:** commits `b5ffc9e`, `4297646`, `aee125a` e `1a2f790` foram enviados ao PR #21. CI e Vercel Preview passaram para `1a2f790`; o Preview não é produção. O `package-lock.json` preexistente não foi incluído.
 - **Próximo bloqueio:** obter CI/deploy do HEAD final e executar auditoria SQL/testes de perfis quando houver acesso não privilegiado apropriado ao Supabase; não solicitar service role.
+
+### 2026-11-23 — Acervo de provas federais por links oficiais
+- **Contexto:** PR #21 foi integrado. O simulador existente usa questões publicadas no banco; não havia conteúdo de prova anterior catalogado.
+- **Entrega:** nova página autenticada `/app/provas-anteriores`, acessível também pela navegação de simulados e questões, com 16 cadernos (tipos 1–4, manhã/tarde, Auditor-Fiscal e Analista-Tributário) da Receita Federal 2023, dois gabaritos oficiais definitivos, quatro tipos da prova de Analista Legislativo (Administração) do Senado 2022 e o gabarito definitivo do edital nº 1.
+- **Fontes:** páginas oficiais de arquivos da FGV; também há acesso aos arquivos gerais oficiais da FGV e do Cebraspe. Links conferidos em 23/11/2026.
+- **Direitos/limites:** apenas metadados e links para PDFs originais; nenhum enunciado ou gabarito foi copiado. Os arquivos externos não alimentam o motor de questões ou os simulados do Me Aprovaê. Para inserir questão de terceiros no banco, ainda é necessária autorização/licença confirmada e revisão editorial.
+- **Validação:** `nuxt typecheck`, Vitest (37 testes) e `nuxt build` passaram. Build emite avisos de import dinâmico e tempo de callbacks já observados; sem falhas.
+- **Pendências:** o acervo é uma lista curada estática, sem gestão dinâmica no admin. O banco de questões segue sem conteúdo publicado verificado; não há conexão ao Supabase ou deploy realizado nesta tarefa.

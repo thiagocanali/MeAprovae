@@ -200,6 +200,7 @@ onBeforeUnmount(stopTimer)
         <NuxtLink to="/app/concursos">Concursos</NuxtLink>
         <NuxtLink to="/app/questoes">Questões</NuxtLink>
         <NuxtLink to="/app/provas">Simulados</NuxtLink>
+        <NuxtLink to="/app/provas-anteriores">Provas anteriores</NuxtLink>
         <NuxtLink to="/app/historico">Histórico</NuxtLink>
       </nav>
     </header>
@@ -211,6 +212,7 @@ onBeforeUnmount(stopTimer)
         <p class="auth-description">
           Modo estudo: veja a correção após cada resposta. As tentativas são registradas no histórico.
         </p>
+        <p><NuxtLink class="study-link" to="/app/provas-anteriores">Consultar provas anteriores e gabaritos oficiais →</NuxtLink></p>
 
         <form class="study-form study-exam-form" @submit.prevent="startExam">
           <label for="exam-contest">Concurso</label>

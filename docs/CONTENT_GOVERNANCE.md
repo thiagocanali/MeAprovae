@@ -50,6 +50,8 @@ Todo conteúdo deve ser classificado como:
 
 Não presumir que uma questão disponível na internet pode ser republicada. Antes de importar ou distribuir conteúdo, verificar titularidade, licença, termos de uso e base legal. Registrar a fonte não substitui autorização de uso.
 
+Quando não houver autorização de reprodução confirmada, oferecer apenas um link para a página ou documento oficial, sem copiar o enunciado, alternativas ou gabarito para o banco interno. Questões de terceiros só podem alimentar prática e simulados internos após confirmação dos direitos, conferência independente do gabarito e revisão editorial. A página de provas anteriores mantém links externos e identifica que esses materiais não fazem parte do banco de questões.
+
 ## Editais e dados de concursos
 
 Priorizar documentos e informações de fontes oficiais. Registrar URL, data de consulta, versão e status. Dados sujeitos a mudança devem exibir data de atualização.

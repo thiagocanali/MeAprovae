@@ -45,6 +45,8 @@ async function logout() {
         <NuxtLink to="/app">Início</NuxtLink>
         <NuxtLink to="/app/concursos">Concursos</NuxtLink>
         <NuxtLink to="/app/questoes">Questões</NuxtLink>
+        <NuxtLink to="/app/provas">Simulados</NuxtLink>
+        <NuxtLink to="/app/provas-anteriores">Provas anteriores</NuxtLink>
         <NuxtLink to="/app/desempenho">Desempenho</NuxtLink>
       </nav>
       <button class="logout-button" :disabled="pending" @click="logout">{{ pending ? 'Saindo…' : 'Sair' }}</button>
