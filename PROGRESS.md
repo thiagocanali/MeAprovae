@@ -302,3 +302,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Direitos/limites:** somente links e metadados; nenhum enunciado ou gabarito foi copiado. Não integram o banco de questões nem os simulados internos.
 - **Total do acervo:** 69 cadernos e 29 gabaritos oficiais definitivos.
 - **Validação:** typecheck, 37 testes unitários, build de produção e `git diff --check` aprovados; 44 URLs de PDFs confirmadas contra os metadados oficiais da API e respostas HTTP válidas no CDN.
+
+### 2026-11-23 — Expansão Cebraspe: PF, TCU, ANTT e MMA
+- **Entrega:** inclusão de 46 cadernos e 46 gabaritos definitivos da PF 2025 (Perito Criminal Federal e área administrativa), TCU 2025 (Técnico Federal de Controle Externo), ANTT 2023 e MMA 2023.
+- **Fontes:** páginas oficiais dos concursos e arquivos publicados pelo CDN do Cebraspe; nomes dos 92 PDFs confirmados nos metadados dos eventos.
+- **Direitos/limites:** somente links e metadados; nenhum enunciado ou gabarito foi copiado. Não integram o banco de questões nem os simulados internos.
+- **Total do acervo:** 115 cadernos e 75 gabaritos oficiais definitivos.
+- **Validação:** typecheck, 37 testes unitários, build de produção e `git diff --check` aprovados; cinco páginas oficiais e os 92 PDFs responderam no CDN.
