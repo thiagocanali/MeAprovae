@@ -60,6 +60,19 @@ describe('Neon editorial authorization boundary', () => {
     expect(rpc).toHaveBeenCalledTimes(1)
   })
 
+  it('does not leak database errors in a failed privilege response', async () => {
+    mocks.createSupabaseServerClient.mockReturnValue({
+      rpc: vi.fn(async () => ({
+        data: null,
+        error: { message: 'postgres://private-user:private-password@internal-host' },
+      })),
+    })
+    await expect(requirePlatformEditor(event)).rejects.toMatchObject({
+      statusCode: 503,
+      message: 'Não foi possível validar suas permissões administrativas. Verifique a migração editorial.',
+    })
+  })
+
   it('fails closed when the privilege RPC cannot be checked', async () => {
     mocks.createSupabaseServerClient.mockReturnValue({
       rpc: vi.fn(async () => ({ data: null, error: { code: 'PGRST000' } })),
