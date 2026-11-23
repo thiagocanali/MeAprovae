@@ -34,26 +34,38 @@ useSeoMeta({ title: 'Provas anteriores | Me Aprovaê' })
         </p>
       </div>
 
-      <section v-for="collection in federalPastExamCollections" :key="collection.title" class="study-section">
-        <p class="auth-eyebrow">{{ collection.board }} · {{ collection.year }}</p>
-        <h2>{{ collection.title }}</h2>
-        <p class="study-muted">{{ collection.notes }}</p>
-        <p>
-          <a class="study-link" :href="collection.sourcePageUrl" target="_blank" rel="noopener noreferrer">
-            {{ collection.sourcePageLabel }} ↗
-          </a>
-        </p>
-        <p class="study-muted">Fontes conferidas em {{ new Date(collection.checkedAt + 'T00:00:00').toLocaleDateString('pt-BR') }}.</p>
-        <div class="study-grid">
-          <article v-for="document in collection.documents" :key="document.url" class="study-card">
-            <span class="study-muted">{{ document.kind }}</span>
-            <h3>{{ document.title }}</h3>
-            <a :href="document.url" target="_blank" rel="noopener noreferrer">
-              Abrir {{ document.kind.toLowerCase() }} oficial ↗
+      <details
+        v-for="(collection, index) in federalPastExamCollections"
+        :key="collection.sourcePageUrl"
+        class="study-section exam-collection"
+        :open="index === 0"
+      >
+        <summary>
+          <div>
+            <p class="auth-eyebrow">{{ collection.board }} · {{ collection.year }}</p>
+            <h2>{{ collection.title }}</h2>
+            <span class="study-muted">{{ collection.documents.length }} documentos · {{ collection.notes }}</span>
+          </div>
+          <span class="study-link">Ver arquivos</span>
+        </summary>
+        <div class="exam-collection-content">
+          <p>
+            <a class="study-link" :href="collection.sourcePageUrl" target="_blank" rel="noopener noreferrer">
+              {{ collection.sourcePageLabel }} ↗
             </a>
-          </article>
+          </p>
+          <p class="study-muted">Fontes conferidas em {{ new Date(collection.checkedAt + 'T00:00:00').toLocaleDateString('pt-BR') }}.</p>
+          <div class="study-grid">
+            <article v-for="document in collection.documents" :key="document.url" class="study-card">
+              <span class="study-muted">{{ document.kind }}</span>
+              <h3>{{ document.title }}</h3>
+              <a :href="document.url" target="_blank" rel="noopener noreferrer">
+                Abrir {{ document.kind.toLowerCase() }} oficial ↗
+              </a>
+            </article>
+          </div>
         </div>
-      </section>
+      </details>
 
       <section class="study-section">
         <h2>Outros arquivos oficiais</h2>
@@ -90,6 +102,10 @@ useSeoMeta({ title: 'Provas anteriores | Me Aprovaê' })
 .study-grid a { color: var(--color-primary); }
 .study-section { margin-top: 36px; }
 .study-section h2 { font-family: var(--font-display); }
+.exam-collection > summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none; }
+.exam-collection > summary::-webkit-details-marker { display: none; }
+.exam-collection > summary h2 { margin: 0 0 8px; }
+.exam-collection-content { padding-top: 16px; }
 .study-muted { color: var(--color-muted); }
 .study-state p { margin-bottom: 0; }
 .study-actions { flex-wrap: wrap; }

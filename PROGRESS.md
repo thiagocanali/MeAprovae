@@ -295,3 +295,10 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Direitos/limites:** somente links e metadados; arquivos externos não são copiados nem usados nos simulados internos.
 - **Total do acervo:** 47 cadernos e sete gabaritos oficiais.
 - **Validação:** pendente nesta atualização.
+
+### 2026-11-23 — Expansão Cebraspe: IBAMA, ANATEL e PRF
+- **Entrega:** inclusão de 22 cadernos objetivos e 22 gabaritos definitivos: IBAMA 2021 e 2025, prova comum e seis cadernos específicos da ANATEL 2024, e três componentes da prova da PRF 2021. As listas de arquivos são expansíveis para facilitar a navegação no catálogo maior.
+- **Fontes:** páginas oficiais dos concursos e arquivos publicados pelo CDN do Cebraspe; nomes dos 44 arquivos confirmados no endpoint público dos eventos e todas as URLs respondem no CDN.
+- **Direitos/limites:** somente links e metadados; nenhum enunciado ou gabarito foi copiado. Não integram o banco de questões nem os simulados internos.
+- **Total do acervo:** 69 cadernos e 29 gabaritos oficiais definitivos.
+- **Validação:** typecheck, 37 testes unitários, build de produção e `git diff --check` aprovados; 44 URLs de PDFs confirmadas contra os metadados oficiais da API e respostas HTTP válidas no CDN.

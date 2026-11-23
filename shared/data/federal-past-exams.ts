@@ -1,5 +1,5 @@
 const fgvContestFilesBase = 'https://conhecimento.fgv.br/sites/default/files/concursos/'
-const cebraspeInssFilesBase = 'https://cdn.cebraspe.org.br/concursos/INSS_22/arquivos/'
+const cebraspeCdnBase = 'https://cdn.cebraspe.org.br/concursos/'
 
 interface PastExamDocument {
   title: string
@@ -16,6 +16,17 @@ interface PastExamCollection {
   sourcePageLabel: string
   checkedAt: string
   documents: PastExamDocument[]
+}
+
+interface CebraspeDocumentInput extends Omit<PastExamDocument, 'url'> {
+  filename: string
+}
+
+function cebraspeDocuments(eventId: string, documents: CebraspeDocumentInput[]): PastExamDocument[] {
+  return documents.map(({ filename, ...document }) => ({
+    ...document,
+    url: `${cebraspeCdnBase}${eventId}/arquivos/${filename}`,
+  }))
 }
 
 function examVariants(
@@ -139,48 +150,136 @@ export const federalPastExamCollections: PastExamCollection[] = [
     sourcePageUrl: 'https://www.cebraspe.org.br/concursos/inss_22',
     sourcePageLabel: 'Página oficial do concurso e arquivos',
     checkedAt: '2026-11-23',
-    documents: [
+    documents: cebraspeDocuments('INSS_22', [
       {
         title: 'Prova objetiva — conhecimentos básicos (exceto GEX Guarulhos)',
         kind: 'Prova',
-        url: `${cebraspeInssFilesBase}760_INSS_CB1_01.PDF`,
+        filename: '760_INSS_CB1_01.PDF',
       },
       {
         title: 'Prova objetiva — conhecimentos específicos (exceto GEX Guarulhos)',
         kind: 'Prova',
-        url: `${cebraspeInssFilesBase}760_INSS_001_01.PDF`,
+        filename: '760_INSS_001_01.PDF',
       },
       {
         title: 'Prova objetiva — conhecimentos básicos (GEX Guarulhos)',
         kind: 'Prova',
-        url: `${cebraspeInssFilesBase}787_INSS_CB1_01.PDF`,
+        filename: '787_INSS_CB1_01.PDF',
       },
       {
         title: 'Prova objetiva — conhecimentos específicos (GEX Guarulhos)',
         kind: 'Prova',
-        url: `${cebraspeInssFilesBase}787_INSS_001_01.PDF`,
+        filename: '787_INSS_001_01.PDF',
       },
       {
         title: 'Gabarito definitivo — conhecimentos básicos (exceto GEX Guarulhos)',
         kind: 'Gabarito',
-        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_760_INSS_CB1_01.PDF`,
+        filename: 'GAB_DEFINITIVO_760_INSS_CB1_01.PDF',
       },
       {
         title: 'Gabarito definitivo — conhecimentos específicos (exceto GEX Guarulhos)',
         kind: 'Gabarito',
-        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_760_INSS_001_01.PDF`,
+        filename: 'GAB_DEFINITIVO_760_INSS_001_01.PDF',
       },
       {
         title: 'Gabarito definitivo — conhecimentos básicos (GEX Guarulhos)',
         kind: 'Gabarito',
-        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_787_INSS_CB1_01.PDF`,
+        filename: 'GAB_DEFINITIVO_787_INSS_CB1_01.PDF',
       },
       {
         title: 'Gabarito definitivo — conhecimentos específicos (GEX Guarulhos)',
         kind: 'Gabarito',
-        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_787_INSS_001_01.PDF`,
+        filename: 'GAB_DEFINITIVO_787_INSS_001_01.PDF',
       },
-    ],
+    ]),
+  },
+  {
+    title: 'IBAMA',
+    year: 2025,
+    notes: 'Provas objetivas e gabaritos definitivos para os cargos 1, 2 e 3.',
+    board: 'Cebraspe',
+    sourcePageUrl: 'https://www.cebraspe.org.br/concursos/ibama_25',
+    sourcePageLabel: 'Página oficial do concurso e arquivos',
+    checkedAt: '2026-11-23',
+    documents: cebraspeDocuments('IBAMA_25', [
+      { title: 'Prova objetiva — conhecimentos básicos — cargo 1', kind: 'Prova', filename: '057_IBAMA_CB1_01.pdf' },
+      { title: 'Prova objetiva — conhecimentos básicos — cargos 2 e 3', kind: 'Prova', filename: '057_IBAMA_CB2_01.pdf' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 1', kind: 'Prova', filename: '057_IBAMA_001_01.pdf' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 2', kind: 'Prova', filename: '057_IBAMA_002_01.pdf' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 3', kind: 'Prova', filename: '057_IBAMA_003_01.pdf' },
+      { title: 'Gabarito definitivo — conhecimentos básicos — cargo 1', kind: 'Gabarito', filename: 'Gab_Definitivo_057_IBAMA_CB1_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos básicos — cargos 2 e 3', kind: 'Gabarito', filename: 'Gab_Definitivo_057_IBAMA_CB2_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 1', kind: 'Gabarito', filename: 'Gab_Definitivo_057_IBAMA_001_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 2', kind: 'Gabarito', filename: 'Gab_Definitivo_057_IBAMA_002_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 3', kind: 'Gabarito', filename: 'Gab_Definitivo_057_IBAMA_003_01.PDF' },
+    ]),
+  },
+  {
+    title: 'IBAMA',
+    year: 2021,
+    notes: 'Provas objetivas e gabaritos definitivos para cargos de nível superior e médio.',
+    board: 'Cebraspe',
+    sourcePageUrl: 'https://www.cebraspe.org.br/concursos/ibama_21',
+    sourcePageLabel: 'Página oficial do concurso e arquivos',
+    checkedAt: '2026-11-23',
+    documents: cebraspeDocuments('IBAMA_21', [
+      { title: 'Prova objetiva — conhecimentos básicos — nível superior', kind: 'Prova', filename: '651_IBAMA_CB1_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos básicos — nível médio', kind: 'Prova', filename: '651_IBAMA_CB2_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 1', kind: 'Prova', filename: '651_IBAMA_001_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 2', kind: 'Prova', filename: '651_IBAMA_002_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 3', kind: 'Prova', filename: '651_IBAMA_003_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 4', kind: 'Prova', filename: '651_IBAMA_004_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 5', kind: 'Prova', filename: '651_IBAMA_005_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos básicos — nível superior', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_CB1_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos básicos — nível médio', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_CB2_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 1', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_001_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 2', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_002_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 3', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_003_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 4', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_004_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 5', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_651_IBAMA_005_01.PDF' },
+    ]),
+  },
+  {
+    title: 'ANATEL',
+    year: 2024,
+    notes: 'Prova comum de conhecimentos básicos e provas de conhecimentos específicos com gabaritos definitivos por cargo; consulte o edital para identificar a especialidade.',
+    board: 'Cebraspe',
+    sourcePageUrl: 'https://www.cebraspe.org.br/concursos/anatel_24',
+    sourcePageLabel: 'Página oficial do concurso e arquivos',
+    checkedAt: '2026-11-23',
+    documents: cebraspeDocuments('ANATEL_24', [
+      { title: 'Prova objetiva — conhecimentos básicos — todos os cargos', kind: 'Prova', filename: '961_ANATEL_CB1_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 1', kind: 'Prova', filename: '961_ANATEL_001_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 2', kind: 'Prova', filename: '961_ANATEL_002_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 3', kind: 'Prova', filename: '961_ANATEL_003_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 4', kind: 'Prova', filename: '961_ANATEL_004_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 5', kind: 'Prova', filename: '961_ANATEL_005_01.PDF' },
+      { title: 'Prova objetiva — conhecimentos específicos — cargo 6', kind: 'Prova', filename: '961_ANATEL_006_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos básicos — todos os cargos', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_CB1_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 1', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_001_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 2', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_002_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 3', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_003_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 4', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_004_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 5', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_005_01.PDF' },
+      { title: 'Gabarito definitivo — conhecimentos específicos — cargo 6', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_961_ANATEL_006_01.PDF' },
+    ]),
+  },
+  {
+    title: 'Polícia Rodoviária Federal — Policial Rodoviário Federal',
+    year: 2021,
+    notes: 'Prova objetiva comum e cadernos de língua inglesa ou espanhola, com gabaritos definitivos correspondentes.',
+    board: 'Cebraspe',
+    sourcePageUrl: 'https://www.cebraspe.org.br/concursos/prf_21',
+    sourcePageLabel: 'Página oficial do concurso e arquivos',
+    checkedAt: '2026-11-23',
+    documents: cebraspeDocuments('PRF_21', [
+      { title: 'Prova objetiva — itens 9 a 120', kind: 'Prova', filename: '578_PRF_001_01.PDF' },
+      { title: 'Prova objetiva — itens 1 a 8 — Língua Inglesa', kind: 'Prova', filename: '578_PRF_ING_01.PDF' },
+      { title: 'Prova objetiva — itens 1 a 8 — Língua Espanhola', kind: 'Prova', filename: '578_PRF_ESP_02.PDF' },
+      { title: 'Gabarito definitivo — itens 9 a 120', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_578_PRF_001_01.PDF' },
+      { title: 'Gabarito definitivo — itens 1 a 8 — Língua Inglesa', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_578_PRF_ING_01.PDF' },
+      { title: 'Gabarito definitivo — itens 1 a 8 — Língua Espanhola', kind: 'Gabarito', filename: 'GAB_DEFINITIVO_578_PRF_ESP_02.PDF' },
+    ]),
   },
 ]
 
