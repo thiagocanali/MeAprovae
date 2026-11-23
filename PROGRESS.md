@@ -282,3 +282,9 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Direitos/limites:** apenas metadados e links para PDFs originais; nenhum enunciado ou gabarito foi copiado. Os arquivos externos não alimentam o motor de questões ou os simulados do Me Aprovaê. Para inserir questão de terceiros no banco, ainda é necessária autorização/licença confirmada e revisão editorial.
 - **Validação:** `nuxt typecheck`, Vitest (37 testes) e `nuxt build` passaram. Build emite avisos de import dinâmico e tempo de callbacks já observados; sem falhas.
 - **Pendências:** o acervo é uma lista curada estática, sem gestão dinâmica no admin. O banco de questões segue sem conteúdo publicado verificado; não há conexão ao Supabase ou deploy realizado nesta tarefa.
+
+### 2026-11-23 — Expansão do acervo do Senado Federal
+- **Entrega:** ampliação do edital nº 1 do Senado para incluir 27 cadernos de prova objetiva cobrindo dez especialidades de Analista Legislativo, mantendo o gabarito oficial definitivo. Total do acervo: 43 cadernos e três gabaritos oficiais, todos ligados às páginas/documentos da FGV.
+- **Fonte:** página oficial do edital nº 1 do concurso do Senado, conferida em 23/11/2026.
+- **Direitos/limites:** somente links e metadados; nenhum conteúdo foi copiado ou integrado ao banco de questões.
+- **Validação:** pendente nesta atualização.

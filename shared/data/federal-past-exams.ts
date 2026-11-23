@@ -30,6 +30,19 @@ function examVariants(
   }))
 }
 
+function senateAnalystVariants(
+  code: string,
+  position: string,
+  fileSlug: string,
+  versions: number[],
+): PastExamDocument[] {
+  return versions.map((version) => ({
+    title: `Prova objetiva — Analista Legislativo (${position}), tipo ${version}`,
+    kind: 'Prova',
+    url: `${fgvContestFilesBase}e1cns${code}_-_analista_legislativo_-_${fileSlug}e1cns${code}_tipo_${version}.pdf`,
+  }))
+}
+
 export const federalPastExamCollections: PastExamCollection[] = [
   {
     title: 'Receita Federal do Brasil',
@@ -77,19 +90,39 @@ export const federalPastExamCollections: PastExamCollection[] = [
     ],
   },
   {
-    title: 'Senado Federal — Analista Legislativo (Administração)',
+    title: 'Senado Federal — edital nº 1 (Analista Legislativo)',
     year: 2022,
-    notes: 'Edital nº 1.',
+    notes: 'Cadernos de dez especialidades, conforme os arquivos oficiais do edital.',
     board: 'FGV',
     sourcePageUrl: 'https://conhecimento.fgv.br/concursos/senado22/1',
     sourcePageLabel: 'Página oficial do edital e arquivos',
     checkedAt: '2026-11-23',
     documents: [
-      ...[1, 2, 3, 4].map((version) => ({
-        title: `Prova objetiva — Analista Legislativo (Administração), tipo ${version}`,
-        kind: 'Prova' as const,
-        url: `${fgvContestFilesBase}e1cns01_-_analista_legislativo_-_administracaoe1cns01_tipo_${version}.pdf`,
-      })),
+      ...senateAnalystVariants('01', 'Administração', 'administracao', [1, 2, 3, 4]),
+      ...senateAnalystVariants('02', 'Arquivologia', 'arquivologia', [1]),
+      ...senateAnalystVariants('03', 'Assistência Social', 'assistencia_social', [1, 2]),
+      ...senateAnalystVariants('04', 'Contabilidade', 'contabilidade', [1, 2, 3, 4]),
+      ...senateAnalystVariants('05', 'Enfermagem', 'enfermagem', [1, 2, 3, 4]),
+      ...senateAnalystVariants(
+        '06',
+        'Engenharia Eletrônica e Telecomunicações',
+        'engenharia_eletronica_e_telecomunicacoes',
+        [1],
+      ),
+      ...senateAnalystVariants('07', 'Engenharia do Trabalho', 'engenharia_do_trabalho', [1]),
+      ...senateAnalystVariants('08', 'Processo Legislativo', 'processo_legislativo', [1, 2, 3, 4]),
+      ...senateAnalystVariants(
+        '09',
+        'Informática Legislativa — Análise de Sistemas',
+        'informatica_legislativa_analise_de_sistemas',
+        [1, 2, 3, 4],
+      ),
+      ...senateAnalystVariants(
+        '10',
+        'Informática Legislativa — Análise de Suporte de Sistemas',
+        'informatica_legislativa_analise_de_suporte_de_sistemas',
+        [1, 2],
+      ),
       {
         title: 'Gabarito oficial definitivo da prova objetiva — edital nº 1',
         kind: 'Gabarito',
