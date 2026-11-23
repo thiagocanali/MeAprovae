@@ -287,4 +287,11 @@ Uma tarefa só será marcada como concluída quando código, persistência, auto
 - **Entrega:** ampliação do edital nº 1 do Senado para incluir 27 cadernos de prova objetiva cobrindo dez especialidades de Analista Legislativo, mantendo o gabarito oficial definitivo. Total do acervo: 43 cadernos e três gabaritos oficiais, todos ligados às páginas/documentos da FGV.
 - **Fonte:** página oficial do edital nº 1 do concurso do Senado, conferida em 23/11/2026.
 - **Direitos/limites:** somente links e metadados; nenhum conteúdo foi copiado ou integrado ao banco de questões.
+- **Validação:** `nuxt typecheck`, Vitest (37 testes) e `nuxt build` passaram.
+
+### 2026-11-23 — Inclusão da prova do INSS pelo Cebraspe
+- **Entrega:** inclusão dos quatro cadernos oficiais da prova objetiva do Técnico do Seguro Social (conhecimentos básicos/específicos, incluindo a versão da GEX Guarulhos) e dos quatro gabaritos definitivos correspondentes.
+- **Fonte:** página oficial do concurso INSS 2022 e PDFs servidos pelo CDN oficial do Cebraspe. Nomes de arquivo conferidos no endpoint público do evento e dois PDFs foram abertos para validação.
+- **Direitos/limites:** somente links e metadados; arquivos externos não são copiados nem usados nos simulados internos.
+- **Total do acervo:** 47 cadernos e sete gabaritos oficiais.
 - **Validação:** pendente nesta atualização.

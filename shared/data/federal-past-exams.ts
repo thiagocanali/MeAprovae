@@ -1,4 +1,5 @@
 const fgvContestFilesBase = 'https://conhecimento.fgv.br/sites/default/files/concursos/'
+const cebraspeInssFilesBase = 'https://cdn.cebraspe.org.br/concursos/INSS_22/arquivos/'
 
 interface PastExamDocument {
   title: string
@@ -127,6 +128,57 @@ export const federalPastExamCollections: PastExamCollection[] = [
         title: 'Gabarito oficial definitivo da prova objetiva — edital nº 1',
         kind: 'Gabarito',
         url: `${fgvContestFilesBase}senado2022_gabarito_definitivo_edital01.pdf`,
+      },
+    ],
+  },
+  {
+    title: 'INSS — Técnico do Seguro Social',
+    year: 2022,
+    notes: 'Provas objetivas e gabaritos definitivos, com cadernos específicos para a GEX Guarulhos.',
+    board: 'Cebraspe',
+    sourcePageUrl: 'https://www.cebraspe.org.br/concursos/inss_22',
+    sourcePageLabel: 'Página oficial do concurso e arquivos',
+    checkedAt: '2026-11-23',
+    documents: [
+      {
+        title: 'Prova objetiva — conhecimentos básicos (exceto GEX Guarulhos)',
+        kind: 'Prova',
+        url: `${cebraspeInssFilesBase}760_INSS_CB1_01.PDF`,
+      },
+      {
+        title: 'Prova objetiva — conhecimentos específicos (exceto GEX Guarulhos)',
+        kind: 'Prova',
+        url: `${cebraspeInssFilesBase}760_INSS_001_01.PDF`,
+      },
+      {
+        title: 'Prova objetiva — conhecimentos básicos (GEX Guarulhos)',
+        kind: 'Prova',
+        url: `${cebraspeInssFilesBase}787_INSS_CB1_01.PDF`,
+      },
+      {
+        title: 'Prova objetiva — conhecimentos específicos (GEX Guarulhos)',
+        kind: 'Prova',
+        url: `${cebraspeInssFilesBase}787_INSS_001_01.PDF`,
+      },
+      {
+        title: 'Gabarito definitivo — conhecimentos básicos (exceto GEX Guarulhos)',
+        kind: 'Gabarito',
+        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_760_INSS_CB1_01.PDF`,
+      },
+      {
+        title: 'Gabarito definitivo — conhecimentos específicos (exceto GEX Guarulhos)',
+        kind: 'Gabarito',
+        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_760_INSS_001_01.PDF`,
+      },
+      {
+        title: 'Gabarito definitivo — conhecimentos básicos (GEX Guarulhos)',
+        kind: 'Gabarito',
+        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_787_INSS_CB1_01.PDF`,
+      },
+      {
+        title: 'Gabarito definitivo — conhecimentos específicos (GEX Guarulhos)',
+        kind: 'Gabarito',
+        url: `${cebraspeInssFilesBase}GAB_DEFINITIVO_787_INSS_001_01.PDF`,
       },
     ],
   },
