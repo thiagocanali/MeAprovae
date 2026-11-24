@@ -54,7 +54,7 @@ async function submit() {
         </div>
         <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
         <p v-if="successMessage" class="auth-success" role="status">{{ successMessage }}</p>
-        <button type="submit" :disabled="pending">{{ pending ? 'Criando conta…' : 'Criar minha conta' }}</button>
+        <button type="submit" :disabled="pending" :aria-busy="pending">{{ pending ? 'Criando conta…' : 'Criar minha conta' }}</button>
       </form>
       <p class="auth-switch">Já tem uma conta? <NuxtLink to="/login">Entrar</NuxtLink></p>
     </section>
