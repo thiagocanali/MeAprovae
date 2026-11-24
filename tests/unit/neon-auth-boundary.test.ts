@@ -108,6 +108,36 @@ describe('Neon Auth -> Data API authentication boundary', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
+  it('rejects mismatched Auth/Data API branches before a data request or token fetch', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      backendProvider: 'neon',
+      neonAuthBaseUrl: authUrl.replace('ep-staging', 'ep-other-branch'),
+      neonDataApiUrl: apiUrl,
+      neonAppOrigin: 'http://localhost:3000',
+    }))
+    await expect(fetchNeonData({} as Parameters<typeof fetchNeonData>[0],
+      `${apiUrl}/study_questions`))
+      .rejects.toMatchObject({ statusCode: 503 })
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('rejects an invalid Data API base path before forwarding session credentials', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      backendProvider: 'neon',
+      neonAuthBaseUrl: authUrl,
+      neonDataApiUrl: apiUrl.replace('/rest/v1', '/rest/v1/extra'),
+      neonAppOrigin: 'http://localhost:3000',
+    }))
+    await expect(fetchNeonData({} as Parameters<typeof fetchNeonData>[0],
+      `${apiUrl}/extra/study_questions`))
+      .rejects.toMatchObject({ statusCode: 503 })
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('blocks URLs with embedded credentials or fragments before calling Data API', async () => {
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
