@@ -78,3 +78,23 @@ export function validateExamCatalog(models: VersionedExamModel[]): ExamModelVali
   }
   return { valid: errors.length === 0, errors }
 }
+
+/** An editorial overlap indicator, not a substitute for verifying distinct learning objectives. */
+export function calculateModelOverlap(left: VersionedExamModel, right: VersionedExamModel): number {
+  if (!left.questionIds?.length || !right.questionIds?.length) return 0
+  const a = new Set(left.questionIds)
+  const b = new Set(right.questionIds)
+  const shared = [...a].filter(id => b.has(id)).length
+  return shared / Math.min(a.size, b.size)
+}
+
+/** Existing published model versions may be supplemented, never overwritten in place. */
+export function changesPublishedSnapshot(previous: VersionedExamModel, next: VersionedExamModel): boolean {
+  if (previous.modelId !== next.modelId || previous.version !== next.version || previous.status !== 'published') return false
+  const snapshot = (model: VersionedExamModel) => JSON.stringify({
+    title: model.title, description: model.description, kind: model.kind,
+    durationMinutes: model.durationMinutes, questionIds: model.questionIds,
+    allocation: model.allocation,
+  })
+  return snapshot(previous) !== snapshot(next)
+}
