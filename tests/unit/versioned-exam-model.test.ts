@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateExamCatalog, validateExamModel, type VersionedExamModel } from '../../shared/domain/questions/exam-model'
+import { calculateModelOverlap, changesPublishedSnapshot, validateExamCatalog, validateExamModel, type VersionedExamModel } from '../../shared/domain/questions/exam-model'
 
 const modelId = '11111111-1111-4111-8111-111111111111'
 const subjectA = '22222222-2222-4222-8222-222222222222'
@@ -51,5 +51,15 @@ describe('versioned exam model editorial boundaries', () => {
   it('does not allow two entries with the same model and version', () => {
     expect(validateExamCatalog([base(), { ...base() }]).errors.some(error => error.includes('Versão duplicada'))).toBe(true)
     expect(validateExamCatalog([base(), { ...base(), version: 2 }]).valid).toBe(true)
+  })
+  it('measures repeat use of question IDs across proposed models', () => {
+    expect(calculateModelOverlap(base(), { ...base(), questionIds: [questionA], allocation: [{ subjectId: subjectA, questionIds: [questionA] }] })).toBe(1)
+    expect(calculateModelOverlap(base(), { ...base(), questionIds: ['66666666-6666-4666-8666-666666666666'] })).toBe(0)
+  })
+  it('detects attempts to rewrite a published version instead of incrementing it', () => {
+    const published = { ...base(), status: 'published' as const }
+    expect(changesPublishedSnapshot(published, { ...published, questionIds: [questionA] })).toBe(true)
+    expect(changesPublishedSnapshot(published, { ...published, version: 2, questionIds: [questionA] })).toBe(false)
+    expect(changesPublishedSnapshot(base(), { ...base(), questionIds: [questionA] })).toBe(false)
   })
 })
