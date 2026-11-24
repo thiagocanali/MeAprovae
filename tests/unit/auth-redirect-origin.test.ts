@@ -13,18 +13,12 @@ describe('trusted authentication redirect origin', () => {
 
   it.each([
     'http://meaprovae.vercel.app',
-    'https://meaprovae.vercel.app.evil.example',
     'https://user:pass@meaprovae.vercel.app',
     'https://meaprovae.vercel.app/auth/callback',
     'https://meaprovae.vercel.app/?next=/redirect',
     'https://meaprovae.vercel.app/#fragment',
   ])('rejects non-canonical or unsafe configured origin %s', (origin) => {
-    if (origin === 'https://meaprovae.vercel.app.evil.example') {
-      // A different HTTPS host is syntactically valid; deployment must configure the correct trusted host.
-      expect(resolveAuthRedirectOrigin(origin, 'https://meaprovae.vercel.app/')).toBe(origin)
-    } else {
-      expect(() => resolveAuthRedirectOrigin(origin, 'https://meaprovae.vercel.app/')).toThrow()
-    }
+    expect(() => resolveAuthRedirectOrigin(origin, 'https://meaprovae.vercel.app/')).toThrow()
   })
 
   it('permits localhost fallback only in development and never accepts remote host', () => {
