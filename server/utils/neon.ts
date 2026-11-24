@@ -286,6 +286,8 @@ export async function fetchNeonData(event: H3Event, input: RequestInfo | URL, in
     throw createError({ statusCode: 503, statusMessage: 'Neon Data API não configurado.' })
   }
   if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash ||
+      !/^\/[^/]+\/rest\/v1\/?$/.test(endpoint.pathname) ||
+      !neonServicesMatch(String(useRuntimeConfig(event).neonAuthBaseUrl || ''), configured) ||
       target.origin !== endpoint.origin || target.username || target.password || target.hash ||
       !(target.pathname === endpoint.pathname || target.pathname.startsWith(`${endpoint.pathname.replace(/\/$/, '')}/`))) {
     throw createError({ statusCode: 503, statusMessage: 'Consulta encaminhada para destino inesperado.' })
