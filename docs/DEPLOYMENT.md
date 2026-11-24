@@ -55,3 +55,14 @@ Depois que o Preview Deployment estiver pronto:
 - [ ] Aprovar ou revisar a ADR-0002.
 
 A landing page é apenas uma apresentação inicial. Cadastro, login, banco de questões, edital, progresso e demais recursos do produto ainda não estão implementados.
+
+## Origem canônica para links de autenticação (alteração proposta)
+
+As rotas de cadastro e recuperação de senha não devem gerar links usando o cabeçalho Host da requisição.
+
+- Configurar **AUTH_REDIRECT_ORIGIN** somente no servidor com a origem HTTPS validada da aplicação, por exemplo `https://meaprovae.vercel.app` (sem caminho, query, credenciais ou fragmento).
+- Conferir a correspondência exata com as URLs de redirecionamento permitidas no projeto Supabase Auth.
+- Antes de integrar esta alteração, verificar a variável em todos os ambientes hospedados relevantes e testar cadastro, confirmação e recuperação com uma caixa de e-mail controlada.
+- Sem essa variável fora do desenvolvimento local, as rotas retornam indisponibilidade controlada (503) para evitar links gerados com Host não confiável. **Não integrar antes de configurar o ambiente**.
+- O fallback HTTP é permitido somente para localhost/127.0.0.1 em desenvolvimento.
+- Não publicar tokens, links de recuperação ou dados de sessões em logs e PRs. Validar o rollback com a versão anterior do deploy sem modificar dados de usuários.
