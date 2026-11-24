@@ -116,6 +116,42 @@ a:focus-visible { outline: 3px solid #6b8e12; outline-offset: 4px; }
 .theme-toggle:focus-visible { outline: 2px solid #718f2e; outline-offset: 4px; border-radius: 4px; }
 .theme-switch-track { position: relative; display: inline-flex; align-items: center; width: 31px; height: 18px; padding: 3px; border: 1px solid #cbd0c4; border-radius: 999px; background: #e6e9df; transition: background .2s, border-color .2s; }
 .theme-switch-track > span { width: 10px; height: 10px; border-radius: 50%; background: #78866a; transition: transform .2s, background .2s; }
+.app-shell { min-height: 100vh; background: var(--color-bg); color: var(--color-text); }
+.app-shell[data-theme='dark'] { color-scheme: dark; --color-bg: #111b17; --color-surface: #1c2a23; --color-text: #f0f3e9; --color-muted: #b4beb3; --color-primary: #c9f05a; --color-primary-dark: #b1dc37; --color-ink: #24352d; --color-line: #2b3931; background: #111b17; color: var(--color-text); }
+.theme-toggle-floating { position: fixed; z-index: 100; right: max(18px, calc((100vw - 1200px) / 2)); bottom: 18px; gap: 9px; padding: 10px 13px; border: 1px solid #d9ded1; border-radius: 999px; color: #435044; background: rgba(255, 254, 250, .96); box-shadow: 0 8px 28px rgba(31, 42, 37, .14); backdrop-filter: blur(10px); }
+.theme-toggle-floating:hover { background: #fff; }
+.app-shell[data-theme='dark'] .theme-toggle-floating { border-color: #46564a; color: #e7eee3; background: rgba(28, 42, 35, .96); box-shadow: 0 8px 28px rgba(0, 0, 0, .32); }
+.app-shell[data-theme='dark'] .theme-toggle-floating .theme-switch-track { border-color: #56674e; background: #344238; }
+.app-shell[data-theme='dark'] .theme-toggle-floating .theme-switch-track > span { transform: translateX(13px); background: #d8f28a; }
+.app-shell[data-theme='light'] .auth-panel { border-color: var(--color-line); box-shadow: 0 24px 70px rgba(31, 42, 37, .08); }
+.app-shell[data-theme='light'] .auth-brand, .app-shell[data-theme='light'] .auth-eyebrow, .app-shell[data-theme='light'] .auth-switch a, .app-shell[data-theme='light'] .student-nav a:hover, .app-shell[data-theme='light'] .student-nav a.router-link-active, .app-shell[data-theme='light'] .publication-checklist li.check-passed { color: #4c6e20; }
+.app-shell[data-theme='light'] .auth-form label { color: #354238; }
+.app-shell[data-theme='light'] .auth-form input { border-color: #d4d8ce; background: var(--color-surface); color: var(--color-text); }
+.app-shell[data-theme='light'] .auth-form input::placeholder { color: #747d72; }
+.app-shell[data-theme='light'] .student-header { border-color: var(--color-line); }
+.app-shell[data-theme='light'] .student-empty { border-color: var(--color-line); background: var(--color-surface); }
+.app-shell[data-theme='light'] .study-page { background: var(--color-bg); color: var(--color-text); }
+.app-shell[data-theme='light'] .study-header { border-color: var(--color-line); }
+.app-shell[data-theme='light'] .study-header nav a, .app-shell[data-theme='light'] .study-back { color: #59655c; }
+.app-shell[data-theme='light'] .study-header nav a:hover, .app-shell[data-theme='light'] .study-back:hover { color: #4c6e20; }
+.app-shell[data-theme='light'] .study-muted, .app-shell[data-theme='light'] .study-progress-line, .app-shell[data-theme='light'] .study-options legend { color: #657066; }
+.app-shell[data-theme='light'] .study-state, .app-shell[data-theme='light'] .study-empty, .app-shell[data-theme='light'] .study-card, .app-shell[data-theme='light'] .study-question-card { border-color: var(--color-line); background: var(--color-surface); color: var(--color-text); }
+.app-shell[data-theme='light'] .study-error, .app-shell[data-theme='light'] .auth-error, .app-shell[data-theme='light'] .admin-error { color: #a23535; }
+.app-shell[data-theme='light'] .study-link { color: #4c6e20; }
+.app-shell[data-theme='light'] .study-secondary-button { border-color: #cbd2c5; color: #2d3930; background: #fffefa; }
+.app-shell[data-theme='light'] .study-section ul { color: #48544a; }
+.app-shell[data-theme='light'] .study-option { border-color: #dce1d7; color: #27342b; background: #fffefa; }
+.app-shell[data-theme='light'] .study-option-label, .app-shell[data-theme='light'] .study-performance-row > strong, .app-shell[data-theme='light'] .study-review-correct { color: #396b42; }
+.app-shell[data-theme='light'] .study-review-wrong { color: #a23535; }
+.app-shell[data-theme='light'] .study-exam-timer { border-color: #b5cc9a; color: #426b2e; background: #f0f5e8; }
+.app-shell[data-theme='light'] .study-exam-timer.is-warning { border-color: #e4b4ae; color: #a23535; background: #fff1ef; }
+.app-shell[data-theme='light'] .study-history-item { border-color: var(--color-line); }
+.app-shell[data-theme='light'] .contest-form label { color: #354238; }
+.app-shell[data-theme='light'] .contest-form input, .app-shell[data-theme='light'] .contest-form select, .app-shell[data-theme='light'] .contest-form textarea, .app-shell[data-theme='light'] .question-option-editor input, .app-shell[data-theme='light'] .question-option-editor textarea { border-color: #d4d8ce; color: #1f2a25; background: #fffefa; }
+.app-shell[data-theme='light'] .admin-success, .app-shell[data-theme='light'] .admin-status, .app-shell[data-theme='light'] .auth-success { color: #426b2e; }
+.app-shell[data-theme='light'] .admin-subject-list li { border-color: #d4d8ce; color: #48544a; }
+.app-shell[data-theme='light'] .admin-contest-row { border-color: #dce1d7; background: #fffefa; }
+.app-shell[data-theme='light'] .admin-metrics .study-card { border-color: var(--color-line); background: var(--color-surface); }
 .landing[data-theme='dark'] { color-scheme: dark; --color-bg: #111b17; --color-surface: #1c2a23; --color-text: #f0f3e9; --color-muted: #b4beb3; --color-primary: #c9f05a; --color-primary-dark: #b1dc37; --color-ink: #24352d; --color-line: #2b3931; background: #111b17; color: var(--color-text); }
 .landing[data-theme='dark'] .theme-toggle { color: #c0c9bf; }
 .landing[data-theme='dark'] .theme-switch-track { border-color: #56674e; background: #344238; }
@@ -187,6 +223,8 @@ a:focus-visible { outline: 3px solid #6b8e12; outline-offset: 4px; }
   .topbar, .hero, .value-section, .footer, .closing-cta { width: calc(100% - 32px); }
   .theme-toggle { gap: 0; }
   .theme-toggle > span:last-child { display: none; }
+  .theme-toggle-floating { gap: 9px; }
+  .theme-toggle-floating > span:last-child { display: inline; }
   .topbar { height: 72px; }
   .brand { font-size: 16px; }
   .topbar-actions { gap: 13px; }

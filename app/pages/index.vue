@@ -1,24 +1,11 @@
 <script setup lang="ts">
-const theme = useCookie<'light' | 'dark'>('meaprovae-theme', {
-  default: () => 'light',
-  maxAge: 60 * 60 * 24 * 365,
-  sameSite: 'lax',
-})
-const isDark = computed(() => theme.value === 'dark')
-
-function toggleTheme() {
-  theme.value = isDark.value ? 'light' : 'dark'
-}
+const { theme } = useAppTheme()
 
 useSeoMeta({
   title: 'Me Aprovaê — sua jornada até a aprovação',
   description: 'Organize seus estudos para concursos públicos, acompanhe editais e evolua questão por questão.',
   ogTitle: 'Me Aprovaê',
   ogDescription: 'Estude com direção. Acompanhe sua evolução.',
-})
-
-useHead({
-  meta: [{ name: 'theme-color', content: computed(() => isDark.value ? '#111b17' : '#f7f6f1') }],
 })
 </script>
 
@@ -30,10 +17,7 @@ useHead({
         <span>me aprovaê</span>
       </NuxtLink>
       <nav class="topbar-actions" aria-label="Acesso à plataforma">
-        <button class="theme-toggle" type="button" :aria-label="isDark ? 'Ativar tema claro' : 'Ativar tema escuro'" :aria-pressed="isDark" @click="toggleTheme">
-          <span class="theme-switch-track" aria-hidden="true"><span /></span>
-          <span>{{ isDark ? 'Escuro' : 'Claro' }}</span>
-        </button>
+        <ThemeToggle />
         <NuxtLink class="topbar-login" to="/login">Entrar</NuxtLink>
         <NuxtLink class="topbar-signup" to="/cadastro">Criar conta <span aria-hidden="true">↗</span></NuxtLink>
       </nav>
