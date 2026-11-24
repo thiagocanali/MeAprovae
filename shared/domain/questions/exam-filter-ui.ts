@@ -26,7 +26,7 @@ export function isCurrentExamAvailability(
   selection: ExamSelection,
 ): response is ExamAvailability & { filters: ExamSelection } {
   if (!response) return false
-  const matches = (a: string | null, b: string | null) => a === b
+  const matches = (a: string | null | undefined, b: string | null) => a === b
   return matches(response.filters?.contestId, selection.contestId)
     && matches(response.filters?.subjectId, selection.subjectId)
     && matches(response.filters?.topicId, selection.topicId)
