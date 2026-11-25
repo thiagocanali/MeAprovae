@@ -26,6 +26,9 @@ import '~/assets/css/contests.css'
         <NuxtLink to="/app/desempenho"
           ><ContestIcon name="chart" />Meu desempenho</NuxtLink
         >
+        <NuxtLink to="/app/provas-oficiais"
+          ><ContestIcon name="questions" />Provas oficiais</NuxtLink
+        >
         <NuxtLink to="/app/favoritas"
           ><ContestIcon name="star" />Favoritas</NuxtLink
         >
