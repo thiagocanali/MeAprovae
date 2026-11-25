@@ -1,5 +1,9 @@
 # Catálogo editorial versionado de simulados — fundação
 
+## Atualização de 25/11/2026
+
+O manifesto agora contém 20 cadernos temáticos autorais em rascunho, com cinco questões e UUIDs reais por versão, provenientes do release matemática 002. Nenhum foi publicado ou persistido no schema experimental da PR #71; essa frente continua sujeita à homologação separada. As seções abaixo descrevem a fundação original. Evidências atuais em [ampliação do acervo](CONTENT_EXPANSION_2026-11-25.md).
+
 ## Limite desta entrega
 
 Esta etapa introduz **tipos, regras de validação, testes e um manifesto editorial vazio** para modelos de simulados. **Não cria tabelas nem rotas públicas, não altera a geração de simulados atual e não publica modelos.** As sessões reais dos estudantes continuam nas tabelas `exam_sessions` e `exam_session_items`, sujeitas às políticas de isolamento existentes.

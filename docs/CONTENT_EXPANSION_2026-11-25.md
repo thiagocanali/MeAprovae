@@ -39,7 +39,7 @@ O gerador SQL é somente cliente, não conecta ao banco e não contém DDL. A in
 
 ## Modelos de simulados
 
-Após a instalação, build_math_models_002.py prepara cadernos temáticos como rascunhos, com versão e IDs explícitos do release instalado. Não substituem a geração dinâmica, não criam sessões de alunos e não entram no schema de staging da #71. Não equivalem a modelos publicados e não completam a meta de diversidade por todas as matérias.
+Foram preparados 20 cadernos temáticos em rascunho, um por família, com cinco questões e 30 minutos cada. build_math_models_002.py usa os UUIDs reais retornados pela instalação do release. A composição cobre os 100 itens, sem sobreposição de IDs entre cadernos; as cinco variantes dentro de um caderno repetem seu objetivo pedagógico. O manifesto e a proveniência foram versionados sem declarar publicação ou revisão humana. Não substituem a geração dinâmica, não criam sessões de alunos e não entram no schema de staging da #71. Não equivalem a modelos publicados e não completam a meta de diversidade por todas as matérias.
 
 ## Homologação, instalação e reversão
 
@@ -60,3 +60,9 @@ bash scripts/test-database.sh
 ```
 
 A verificação de rede é opt-in e não roda no CI: `python3 scripts/content/verify_official_sources.py --output /tmp/novo-relatorio.json` requer pypdf. Ela limita hosts/redirects, tamanho, tempo e concorrência, não instala dados e não altera o manifesto automaticamente. Revalidar links e retificações antes de usar o acervo em novas importações.
+
+## Recibo de instalação observado
+
+Instalação administrativa autorizada pela solicitação de ampliação nesta conversa, após homologação descartável. Payload de origem: commit `4af8f8aa1c49b3dabab4c2f5460b8fbbfe539760`, release SHA-256 `c2250d104930e6406957ea4782976b918ff255956699c876d6e0b03ae4b20560`. A transação do Supabase confirmou 100 itens vinculados, 400 alternativas, 100 gabaritos, 100 explicações, status draft e difficulty_reviewed=false. Contagens agregadas após instalação: 60 publicadas, 200 rascunhos, quatro concursos publicados. Não se usou conta humana, claims forjadas ou nova credencial.
+
+Os modelos estão somente no manifesto editorial: não foram inseridos no schema experimental da #71 nem habilitados para sessões públicas. A validação estrutural e a ausência de sobreposição não equivalem a aprovação pedagógica. Os limites de publicação continuam em content/reviews/REVIEW_CHECKLIST.md.

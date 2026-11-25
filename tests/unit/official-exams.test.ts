@@ -51,7 +51,9 @@ describe('official exam source catalog', () => {
           isOfficialExamUrl,
         ),
       ).toBe(true)
-      expect(exam.answerKeyStatus).toBe('definitive')
+      expect(exam.answerKeyStatus).toBe(
+        exam.category === 'avaliacao-educacional' ? 'official' : 'definitive',
+      )
       expect(exam.reproductionRights).toBe('not-assessed')
       expect(exam.checkedAt).toBe('2026-11-25')
       expect(exam.comparisonNote.length).toBeGreaterThan(15)

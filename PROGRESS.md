@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Ampliação de 25/11/2026 — fontes oficiais e autorais
+
+- Frente de concursos integrada na #72 após reconciliação com tema claro/escuro, CI #441 aprovada e produção READY.
+- Biblioteca /app/provas-oficiais com 36 referências de CNU 2024/2025, TRF1 2024 e Enem 2021–2025; 21 pares de PDFs distintos conferidos, 15 referências somente pela fonte após falha de download. Não são questões externas importadas ou notas interativas.
+- Instalados três concursos históricos e 100 autorais do release matemática 002, transacionalmente e sem modificar as existentes. Supabase: 60 publicadas, 200 rascunhos e quatro concursos publicados. Human review continua pendente.
+- Vinte modelos temáticos em rascunho com cinco UUIDs reais cada, composição fixa, 30 minutos e sem sobreposição entre modelos. Não publicados; schema da #71 permanece isolado.
+- Homologação PostgreSQL 17 confirmou contagens, replay sem duplicação e preservação em colisões. Detalhes, direitos, fontes, recibo e reversão em docs/CONTENT_EXPANSION_2026-11-25.md. CI/deploy do lote registrados no PR.
+
 ## Prioridade de 21/11/2026 — frontend de concursos
 
 - Por orientação do usuário, frontend passa à frente das demais expansões, começando por catálogo/detalhe de concursos. As demais telas ainda precisam de revisão de experiência; não considerar todo o frontend concluído.

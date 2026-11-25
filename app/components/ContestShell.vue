@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import '~/assets/css/contests.css'
+const route = useRoute()
 </script>
 <template>
   <div class="contest-hub">
@@ -13,8 +14,12 @@ import '~/assets/css/contests.css'
         <NuxtLink to="/app"><ContestIcon name="home" />Visão geral</NuxtLink>
         <NuxtLink
           to="/app/concursos"
-          class="contest-nav-active"
-          aria-current="page"
+          :class="{
+            'contest-nav-active': route.path.startsWith('/app/concursos'),
+          }"
+          :aria-current="
+            route.path.startsWith('/app/concursos') ? 'location' : undefined
+          "
           ><ContestIcon name="target" />Concursos</NuxtLink
         >
         <NuxtLink to="/app/questoes"
@@ -26,7 +31,14 @@ import '~/assets/css/contests.css'
         <NuxtLink to="/app/desempenho"
           ><ContestIcon name="chart" />Meu desempenho</NuxtLink
         >
-        <NuxtLink to="/app/provas-oficiais"
+        <NuxtLink
+          to="/app/provas-oficiais"
+          :class="{
+            'contest-nav-active': route.path === '/app/provas-oficiais',
+          }"
+          :aria-current="
+            route.path === '/app/provas-oficiais' ? 'page' : undefined
+          "
           ><ContestIcon name="questions" />Provas oficiais</NuxtLink
         >
         <NuxtLink to="/app/favoritas"

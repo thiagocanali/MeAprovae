@@ -213,7 +213,11 @@ function clear() {
               :href="exam.answerKeyUrl"
               target="_blank"
               rel="noopener noreferrer"
-              >Gabarito final
+              >{{
+                exam.answerKeyStatus === 'definitive'
+                  ? 'Gabarito final'
+                  : 'Gabarito oficial'
+              }}
               <span class="visually-hidden">(PDF em nova aba)</span></a
             >
           </div>

@@ -1,4 +1,645 @@
 {
   "schemaVersion": 1,
-  "models": []
+  "models": [
+    {
+      "modelId": "3ac9af3b-6d7b-57ff-9fdf-5eb16e18da5d",
+      "version": 1,
+      "title": "Prática autoral — Mediana",
+      "description": "Cinco variantes autorais de mediana, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "2c939522-1e56-4870-b326-c1050d450103",
+        "30c39752-a910-4c97-8edb-6fcc167bfd4e",
+        "955fbde8-c380-4630-a2d0-83c6a1702cc3",
+        "91bc9aab-1bba-4f0a-aa7b-4b5a61b66a86",
+        "a53f1f8e-f914-4ce3-9d27-e8eb83ee33cc"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "2c939522-1e56-4870-b326-c1050d450103",
+            "30c39752-a910-4c97-8edb-6fcc167bfd4e",
+            "955fbde8-c380-4630-a2d0-83c6a1702cc3",
+            "91bc9aab-1bba-4f0a-aa7b-4b5a61b66a86",
+            "a53f1f8e-f914-4ce3-9d27-e8eb83ee33cc"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "beef669b-e212-5bee-be3e-f6e195b571b6",
+      "version": 1,
+      "title": "Prática autoral — Moda",
+      "description": "Cinco variantes autorais de moda, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "84e3fa60-fe48-425d-8169-a6af05a9c979",
+        "052bb0cc-7028-48fd-8724-ec86e26c52c5",
+        "c1700aa1-12b6-4a0c-a515-e3f30d6bebbd",
+        "c0c96de0-8160-4926-b265-b46ad9fb2e1d",
+        "c5d456c7-bcfd-40b9-a39b-df737c4e9a57"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "84e3fa60-fe48-425d-8169-a6af05a9c979",
+            "052bb0cc-7028-48fd-8724-ec86e26c52c5",
+            "c1700aa1-12b6-4a0c-a515-e3f30d6bebbd",
+            "c0c96de0-8160-4926-b265-b46ad9fb2e1d",
+            "c5d456c7-bcfd-40b9-a39b-df737c4e9a57"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "d3314cb2-8e4d-597b-a1d7-c1e9c6288821",
+      "version": 1,
+      "title": "Prática autoral — Amplitude",
+      "description": "Cinco variantes autorais de amplitude, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "2a4f647a-3a1f-4c51-acce-92130be7026c",
+        "eaa6b8fc-734f-443c-975f-f61205815c63",
+        "b13750ef-2b2a-438b-a0c3-b96a2ca6c9e2",
+        "2779d9ea-46a6-468d-8f64-41638037b720",
+        "e3d3b0c1-0164-4793-afb4-24158508d931"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "2a4f647a-3a1f-4c51-acce-92130be7026c",
+            "eaa6b8fc-734f-443c-975f-f61205815c63",
+            "b13750ef-2b2a-438b-a0c3-b96a2ca6c9e2",
+            "2779d9ea-46a6-468d-8f64-41638037b720",
+            "e3d3b0c1-0164-4793-afb4-24158508d931"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "411a2b50-51da-57a1-ad43-9d96b88fa13d",
+      "version": 1,
+      "title": "Prática autoral — Desconto inverso",
+      "description": "Cinco variantes autorais de desconto inverso, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "e7a9de32-8c66-45dd-8fd9-4af30565aaf0",
+        "13a30d7c-8c74-4bbc-a4d1-031e4d841921",
+        "c6e3224f-8eb4-4b1b-aae8-959fb908c1ba",
+        "78ac2407-5ec7-4a42-a136-1e24b4ed004c",
+        "c3a2fdd6-be95-420e-b607-29bdf35b2627"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "e7a9de32-8c66-45dd-8fd9-4af30565aaf0",
+            "13a30d7c-8c74-4bbc-a4d1-031e4d841921",
+            "c6e3224f-8eb4-4b1b-aae8-959fb908c1ba",
+            "78ac2407-5ec7-4a42-a136-1e24b4ed004c",
+            "c3a2fdd6-be95-420e-b607-29bdf35b2627"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "53cc8b0a-5af9-5dec-ad95-aa169993d98e",
+      "version": 1,
+      "title": "Prática autoral — Juros compostos",
+      "description": "Cinco variantes autorais de juros compostos, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "c377e4c0-911a-42b7-9b25-40e2bf3ace11",
+        "13ebc380-aadc-4811-bb7b-e7bdec63e127",
+        "716f7640-d3d7-4919-9ac3-cefdabb76561",
+        "f1db11a9-fb49-4b4f-8ab9-3389297ebb66",
+        "2cf4f87e-5837-4f3b-b33a-fbd8fce53648"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "c377e4c0-911a-42b7-9b25-40e2bf3ace11",
+            "13ebc380-aadc-4811-bb7b-e7bdec63e127",
+            "716f7640-d3d7-4919-9ac3-cefdabb76561",
+            "f1db11a9-fb49-4b4f-8ab9-3389297ebb66",
+            "2cf4f87e-5837-4f3b-b33a-fbd8fce53648"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "a745589e-45d9-5726-b5b3-02ec4515b40f",
+      "version": 1,
+      "title": "Prática autoral — Área do trapézio",
+      "description": "Cinco variantes autorais de área do trapézio, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "16051d8d-0252-4be4-ad63-804f8d3097fb",
+        "2180cb4f-6e21-4077-b994-e621fb05d764",
+        "4aacceca-6307-40ec-8e4f-fdc5e19b772d",
+        "e15977b2-4b89-4ef2-8ec5-46d4c18cd67f",
+        "5d470874-ef33-4a92-8b0b-6e6b18eaba2f"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "16051d8d-0252-4be4-ad63-804f8d3097fb",
+            "2180cb4f-6e21-4077-b994-e621fb05d764",
+            "4aacceca-6307-40ec-8e4f-fdc5e19b772d",
+            "e15977b2-4b89-4ef2-8ec5-46d4c18cd67f",
+            "5d470874-ef33-4a92-8b0b-6e6b18eaba2f"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "fba57cf4-e1da-58b2-8600-cea7d26a1d90",
+      "version": 1,
+      "title": "Prática autoral — Área do triângulo",
+      "description": "Cinco variantes autorais de área do triângulo, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "d91707c3-e7d9-4337-ae73-ca4cfc0c7d28",
+        "0c41a15b-366a-44c2-9626-1bfda9970a72",
+        "d4b027f8-1590-49f4-af60-1d503b71af9b",
+        "45f965d0-a361-4700-9fa8-a9f4b80eb7c6",
+        "a6cb6110-8e11-4dbc-b38a-7d35a9de00e7"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "d91707c3-e7d9-4337-ae73-ca4cfc0c7d28",
+            "0c41a15b-366a-44c2-9626-1bfda9970a72",
+            "d4b027f8-1590-49f4-af60-1d503b71af9b",
+            "45f965d0-a361-4700-9fa8-a9f4b80eb7c6",
+            "a6cb6110-8e11-4dbc-b38a-7d35a9de00e7"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "123de4a8-d748-5794-9ed6-d380140d7564",
+      "version": 1,
+      "title": "Prática autoral — Teorema de Pitágoras",
+      "description": "Cinco variantes autorais de teorema de pitágoras, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "45c10c0f-d404-4bf5-8e24-720c742b4539",
+        "bfd66a97-a102-4b95-b061-3e4052e0e1e7",
+        "e3ca7549-b57b-4882-bcd9-348d5adf6954",
+        "70ca5ba7-26de-4b47-b5c3-134779f651ca",
+        "d2c6ea2d-0b8f-49ea-9254-14c1a0bf076d"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "45c10c0f-d404-4bf5-8e24-720c742b4539",
+            "bfd66a97-a102-4b95-b061-3e4052e0e1e7",
+            "e3ca7549-b57b-4882-bcd9-348d5adf6954",
+            "70ca5ba7-26de-4b47-b5c3-134779f651ca",
+            "d2c6ea2d-0b8f-49ea-9254-14c1a0bf076d"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "f185093a-a446-57af-866a-0d50d721ec40",
+      "version": 1,
+      "title": "Prática autoral — Comprimento da circunferência",
+      "description": "Cinco variantes autorais de comprimento da circunferência, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "93a6e074-5340-4ca8-b94f-b6af3a39d570",
+        "4b6bffc7-b099-4d35-9d63-1c310f2792fa",
+        "2b41bd9c-d8ed-44f5-acee-06aa3763dd69",
+        "5a16297c-7445-4e73-99b2-c86ed38e84fa",
+        "59115514-790c-40d2-8492-1c0bfecce104"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "93a6e074-5340-4ca8-b94f-b6af3a39d570",
+            "4b6bffc7-b099-4d35-9d63-1c310f2792fa",
+            "2b41bd9c-d8ed-44f5-acee-06aa3763dd69",
+            "5a16297c-7445-4e73-99b2-c86ed38e84fa",
+            "59115514-790c-40d2-8492-1c0bfecce104"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "9045a416-0516-5a17-828c-b4a40c71be3b",
+      "version": 1,
+      "title": "Prática autoral — Volume do cilindro",
+      "description": "Cinco variantes autorais de volume do cilindro, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "2a4544c3-72c3-48a4-a9e3-fb80b7b2931e",
+        "1af560c3-8c3e-4446-8ee0-76b5b9c9c231",
+        "26b9c4e9-9ae4-431c-b61b-688065a5b95c",
+        "e2886372-d818-4bf0-ac30-8385c5d194bd",
+        "53843400-ad6b-4b2d-b970-48ae08767c89"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "2a4544c3-72c3-48a4-a9e3-fb80b7b2931e",
+            "1af560c3-8c3e-4446-8ee0-76b5b9c9c231",
+            "26b9c4e9-9ae4-431c-b61b-688065a5b95c",
+            "e2886372-d818-4bf0-ac30-8385c5d194bd",
+            "53843400-ad6b-4b2d-b970-48ae08767c89"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "1e14a85d-e559-5ca3-882e-aab5933fbc68",
+      "version": 1,
+      "title": "Prática autoral — Capacidade em litros",
+      "description": "Cinco variantes autorais de capacidade em litros, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "c637ec50-64f4-4260-87f7-42a794f75a73",
+        "03c836ed-d94d-4e39-a28a-2e3b1591c7ac",
+        "0366f4ad-e35f-4619-8f0c-db4342007bd2",
+        "60c70b06-823c-48f1-949a-e009f48d9a2e",
+        "04543f01-9e74-4fe1-9ee8-8fb33c9f2046"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "c637ec50-64f4-4260-87f7-42a794f75a73",
+            "03c836ed-d94d-4e39-a28a-2e3b1591c7ac",
+            "0366f4ad-e35f-4619-8f0c-db4342007bd2",
+            "60c70b06-823c-48f1-949a-e009f48d9a2e",
+            "04543f01-9e74-4fe1-9ee8-8fb33c9f2046"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "09c649d4-dcb1-5dac-a29c-3060f454ffee",
+      "version": 1,
+      "title": "Prática autoral — Escala de mapas",
+      "description": "Cinco variantes autorais de escala de mapas, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "f92c803c-909a-43f1-a4c6-f63b3c3aa131",
+        "6a8f3fc4-e4b6-4e7e-8950-8af93035a872",
+        "29bd3348-d75a-4336-be9f-a4f0eb1f7a91",
+        "090be277-5097-4759-8fa0-f8fc99caadd0",
+        "bfbdfe06-1b7c-439d-a033-6d65e9d04d00"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "f92c803c-909a-43f1-a4c6-f63b3c3aa131",
+            "6a8f3fc4-e4b6-4e7e-8950-8af93035a872",
+            "29bd3348-d75a-4336-be9f-a4f0eb1f7a91",
+            "090be277-5097-4759-8fa0-f8fc99caadd0",
+            "bfbdfe06-1b7c-439d-a033-6d65e9d04d00"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "df514ba9-80dd-5d27-90bc-7100d1f3b4d5",
+      "version": 1,
+      "title": "Prática autoral — Duração entre horários",
+      "description": "Cinco variantes autorais de duração entre horários, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "dc7ac5ae-ce8c-46fb-b66b-2fa9ac3bbb81",
+        "dc79fc8f-a2a0-4269-ae2f-5a77a3f80c2c",
+        "3a7ffa82-231d-4539-b692-66e76731c5f5",
+        "1c5831e0-8253-45dd-9c30-5a33abbd4630",
+        "87c963c9-195c-4a11-aee9-43b3bf68be95"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "dc7ac5ae-ce8c-46fb-b66b-2fa9ac3bbb81",
+            "dc79fc8f-a2a0-4269-ae2f-5a77a3f80c2c",
+            "3a7ffa82-231d-4539-b692-66e76731c5f5",
+            "1c5831e0-8253-45dd-9c30-5a33abbd4630",
+            "87c963c9-195c-4a11-aee9-43b3bf68be95"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "c3cb6035-cb65-54d3-bbae-1dbb65a97e85",
+      "version": 1,
+      "title": "Prática autoral — Senhas com repetição",
+      "description": "Cinco variantes autorais de senhas com repetição, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "a30698c4-f94c-4e36-9fdd-e107de630a10",
+        "6e7d0de7-8eb3-440d-accf-1f72905ddd0d",
+        "a736e3ad-ac15-4743-a042-22ebafdcde2b",
+        "de31609e-2392-476f-a998-a5b9cae72f50",
+        "861bd359-5602-4e18-8872-7b10ce2ab1a4"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "a30698c4-f94c-4e36-9fdd-e107de630a10",
+            "6e7d0de7-8eb3-440d-accf-1f72905ddd0d",
+            "a736e3ad-ac15-4743-a042-22ebafdcde2b",
+            "de31609e-2392-476f-a998-a5b9cae72f50",
+            "861bd359-5602-4e18-8872-7b10ce2ab1a4"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "02329d27-e166-5a77-be24-8d5492398fe6",
+      "version": 1,
+      "title": "Prática autoral — Ocupação de cargos distintos",
+      "description": "Cinco variantes autorais de ocupação de cargos distintos, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "d7b970dc-653f-413a-a93c-1a8fc7de3a0d",
+        "522bd5f1-30e0-4ac7-8243-7c1f53bd01f5",
+        "441da3a4-50c6-4ffa-9e29-27782183bcdb",
+        "c60f8f49-8151-4f88-92f0-c6cb0db48025",
+        "e81db0d4-bceb-4287-b73a-902e5be47c16"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "d7b970dc-653f-413a-a93c-1a8fc7de3a0d",
+            "522bd5f1-30e0-4ac7-8243-7c1f53bd01f5",
+            "441da3a4-50c6-4ffa-9e29-27782183bcdb",
+            "c60f8f49-8151-4f88-92f0-c6cb0db48025",
+            "e81db0d4-bceb-4287-b73a-902e5be47c16"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "e638c4f1-2ae2-567f-bff9-9d946ca62911",
+      "version": 1,
+      "title": "Prática autoral — Probabilidade complementar",
+      "description": "Cinco variantes autorais de probabilidade complementar, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "5fa874c8-5c47-479c-a62d-428fe81b913d",
+        "14079619-f9db-4872-8fb1-a812556d2766",
+        "581a67af-da41-496c-bddc-ce9eb8d4e7b9",
+        "05be907d-1a4f-4c09-a517-7f2d22d40bf4",
+        "d89a2f38-739a-4f76-b2dc-811eb4a54399"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "5fa874c8-5c47-479c-a62d-428fe81b913d",
+            "14079619-f9db-4872-8fb1-a812556d2766",
+            "581a67af-da41-496c-bddc-ce9eb8d4e7b9",
+            "05be907d-1a4f-4c09-a517-7f2d22d40bf4",
+            "d89a2f38-739a-4f76-b2dc-811eb4a54399"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "5c5677d2-1f93-5d62-9bca-b521399dba42",
+      "version": 1,
+      "title": "Prática autoral — Contagem de múltiplos",
+      "description": "Cinco variantes autorais de contagem de múltiplos, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "459f2ea0-8222-441d-8ea3-7e76912216b1",
+        "22875445-5944-4fcd-8e17-8206b5ba39a5",
+        "dc7d2cc6-dc5c-4d28-8bb8-9acc5bae5cf1",
+        "84d7a4ad-b664-47b6-9af1-8466cb4b386a",
+        "6a06ac18-9efc-4f67-9649-b4366121bb81"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "459f2ea0-8222-441d-8ea3-7e76912216b1",
+            "22875445-5944-4fcd-8e17-8206b5ba39a5",
+            "dc7d2cc6-dc5c-4d28-8bb8-9acc5bae5cf1",
+            "84d7a4ad-b664-47b6-9af1-8466cb4b386a",
+            "6a06ac18-9efc-4f67-9649-b4366121bb81"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "014b85ea-d368-5bdd-a232-a7a2caa216aa",
+      "version": 1,
+      "title": "Prática autoral — Lucro unitário e total",
+      "description": "Cinco variantes autorais de lucro unitário e total, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "7ebde013-4b2a-42d6-9c7b-e535c996a9f9",
+        "1b9dad9c-32d6-48b0-8e3e-a66a3c2e8e92",
+        "21eab64a-a38d-41cc-8cbe-bc32e6530319",
+        "c1d5777d-f338-4487-ad9c-8f7b2b97443b",
+        "10c1a176-bb2c-4236-b6e4-cc4e7e161aa8"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "7ebde013-4b2a-42d6-9c7b-e535c996a9f9",
+            "1b9dad9c-32d6-48b0-8e3e-a66a3c2e8e92",
+            "21eab64a-a38d-41cc-8cbe-bc32e6530319",
+            "c1d5777d-f338-4487-ad9c-8f7b2b97443b",
+            "10c1a176-bb2c-4236-b6e4-cc4e7e161aa8"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "bb2cad9a-d675-55a7-9990-5dee61ff6bc2",
+      "version": 1,
+      "title": "Prática autoral — Variação absoluta",
+      "description": "Cinco variantes autorais de variação absoluta, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "f3649141-b24f-45e0-91a3-0debfa28b570",
+        "515b3b9f-c83d-4d0d-8a13-33e0863ce7d4",
+        "19acecd0-6264-495a-9b9a-038cfb3518fa",
+        "51886664-d3f0-4cc2-aa5a-ee971e5a547a",
+        "05a61e7e-c268-48f9-8b99-2e24743b1f6e"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "f3649141-b24f-45e0-91a3-0debfa28b570",
+            "515b3b9f-c83d-4d0d-8a13-33e0863ce7d4",
+            "19acecd0-6264-495a-9b9a-038cfb3518fa",
+            "51886664-d3f0-4cc2-aa5a-ee971e5a547a",
+            "05a61e7e-c268-48f9-8b99-2e24743b1f6e"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    },
+    {
+      "modelId": "3df8ef58-402e-5b2e-82e5-2513902b7ea1",
+      "version": 1,
+      "title": "Prática autoral — Potências",
+      "description": "Cinco variantes autorais de potências, com composição fixa. Caderno em revisão, sem publicação nem equivalência a prova oficial.",
+      "kind": "subject-foundations",
+      "status": "draft",
+      "durationMinutes": 30,
+      "questionIds": [
+        "c5dbc67a-9446-411c-939a-b1372fcb206e",
+        "fa98da3f-c137-47c2-8a1d-267df762d31f",
+        "2028ce56-0b59-4e53-a44d-2a9fde7ef855",
+        "28fcd7f5-3710-4c15-9820-05d685191210",
+        "8f9aaf2f-bfce-44e9-929b-86d67c55aac1"
+      ],
+      "allocation": [
+        {
+          "subjectId": "203d299c-f76e-4600-b2ac-46844388d86f",
+          "questionIds": [
+            "c5dbc67a-9446-411c-939a-b1372fcb206e",
+            "fa98da3f-c137-47c2-8a1d-267df762d31f",
+            "2028ce56-0b59-4e53-a44d-2a9fde7ef855",
+            "28fcd7f5-3710-4c15-9820-05d685191210",
+            "8f9aaf2f-bfce-44e9-929b-86d67c55aac1"
+          ]
+        }
+      ],
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rightsChecked": false,
+      "publishedAt": null
+    }
+  ]
 }
