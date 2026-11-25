@@ -1,0 +1,330 @@
+{
+  "checkedAt": "2026-11-25",
+  "files": [
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/13.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/13.pdf",
+      "status": 200,
+      "bytes": 688677,
+      "sha256": "998587451e1910e81ad8e6280afebdaf62520bf50664c7028e2e4ec37bc69aee",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/15.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/15.pdf",
+      "status": 200,
+      "bytes": 531781,
+      "sha256": "49e80983ce90f921b48e99afad314ea62f611495d4c9bc5f4a7771e8d75c2509",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/19.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/19.pdf",
+      "status": 200,
+      "bytes": 552356,
+      "sha256": "032259b5ec01deb404f1c297120a1f03b57e3eb0935d83ec32b4ff56be72e56c",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/27.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/27.pdf",
+      "status": 200,
+      "bytes": 498982,
+      "sha256": "ccd6773bfde14812f1aae27c595156072ed604a1ccc93dcf8dd85d4b6a918354",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/29.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/29.pdf",
+      "status": 200,
+      "bytes": 493728,
+      "sha256": "7f67c70ed927cd998f152665c6c3c8e81eeaef91068e07fb2061e54cf18d4009",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/6.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/6.pdf",
+      "status": 200,
+      "bytes": 580569,
+      "sha256": "b1c27ee1d0dc6f06e790f6adefdd51b70a363c098baa8479a74a208c320f33f2",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/7.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/7.pdf",
+      "status": 200,
+      "bytes": 533393,
+      "sha256": "603b0c6d7e0da03ca8cf57ede9bda184a3aad4633d7f1ef9e5caf3af25f88885",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/8.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/8.pdf",
+      "status": 200,
+      "bytes": 513496,
+      "sha256": "64ac96fd1b1f4c007c300c28d8239b2fc64241b6e964fccf4e071f21cdd3c05a",
+      "pages": 20,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b1101.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b1101.pdf",
+      "status": 200,
+      "bytes": 1032798,
+      "sha256": "71334f040bc744a143b05e79a5a9cd2a577e919f9a5180a751e4d86f372a857f",
+      "pages": 28,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b2201.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b2201.pdf",
+      "status": 200,
+      "bytes": 757965,
+      "sha256": "8cf79efcf42c4b2002dfd4db0a78a434449257d4655eae5de8fe11a30ab4b0df",
+      "pages": 32,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b3301.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b3301.pdf",
+      "status": 200,
+      "bytes": 570079,
+      "sha256": "839c8c65de953a07affd698aae3a22c67f58c5d46870c0442b2c99d8390e327d",
+      "pages": 28,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b4401.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b4401.pdf",
+      "status": 200,
+      "bytes": 681040,
+      "sha256": "182a5e5ab77a03ed77414e8bece00a9d8d0637d8b748bd02e2c1d6bdc5afd521",
+      "pages": 28,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b5501.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b5501.pdf",
+      "status": 200,
+      "bytes": 631140,
+      "sha256": "281a09a5104734a2ceb3a0ee939e143ed07ed5032fa4eb1b9e492b963576ee25",
+      "pages": 32,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b6601.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b6601.pdf",
+      "status": 200,
+      "bytes": 620041,
+      "sha256": "056ac61709553d2f8c3c2e8ded8cb4affab90bdad3aa817355ba66876cad5cd1",
+      "pages": 28,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b7701.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b7701.pdf",
+      "status": 200,
+      "bytes": 621761,
+      "sha256": "52285250ca4610919e1e963081a7b6224f8460f1c91bdce47445f82d39963d7f",
+      "pages": 32,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b8801.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b8801.pdf",
+      "status": 200,
+      "bytes": 681522,
+      "sha256": "705e5681e137d970817bacdd8be0b7e3144bc616e66227e58b4ff66b95e128a2",
+      "pages": 18,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/b9901.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/b9901.pdf",
+      "status": 200,
+      "bytes": 714238,
+      "sha256": "a1626de5963ab31eae1bf7cda935f0d17e0115cf623fa3a219f87fda522cba52",
+      "pages": 22,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/cpnu_gabarito_oficial_definitivo_retificado_21.11.2025.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/cpnu_gabarito_oficial_definitivo_retificado_21.11.2025.pdf",
+      "status": 200,
+      "bytes": 560073,
+      "sha256": "b3b930f94f261ee44a2a8e639a5865b30c40c611b911a410bb44d8beb358b22d",
+      "pages": 18,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://conhecimento.fgv.br/sites/default/files/concursos/trf1_gabarito_definitivo_v4.pdf",
+      "finalUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/trf1_gabarito_definitivo_v4.pdf",
+      "status": 200,
+      "bytes": 378210,
+      "sha256": "7e5463bc0e9632ee6bb75f2ea094a2413f426e5da2f9f2763dcaa8bda40a15b2",
+      "pages": 33,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2021_GB_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2021_GB_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2021_PV_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2021_PV_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2022_GB_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2022_GB_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2022_PV_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2022_PV_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2023_GB_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2023_GB_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2023_PV_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2023_PV_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_GB_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D1_CD1.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD5.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/manha/prova-1-gabarito-1-infraestrutura-exatas-e-engenharia-manha.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/manha/prova-8-gabarito-1-nivel-intermediario-manha.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-10-gabarito-1-tecnologia-dados-e-informacao-tarde.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-11-gabarito-1-ambiental-agrario-e-biologicas-tarde.pdf",
+      "finalUrl": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-11-gabarito-1-ambiental-agrario-e-biologicas-tarde.pdf",
+      "status": 200,
+      "bytes": 972979,
+      "sha256": "ed0d2d043cafa0316f7ccdbe0ac011bdab895811655dd4c4221a71aa243fda00",
+      "pages": 16,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-12-gabarito-1-trabalho-e-saude-do-servidor-tarde.pdf",
+      "finalUrl": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-12-gabarito-1-trabalho-e-saude-do-servidor-tarde.pdf",
+      "status": 200,
+      "bytes": 402799,
+      "sha256": "14b9da144a993a6ab3eb920a9a4cd8721c31cb8f68318c501cd1b21f45494f2a",
+      "pages": 16,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-13-gabarito-1-educacao_-saude_desenvolvimento-social-e-direitos-humanos-tarde.pdf",
+      "finalUrl": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-13-gabarito-1-educacao_-saude_desenvolvimento-social-e-direitos-humanos-tarde.pdf",
+      "status": 200,
+      "bytes": 507356,
+      "sha256": "d189f43775c9ddfbf6a7240cf8f354bc5b222a1b4af21f023bff8548d1608192",
+      "pages": 16,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-14-gabarito-1-setores-economicos-e-regulacao-tarde.pdf",
+      "finalUrl": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-14-gabarito-1-setores-economicos-e-regulacao-tarde.pdf",
+      "status": 200,
+      "bytes": 604585,
+      "sha256": "4d66b78441838b303bc073998a38a0df514013c8301eae9f7211c5471d24bb39",
+      "pages": 16,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-15-gabarito-1-gestao-governamental-e-administracao-publica-tarde.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/caderno-de-provas/tarde/prova-9-gabarito-1-infraestrutura-exatas-e-engenharia-tarde.pdf",
+      "error": "HTTPError: HTTP Error 503: Service Unavailable"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/gabaritos-finais/cpnu2024_gabaritosoficiais_todos-os-blocos-manha.pdf",
+      "finalUrl": "https://www.gov.br/gestao/pt-br/concursonacional/gabaritos-finais/cpnu2024_gabaritosoficiais_todos-os-blocos-manha.pdf",
+      "status": 200,
+      "bytes": 191732,
+      "sha256": "18cd8ddb92883ba6e6b036dd31eb258b12b028f5108819cc30533a67545278c4",
+      "pages": 3,
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "url": "https://www.gov.br/gestao/pt-br/concursonacional/gabaritos-finais/cpnu2024_gabaritosoficiais_todos-os-blocos-tarde.pdf",
+      "finalUrl": "https://www.gov.br/gestao/pt-br/concursonacional/gabaritos-finais/cpnu2024_gabaritosoficiais_todos-os-blocos-tarde.pdf",
+      "status": 200,
+      "bytes": 267506,
+      "sha256": "14aca23753d1ba50626557d85f9be1a1c2fa059ac719c09f97963c0c30ec74de",
+      "pages": 9,
+      "checkedAt": "2026-11-25"
+    }
+  ]
+}

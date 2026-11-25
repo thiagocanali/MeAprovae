@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
+import { officialArchiveForContest } from '~~/shared/domain/content/official-exams'
 import {
   contestDate,
   noticeSource,
@@ -30,6 +31,9 @@ const {
   } | null
 }>('/api/study/goals')
 const contest = computed(() => data.value?.contest)
+const officialArchive = computed(() =>
+  officialArchiveForContest(contest.value?.slug || ''),
+)
 useSeoMeta({
   title: () => `${contest.value?.title || 'Concurso'} | Me Aprovaê`,
 })
@@ -201,6 +205,12 @@ async function saveGoal() {
           ><a class="contest-btn secondary" href="#contest-goal">{{
             isGoal ? 'Gerenciar meu objetivo' : 'Definir como objetivo'
           }}</a>
+          <NuxtLink
+            v-if="officialArchive"
+            class="contest-btn secondary"
+            :to="officialArchive"
+            >Ver provas e gabaritos →</NuxtLink
+          >
         </div>
         <dl class="contest-facts">
           <div>
@@ -394,6 +404,15 @@ async function saveGoal() {
           </section>
           <section class="contest-panel">
             <h2>Seu próximo passo</h2>
+            <template v-if="officialArchive"
+              ><p>
+                Este concurso tem um acervo de provas anteriores. Os PDFs ainda
+                não são questões do modo interativo.
+              </p>
+              <NuxtLink class="contest-btn" :to="officialArchive"
+                >Abrir acervo oficial →</NuxtLink
+              ></template
+            >
             <p>
               Pratique com as questões disponíveis ou monte um simulado deste
               concurso.

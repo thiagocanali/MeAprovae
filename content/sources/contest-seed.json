@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "contests": [
+    {
+      "id": "5b11b55a-e5d5-55c8-9676-4a1970b1f049",
+      "slug": "acervo-cnu-2024",
+      "title": "CNU 2024 — provas anteriores",
+      "organization": "Ministério da Gestão e da Inovação em Serviços Públicos",
+      "board": "Cesgranrio",
+      "sourceUrl": "https://www.gov.br/gestao/pt-br/concursonacional/gabaritos-finais",
+      "scope": "historical-official-exam-links",
+      "rights": "factual-metadata-only",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "923fe92d-9cc1-55e4-93a6-8f50ca105332",
+      "slug": "acervo-cnu-2025",
+      "title": "CNU 2025 — provas anteriores",
+      "organization": "Ministério da Gestão e da Inovação em Serviços Públicos",
+      "board": "FGV",
+      "sourceUrl": "https://conhecimento.fgv.br/cpnu2",
+      "scope": "historical-official-exam-links",
+      "rights": "factual-metadata-only",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "fd1bc48b-e9f7-5c12-b581-e8aa439df812",
+      "slug": "acervo-trf1-servidores-2024",
+      "title": "TRF1 Servidores 2024 — provas anteriores",
+      "organization": "Tribunal Regional Federal da 1ª Região",
+      "board": "FGV",
+      "sourceUrl": "https://conhecimento.fgv.br/concursos/trf1servidor24",
+      "scope": "historical-official-exam-links",
+      "rights": "factual-metadata-only",
+      "checkedAt": "2026-11-25"
+    }
+  ]
+}
