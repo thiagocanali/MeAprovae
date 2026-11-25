@@ -30,3 +30,7 @@ test-results/
 
 # Supabase CLI local state
 supabase/.temp/
+
+# Python bytecode caches
+__pycache__/
+*.py[cod]

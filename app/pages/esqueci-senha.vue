@@ -35,7 +35,7 @@ async function submit() {
         <input id="email" v-model="email" type="email" autocomplete="email" required maxlength="254">
         <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
         <p v-if="successMessage" class="auth-success" role="status">{{ successMessage }}</p>
-        <button type="submit" :disabled="pending">{{ pending ? 'Enviando…' : 'Enviar instruções' }}</button>
+        <button type="submit" :disabled="pending" :aria-busy="pending">{{ pending ? 'Enviando…' : 'Enviar instruções' }}</button>
       </form>
       <p class="auth-switch"><NuxtLink to="/login">Voltar para entrar</NuxtLink></p>
     </section>

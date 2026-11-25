@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { theme } = useAppTheme()
+
 useSeoMeta({
   title: 'Me Aprovaê — sua jornada até a aprovação',
   description: 'Organize seus estudos para concursos públicos, acompanhe editais e evolua questão por questão.',
@@ -8,83 +10,74 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="landing">
+  <main class="landing" :data-theme="theme">
     <header class="topbar">
       <NuxtLink class="brand" to="/" aria-label="Me Aprovaê, início">
-        <span class="brand-mark">M</span>
-        <span>Me Aprovaê</span>
+        <span class="brand-mark">m.</span>
+        <span>me aprovaê</span>
       </NuxtLink>
       <nav class="topbar-actions" aria-label="Acesso à plataforma">
+        <ThemeToggle />
         <NuxtLink class="topbar-login" to="/login">Entrar</NuxtLink>
-        <NuxtLink class="topbar-signup" to="/cadastro">Criar conta</NuxtLink>
+        <NuxtLink class="topbar-signup" to="/cadastro">Criar conta <span aria-hidden="true">↗</span></NuxtLink>
       </nav>
     </header>
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot" /> SUA JORNADA, COM DIREÇÃO</p>
-        <h1 id="hero-title">Sua aprovação começa com <span>um passo de cada vez.</span></h1>
+        <p class="eyebrow"><span class="eyebrow-dot" /> SUA APROVAÇÃO, NO SEU RITMO</p>
+        <h1 id="hero-title">O próximo passo<br />é <span>seu.</span></h1>
         <p class="hero-description">
-          Pratique questões para concursos, entenda suas respostas
-          e acompanhe sua evolução em um só lugar.
+          Menos ansiedade sobre por onde começar. Mais clareza para estudar, praticar e chegar cada vez mais perto da sua aprovação.
         </p>
         <div class="hero-actions">
-          <NuxtLink class="primary-action" to="/cadastro">Começar agora <span aria-hidden="true">↗</span></NuxtLink>
-          <a class="secondary-action" href="#proposta">Conheça a proposta</a>
+          <NuxtLink class="primary-action" to="/cadastro">Começar a estudar <span aria-hidden="true">↗</span></NuxtLink>
+          <a class="secondary-action" href="#proposta">Conheça a plataforma <span aria-hidden="true">↓</span></a>
         </div>
-        <p class="status-note">Crie sua conta para praticar e salvar seu histórico. Escolher um concurso como objetivo é opcional.</p>
-        <p class="status-note"><strong>Versão inicial:</strong> acervo piloto em revisão, com cobertura limitada de disciplinas. Ainda não oferecemos preparação completa para um edital.</p>
+        <div class="hero-footnote"><span class="footnote-check">✓</span><span>Comece de onde você está. O seu ritmo é o ritmo certo.</span></div>
       </div>
 
-      <div class="hero-visual" aria-label="Ilustração abstrata de progresso nos estudos">
-        <div class="visual-glow" />
-        <div class="study-card">
-          <div class="study-card-top">
-            <span class="mini-label">SUA EVOLUÇÃO</span>
-            <span class="live-dot" />
+      <div class="hero-visual" aria-label="Prévia do acompanhamento de estudos">
+        <div class="visual-orbit orbit-one" />
+        <div class="visual-orbit orbit-two" />
+        <div class="dashboard-card">
+          <div class="dashboard-header">
+            <div><span class="dashboard-kicker">SEU ESPAÇO DE ESTUDO</span><h2>Bom dia, estudante<span>.</span></h2></div>
+            <div class="avatar" aria-hidden="true">M</div>
           </div>
-          <div class="progress-number">01<span>/03</span></div>
-          <p class="progress-caption">Um passo por vez.</p>
-          <div class="progress-track"><span /></div>
-          <div class="progress-footer"><span>Planejar</span><span>Estudar</span><span>Avançar</span></div>
-          <div class="card-divider" />
-          <div class="quote-mark">“</div>
-          <p class="study-quote">Constância hoje.<br />Conquista amanhã.</p>
-          <span class="quote-decoration">✳</span>
+          <div class="daily-card">
+            <div class="daily-title"><div><span class="daily-overline">UM DIA DE CADA VEZ</span><h3>Seu próximo passo</h3></div><span class="sun-icon" aria-hidden="true">+</span></div>
+            <p>Escolha uma disciplina e comece com uma questão.</p>
+            <div class="study-progress"><span /><span /><span /><span /><span /><span /><span /></div>
+            <div class="week-labels"><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span><span>DOM</span></div>
+          </div>
+          <div class="dashboard-bottom">
+            <div class="metric-card"><span class="metric-icon" aria-hidden="true">↗</span><span class="metric-label">QUESTÕES FEITAS</span><strong>+1 <small>por vez</small></strong></div>
+            <div class="metric-card metric-card-accent"><span class="metric-icon" aria-hidden="true">o</span><span class="metric-label">SUA JORNADA</span><strong>Em curso <small>no seu tempo</small></strong></div>
+          </div>
+          <div class="card-caption"><span class="caption-dot" /> Constância vale mais que pressa.</div>
         </div>
-        <span class="orbit orbit-one" />
-        <span class="orbit orbit-two" />
-        <span class="floating-star">✳</span>
+        <div class="floating-note"><span class="note-star" aria-hidden="true">✓</span><span>Seu futuro<br /><strong>começa hoje.</strong></span></div>
+        <span class="visual-spark" aria-hidden="true">+</span>
       </div>
     </section>
 
     <section id="proposta" class="value-section">
-      <div class="section-heading">
-        <p class="eyebrow">MENOS DISPERSÃO. MAIS CLAREZA.</p>
-        <h2>Estudar com um plano muda o caminho.</h2>
-      </div>
+      <div class="section-topline"><p class="eyebrow">UM CAMINHO MAIS LEVE</p><span class="section-aside">01 — 03</span></div>
+      <div class="section-heading"><h2>Transforme intenção<br />em <span>conquista.</span></h2><p>Uma plataforma feita para ajudar você a estudar com direção — sem esquecer que cada jornada é única.</p></div>
       <div class="value-grid">
-        <article class="value-card">
-          <span class="value-index">01</span>
-          <h3>Saiba o que estudar</h3>
-          <p>Escolha uma disciplina para praticar e, se quiser, defina um concurso como objetivo.</p>
-        </article>
-        <article class="value-card">
-          <span class="value-index">02</span>
-          <h3>Aprenda praticando</h3>
-          <p>Resolva questões, entenda seus erros e fortaleça o que ainda precisa de atenção.</p>
-        </article>
-        <article class="value-card">
-          <span class="value-index">03</span>
-          <h3>Enxergue sua evolução</h3>
-          <p>Acompanhe seu progresso com indicadores construídos a partir do seu estudo real.</p>
-        </article>
+        <article class="value-card"><span class="value-index">01</span><div class="value-icon icon-plan" aria-hidden="true">↗</div><h3>Encontre seu foco</h3><p>Escolha uma disciplina para praticar e, se quiser, defina um concurso como objetivo.</p><span class="card-arrow" aria-hidden="true">↗</span></article>
+        <article class="value-card"><span class="value-index">02</span><div class="value-icon icon-practice" aria-hidden="true">✓</div><h3>Aprenda fazendo</h3><p>Resolva questões, entenda seus erros e fortaleça o que ainda precisa de atenção.</p><span class="card-arrow" aria-hidden="true">↗</span></article>
+        <article class="value-card"><span class="value-index">03</span><div class="value-icon icon-progress" aria-hidden="true">◎</div><h3>Veja o quanto avançou</h3><p>Acompanhe seu progresso com indicadores construídos a partir do seu estudo real.</p><span class="card-arrow" aria-hidden="true">↗</span></article>
       </div>
+      <div class="disclaimer"><span class="disclaimer-mark">i</span><p><strong>Estamos começando juntos.</strong> O acervo está em fase piloto e ainda não cobre integralmente todos os editais e disciplinas.</p></div>
     </section>
 
+    <section class="closing-cta"><div><p class="eyebrow">TODA GRANDE CONQUISTA COMEÇA ASSIM</p><h2>Um passo seu.<br /><span>Um futuro inteiro.</span></h2></div><NuxtLink class="primary-action" to="/cadastro">Dar o primeiro passo <span aria-hidden="true">↗</span></NuxtLink></section>
+
     <footer class="footer">
-      <NuxtLink class="brand footer-brand" to="/"><span class="brand-mark">M</span><span>Me Aprovaê</span></NuxtLink>
-      <span>Um projeto em construção, feito para quem não desistiu do seu objetivo.</span>
+      <NuxtLink class="brand footer-brand" to="/"><span class="brand-mark">m.</span><span>me aprovaê</span></NuxtLink>
+      <span>Feito para quem continua acreditando.</span>
       <span>© {{ new Date().getFullYear() }} Me Aprovaê</span>
     </footer>
   </main>
