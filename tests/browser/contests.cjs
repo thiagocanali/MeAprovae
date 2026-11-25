@@ -310,6 +310,10 @@ const contests = Array.from({ length: 14 }, (_, i) => ({
       path: '/workspace/work/validation/contests-desktop.png',
       fullPage: true,
     })
+    await p.getByRole('button', { name: 'Ativar tema escuro', exact: true }).click()
+    await p.waitForFunction(() => document.querySelector('.app-shell')?.getAttribute('data-theme') === 'dark')
+    await p.screenshot({ path: '/workspace/work/validation/contests-desktop-dark.png', fullPage: true })
+    await p.getByRole('button', { name: 'Ativar tema claro', exact: true }).click()
     await p.setViewportSize({ width: 390, height: 844 })
     assert.equal(
       await p.evaluate(() => document.documentElement.scrollWidth > innerWidth),

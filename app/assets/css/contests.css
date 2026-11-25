@@ -708,3 +708,29 @@
     align-items: stretch;
   }
 }
+
+/* The application theme is owned by useAppTheme; this module follows it. */
+[data-theme='light'] .contest-hub { --hub-line:#dce3d5; --hub-muted:#596b5e; --hub-panel:#fffefa; background:#f7f6f1; color:#203129; }
+[data-theme='light'] .contest-sidebar { background:#f0f3e9; }
+[data-theme='light'] .contest-brand>span { background:#c9f05a; color:#23342d; }
+[data-theme='light'] .contest-sidebar nav a { color:#4e6053; }
+[data-theme='light'] .contest-sidebar nav a:hover { background:#e4eadb; color:#203129; }
+[data-theme='light'] .contest-sidebar nav .contest-nav-active { background:#dfecc4; color:#2f4a20; box-shadow:inset 3px 0 #6b8e12; }
+[data-theme='light'] .contest-hub :is(.contest-kicker,.contest-text-link,.contest-clear,.contest-follow-label,.contest-sidebar-note a) { color:#44631d; }
+[data-theme='light'] .contest-hub :is(.contest-nav-label,.contest-sidebar-note p,.contest-topbar a,.contest-card dt,.contest-card .contest-org,.contest-facts dt,.contest-footer) { color:#52644e; }
+[data-theme='light'] .contest-label-pill { color:#3c591f; border-color:#c1d2ac; }
+[data-theme='light'] .contest-goal-banner { background:linear-gradient(110deg,#e7f1d2,#fffefa); border-color:#c8d8b0; }
+[data-theme='light'] .contest-goal-banner p { color:#52644e; }
+[data-theme='light'] .contest-btn { background:#c9f05a; color:#23342d; }
+[data-theme='light'] .contest-btn:hover { background:#b8e047; }
+[data-theme='light'] .contest-btn.secondary { color:#344b32; border-color:#b6c4ad; background:transparent; }
+[data-theme='light'] .contest-btn.secondary:hover { background:#e7eddc; }
+[data-theme='light'] .contest-hub :is(input:not([type=checkbox]),select) { background:#fffefa; color:#263b2d; border-color:#bdcbb5; }
+[data-theme='light'] .contest-hub input::placeholder { color:#64765d; }
+[data-theme='light'] .contest-card:hover { border-color:#88a36a; }
+[data-theme='light'] .contest-org-mark { background:#e3eccf; color:#476827; border-color:#c3d3ae; }
+[data-theme='light'] .contest-detail-hero { background:radial-gradient(ellipse at top right,#dcebbf,transparent 65%),#fffefa; border-color:#c0d1aa; }
+[data-theme='light'] .contest-facts { border-color:#c6d5b4; }
+[data-theme='light'] .contest-subjects a { color:#426227; border-color:#c0ceaf; }
+[data-theme='light'] .contest-alert { background:#fff0e8; color:#7d3423; border-color:#e3b9a5; }
+[data-theme='light'] .contest-success { background:#e6f2dc; color:#2b5d2f; border-color:#b7d1a5; }
