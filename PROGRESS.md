@@ -1,5 +1,11 @@
 # PROGRESS.md — execução e entregas
 
+## Padronização de 25/11/2026 — todas as telas
+
+- Aplicada a identidade aprovada em Concursos às 22 páginas existentes e ao erro global: layouts público/acesso/workspace, menu comum e expansível no celular, tema claro/escuro, formulários, cartões, botões, alertas e gráficos.
+- Mantidos endpoints, handlers, middleware, permissões e dados; comparação, histórico, favoritas, revisão e objetivo acessíveis no menu compartilhado. Sem novas dependências ou mudanças de banco.
+- Matriz Chromium cobre o inventário real de rotas, dois temas e quatro larguras; inclui fluxos com APIs sintéticas. Regressões de concursos, biblioteca oficial e oito cenários da prática também exercitadas. Detalhes, limites, comandos e reversão em docs/UNIFIED_INTERFACE.md; resultados finais de CI/deploy na PR.
+
 ## Ampliação de 25/11/2026 — fontes oficiais e autorais
 
 - Frente de concursos integrada na #72 após reconciliação com tema claro/escuro, CI #441 aprovada e produção READY.

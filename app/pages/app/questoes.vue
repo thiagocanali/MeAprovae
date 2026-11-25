@@ -2,7 +2,7 @@
 import authMiddleware from '~/middleware/auth'
 import { createAttemptIdempotencyKeys } from '~~/shared/domain/questions/attempt-idempotency'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Resolver questões | Me Aprovaê' })
 
 interface QuestionOption { id: string; option_label: string; content: string; position: number }
@@ -183,11 +183,7 @@ async function nextQuestion() {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/provas">Simulados</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/erros">Revisar erros</NuxtLink><NuxtLink to="/app/historico">Meu histórico</NuxtLink></nav>
-    </header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">PRÁTICA</p>
       <h1>Banco de questões</h1>
@@ -274,7 +270,7 @@ async function nextQuestion() {
         </article>
       </template>
     </section>
-  </main>
+  </div>
 </template>
 
 <style scoped>

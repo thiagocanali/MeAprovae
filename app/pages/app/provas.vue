@@ -3,7 +3,7 @@ import authMiddleware from '~/middleware/auth'
 import type { ExamSession } from '~~/shared/domain/questions/exam-session'
 import { isExamQuestionCount, validExamFilters, type ExamAvailability } from '~~/shared/domain/questions/exam-config'
 import { isCurrentExamAvailability, parseExamQueryCount, parseExamQueryId, topicBelongsToSubject } from '~~/shared/domain/questions/exam-filter-ui'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Simulados | Me Aprovaê' })
 interface Summary { id: string; question_count: number; answered_count: number; correct_count: number; status: string; started_at: string; score: number }
 const { data: contests, error: contestsError } = await useFetch<{ contests: Array<{ id: string; title: string }> }>('/api/study/contests')
@@ -57,8 +57,7 @@ async function startExam() {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/provas-oficiais">Provas e gabaritos oficiais</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/desempenho">Desempenho</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">SIMULADOS</p><h1>Pratique e acompanhe sua evolução</h1>
       <p class="auth-description">Modo estudo: correção após cada resposta. Sua sessão fica salva para retomar em outro momento ou dispositivo, dentro do prazo original.</p>
@@ -93,5 +92,5 @@ async function startExam() {
         </li></ol>
       </section>
     </section>
-  </main>
+  </div>
 </template>

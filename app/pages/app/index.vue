@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Minha área | Me Aprovaê' })
 
 const { data } = await useFetch<{ user: { id: string; email?: string } | null }>('/api/auth/me')
@@ -38,18 +38,8 @@ async function logout() {
 </script>
 
 <template>
-  <main class="student-home">
-    <header class="student-header">
-      <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
-      <nav class="student-nav" aria-label="Navegação do estudante">
-        <NuxtLink to="/app">Início</NuxtLink>
-        <NuxtLink to="/app/concursos">Concursos</NuxtLink>
-        <NuxtLink to="/app/questoes">Questões</NuxtLink>
-        <NuxtLink to="/app/desempenho">Desempenho</NuxtLink>
-      </nav>
-      <button class="logout-button" :disabled="pending" @click="logout">{{ pending ? 'Saindo…' : 'Sair' }}</button>
-    </header>
-    <section class="student-welcome">
+  <div class="workspace-page">
+    <section class="student-welcome"><div class="workspace-page-actions"><button class="logout-button" :disabled="pending" @click="logout">{{ pending ? 'Saindo…' : 'Sair' }}</button></div>
       <p class="auth-eyebrow">ÁREA DO ESTUDANTE</p>
       <h1>Seu próximo passo começa aqui.</h1>
       <p v-if="data?.user?.email" class="auth-description">Você está conectado como {{ data.user.email }}</p>
@@ -94,5 +84,5 @@ async function logout() {
         </ol>
       </section>
     </section>
-  </main>
+  </div>
 </template>

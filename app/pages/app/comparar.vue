@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 import { COMPARISON_CONSENT_VERSION, type StudyComparison } from '~~/shared/domain/questions/comparison'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Comparar minha prática | Me Aprovaê' })
 const { data, pending, error, refresh } = await useFetch<{ comparison: StudyComparison }>('/api/study/comparison')
 const comparison = computed(() => data.value?.comparison)
@@ -24,8 +24,7 @@ async function participate(enabled: boolean) {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/desempenho">Meu desempenho</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">REFERÊNCIA DE PRÁTICA</p><h1>Comparar minha prática</h1>
       <p class="auth-description">Uma referência agregada de perfis que escolheram o mesmo concurso e responderam às mesmas 20 questões no mês. Não há nomes, posições individuais ou previsão de aprovação.</p>
@@ -52,7 +51,7 @@ async function participate(enabled: boolean) {
       </template>
       <p v-if="message" role="status">{{ message }}</p><p v-if="choiceError" class="study-error" role="alert">{{ choiceError }}</p>
     </section>
-  </main>
+  </div>
 </template>
 <style scoped>
 .consent-choice { display: flex; align-items: flex-start; gap: 12px; margin: 20px 0; line-height: 1.6; }.consent-choice input { flex: 0 0 auto; margin-top: 6px; }

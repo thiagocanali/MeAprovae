@@ -2,7 +2,7 @@
 import authMiddleware from '~/middleware/auth'
 import { isUuid } from '~~/shared/domain/common/uuid'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Administração editorial | Me Aprovaê' })
 
 interface AdminOverview {
@@ -372,16 +372,7 @@ const label = (table: string) => ({
 </script>
 
 <template>
-  <main class="student-home">
-    <header class="student-header">
-      <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
-      <nav class="admin-nav">
-        <NuxtLink class="study-link" to="/admin/revisao">Fila de revisão</NuxtLink>
-        <NuxtLink class="study-link" to="/admin/acervo">Acervo em revisão</NuxtLink>
-        <NuxtLink class="study-link" to="/admin/importar">Importar questões</NuxtLink>
-        <NuxtLink class="study-link" to="/app">Área do estudante</NuxtLink>
-      </nav>
-    </header>
+  <div class="workspace-page">
 
     <section class="student-welcome">
       <p class="auth-eyebrow">PAINEL ADMINISTRATIVO · {{ data?.role === 'owner' ? 'PROPRIETÁRIO' : 'EDITOR' }}</p>
@@ -389,7 +380,7 @@ const label = (table: string) => ({
       <p class="auth-description">Gerencie a estrutura de concursos e conteúdos de estudo. Toda alteração editorial autorizada fica registrada no histórico.</p>
 
       <div v-if="error" class="study-state study-error" role="alert">
-        <p>Não foi possível acessar o painel. Sua conta precisa ter papel editorial e a migração 0006 precisa estar aplicada.</p>
+        <p>Não foi possível acessar o painel. Verifique seu acesso editorial ou tente novamente em instantes.</p>
         <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
         <NuxtLink class="study-link" to="/app">Voltar à área do estudante →</NuxtLink>
       </div>
@@ -641,7 +632,7 @@ const label = (table: string) => ({
 
       </template>
     </section>
-  </main>
+  </div>
 </template>
 
 <style scoped>

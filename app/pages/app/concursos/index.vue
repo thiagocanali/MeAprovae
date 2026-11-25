@@ -4,7 +4,7 @@ import {
   filterContests,
   type StudyContest,
 } from '~~/shared/domain/contests/catalog'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Encontre seu concurso | Me Aprovaê' })
 const route = useRoute()
 const router = useRouter()
@@ -112,7 +112,7 @@ function changePage(page: number) {
 }
 </script>
 <template>
-  <ContestShell>
+  <div class="workspace-page">
     <nav class="contest-breadcrumb" aria-label="Caminho da página">
       <NuxtLink to="/app">Minha área</NuxtLink><span aria-hidden="true">/</span
       ><span>Concursos</span>
@@ -354,5 +354,5 @@ function changePage(page: number) {
       A presença no catálogo não indica inscrições abertas. Confira prazos,
       vagas e regras na fonte do órgão.
     </p>
-  </ContestShell>
+  </div>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 import { parseReviewQueueQuery, type ReviewQueueResponse } from '~~/shared/domain/questions/review-queue'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Fila de revisão | Me Aprovaê' })
 const route = useRoute()
 const router = useRouter()
@@ -36,8 +36,7 @@ const difficultyLabel = (difficulty: string | null) => ({ easy: 'Fácil', medium
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><nav><NuxtLink to="/admin/acervo">Acervo</NuxtLink><NuxtLink to="/admin">Gestão</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">REVISÃO EDITORIAL</p><h1>Fila de revisão</h1>
       <p class="auth-description">Encontre questões por disciplina, lote e pendência de dificuldade. Abra cada item no editor para conferir enunciado, gabarito, explicação e procedência. Classificar a dificuldade não aprova automaticamente o conteúdo.</p>
@@ -68,7 +67,7 @@ const difficultyLabel = (difficulty: string | null) => ({ easy: 'Fácil', medium
         <nav v-if="data.total" class="study-actions" aria-label="Paginação da fila"><button class="study-secondary-button" :disabled="pending || data.page <= 1" @click="changePage(data.page - 1)">Página anterior</button><button class="study-secondary-button" :disabled="pending || !data.hasMore" @click="changePage(data.page + 1)">Próxima página</button></nav>
       </template>
     </section>
-  </main>
+  </div>
 </template>
 <style scoped>
 .review-filters { display: grid; gap: 10px; }

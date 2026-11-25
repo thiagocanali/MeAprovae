@@ -6,7 +6,7 @@ import {
   noticeSource,
   type StudyContest,
 } from '~~/shared/domain/contests/catalog'
-definePageMeta({
+definePageMeta({ layout: 'workspace',
   middleware: authMiddleware,
   key: (route) => String(route.params.slug),
 })
@@ -143,7 +143,7 @@ async function saveGoal() {
 }
 </script>
 <template>
-  <ContestShell>
+  <div class="workspace-page">
     <nav class="contest-breadcrumb" aria-label="Caminho da página">
       <NuxtLink to="/app/concursos">Concursos</NuxtLink
       ><span aria-hidden="true">/</span><span>Detalhes do concurso</span>
@@ -435,5 +435,5 @@ async function saveGoal() {
         </aside>
       </div>
     </template>
-  </ContestShell>
+  </div>
 </template>
