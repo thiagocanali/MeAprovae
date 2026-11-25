@@ -4,7 +4,7 @@ import {
   filterOfficialExams,
   type OfficialExam,
 } from '~~/shared/domain/content/official-exams'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Provas e gabaritos oficiais | Me Aprovaê' })
 const route = useRoute()
 const router = useRouter()
@@ -74,7 +74,7 @@ function clear() {
 }
 </script>
 <template>
-  <ContestShell>
+  <div class="workspace-page">
     <nav class="contest-breadcrumb" aria-label="Caminho da página">
       <NuxtLink to="/app/concursos">Concursos</NuxtLink
       ><span aria-hidden="true">/</span><span>Provas oficiais</span>
@@ -267,5 +267,5 @@ function clear() {
         </button>
       </nav></template
     >
-  </ContestShell>
+  </div>
 </template>

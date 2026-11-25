@@ -1,0 +1,901 @@
+/* Shared visual contract. Legacy study classes are adapters, not separate themes. */
+:root,
+.app-shell[data-theme='light'] {
+  color-scheme: light;
+  --ui-bg: #f7f6f1;
+  --ui-surface: #fffefa;
+  --ui-soft: #f0f3e9;
+  --ui-input: #fffefa;
+  --ui-text: #203129;
+  --ui-muted: #596b5e;
+  --ui-border: #dce3d5;
+  --ui-accent: #c9f05a;
+  --ui-accent-text: #23342d;
+  --ui-link: #44631d;
+  --ui-selected: #e4edcf;
+  --ui-success: #285c32;
+  --ui-success-bg: #e6f2dc;
+  --ui-danger: #923b2d;
+  --ui-danger-bg: #fff0e8;
+  --ui-warning: #805a13;
+  --ui-warning-bg: #fcf0d1;
+  --ui-shadow: 0 14px 40px rgba(32, 49, 41, 0.04);
+  --color-bg: var(--ui-bg);
+  --color-surface: var(--ui-surface);
+  --color-surface-soft: var(--ui-soft);
+  --color-text: var(--ui-text);
+  --color-muted: var(--ui-muted);
+  --color-primary: var(--ui-link);
+  --color-primary-strong: #31501c;
+  --color-border: var(--ui-border);
+  --color-line: var(--ui-border);
+}
+.app-shell[data-theme='dark'] {
+  color-scheme: dark;
+  --ui-bg: #0d1625;
+  --ui-surface: #152135;
+  --ui-soft: #101b2c;
+  --ui-input: #0f1b2c;
+  --ui-text: #f1f5fc;
+  --ui-muted: #aab9cd;
+  --ui-border: #28364a;
+  --ui-accent: #a3e7c2;
+  --ui-accent-text: #142c21;
+  --ui-link: #a3e7c2;
+  --ui-selected: #203b35;
+  --ui-success: #baf1d3;
+  --ui-success-bg: #1b3a30;
+  --ui-danger: #ffd4bf;
+  --ui-danger-bg: #3a2925;
+  --ui-warning: #f0ce82;
+  --ui-warning-bg: #342b1b;
+  --ui-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+  --color-bg: var(--ui-bg);
+  --color-surface: var(--ui-surface);
+  --color-surface-soft: var(--ui-soft);
+  --color-text: var(--ui-text);
+  --color-muted: var(--ui-muted);
+  --color-primary: var(--ui-link);
+  --color-primary-strong: #baf3d5;
+  --color-border: var(--ui-border);
+  --color-line: var(--ui-border);
+}
+.app-shell {
+  min-height: 100vh;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+.app-shell :is(button, input, select, textarea) {
+  font-family: var(--font-body);
+}
+.app-shell :is(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--ui-link);
+  outline-offset: 4px;
+}
+.app-shell :is(button, input, select, textarea):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.app-shell :is(p, h1, h2, h3, h4, dd, a, small) {
+  overflow-wrap: anywhere;
+}
+.app-shell :is(.contest-kicker, .auth-eyebrow, .eyebrow, .study-link) {
+  color: var(--ui-link);
+}
+.app-shell .contest-btn,
+.app-shell .primary-action {
+  min-height: 44px;
+  border-radius: 9px;
+  background: var(--ui-accent);
+  color: var(--ui-accent-text);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: none;
+}
+.app-shell .contest-btn.secondary {
+  background: transparent;
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+}
+.app-shell .contest-btn.secondary:hover {
+  background: var(--ui-soft);
+}
+.app-shell .contest-brand {
+  color: var(--ui-text);
+}
+.app-shell .contest-brand > span {
+  background: var(--ui-accent);
+  color: var(--ui-accent-text);
+}
+.app-shell .theme-toggle {
+  min-height: 40px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  padding: 8px 10px;
+  box-shadow: none;
+}
+.app-shell .theme-switch-track {
+  background: var(--ui-selected);
+  border: 1px solid var(--ui-border);
+}
+.app-shell .theme-switch-track > span {
+  background: var(--ui-link);
+}
+.workspace-shell {
+  --hub-line: var(--ui-border);
+  --hub-muted: var(--ui-muted);
+  --hub-panel: var(--ui-surface);
+}
+.workspace-shell .contest-sidebar {
+  padding: 26px 18px;
+  gap: 16px;
+}
+.workspace-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.workspace-shell .contest-nav-label {
+  margin: 14px 14px 10px;
+}
+.workspace-navigation {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.workspace-shell .contest-sidebar nav {
+  gap: 4px;
+}
+.workspace-shell .contest-sidebar nav a {
+  padding: 10px 13px;
+  min-height: 43px;
+}
+.workspace-shell .contest-sidebar-note {
+  margin-top: 0;
+  padding: 16px 13px 0;
+  border-top: 1px solid var(--ui-border);
+}
+.workspace-shell .contest-sidebar-note p {
+  font-size: 12px;
+  margin: 10px 0;
+}
+.workspace-menu-button {
+  display: none;
+}
+.workspace-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.workspace-shell .contest-topbar {
+  min-height: 78px;
+  padding-block: 16px;
+}
+.workspace-shell .contest-topbar > span {
+  line-height: 1.7;
+}
+.workspace-page {
+  min-width: 0;
+}
+.workspace-shell .workspace-page > :is(.study-content, .student-welcome) {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+.workspace-page-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.app-shell .workspace-page h1 {
+  color: var(--ui-text);
+  font: 800 clamp(30px, 3.5vw, 46px) / 1.17 var(--font-display);
+  letter-spacing: -1.7px;
+  margin: 12px 0 16px;
+}
+.app-shell .workspace-page :is(h2, h3, h4) {
+  color: var(--ui-text);
+  font-family: var(--font-display);
+}
+.app-shell .workspace-page h2 {
+  font-size: 20px;
+  letter-spacing: -0.45px;
+  line-height: 1.45;
+}
+.app-shell .workspace-page h3 {
+  font-size: 17px;
+  line-height: 1.5;
+}
+.app-shell .workspace-page :is(.auth-description, .study-muted) {
+  color: var(--ui-muted);
+  line-height: 1.8;
+}
+.app-shell .workspace-page .auth-description {
+  max-width: 780px;
+  margin-bottom: 25px;
+}
+.app-shell
+  .workspace-page
+  :is(
+    .study-card,
+    .study-question-card,
+    .student-empty,
+    .study-empty,
+    .study-state
+  ) {
+  width: 100%;
+  min-width: 0;
+  transform: none;
+  padding: 24px;
+  border: 1px solid var(--ui-border);
+  border-radius: 15px;
+  background: var(--ui-surface);
+  box-shadow: none;
+}
+.app-shell .workspace-page :is(.study-state, .study-empty) {
+  margin: 20px 0;
+}
+.app-shell .workspace-page .study-card {
+  margin-bottom: 16px;
+}
+.app-shell .workspace-page .study-grid {
+  align-items: stretch;
+  gap: 18px;
+}
+.app-shell .workspace-page .study-grid > .study-card {
+  margin: 0;
+}
+.app-shell .workspace-page .study-section {
+  margin-top: 30px;
+}
+.app-shell .workspace-page .study-stats {
+  gap: 16px;
+  margin: 26px 0;
+}
+.app-shell .workspace-page .study-stats .study-card {
+  margin: 0;
+  padding: 22px;
+}
+.app-shell .workspace-page .study-stats strong {
+  font: 800 34px/1.3 var(--font-display);
+  letter-spacing: -1px;
+}
+.app-shell
+  .workspace-page
+  :is(.study-primary-button, .study-secondary-button, .logout-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 11px 16px;
+  border-radius: 9px;
+  border: 1px solid var(--ui-border);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  margin-right: 0;
+}
+.app-shell .workspace-page .study-primary-button {
+  background: var(--ui-accent);
+  border-color: transparent;
+  color: var(--ui-accent-text);
+}
+.app-shell .workspace-page :is(.study-secondary-button, .logout-button) {
+  background: transparent;
+  color: var(--ui-text);
+}
+.app-shell .workspace-page :is(.study-secondary-button, .logout-button):hover {
+  background: var(--ui-soft);
+}
+.app-shell .workspace-page button:not([class]) {
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  cursor: pointer;
+}
+.app-shell .workspace-page .study-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
+}
+.app-shell .workspace-page .study-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--ui-link);
+  font-weight: 700;
+  font-size: 13px;
+}
+.app-shell
+  .workspace-page
+  :is(input:not([type='checkbox']):not([type='radio']), select, textarea) {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  background: var(--ui-input);
+  color: var(--ui-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+.app-shell .workspace-page :is(input[type='radio'], input[type='checkbox']) {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  accent-color: var(--ui-link);
+}
+.app-shell .workspace-page textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+.workspace-page
+  :where(label:not(.study-option, .consent-choice, .contest-check)) {
+  display: grid;
+  gap: 8px;
+  color: var(--ui-muted);
+  font-size: 12px;
+}
+.app-shell
+  .workspace-page
+  :is(
+    .study-filters,
+    .review-filters,
+    .performance-filters,
+    fieldset,
+    .publication-checklist
+  ) {
+  background: var(--ui-soft);
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  padding: 18px;
+}
+.app-shell .workspace-page .study-options {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.app-shell .workspace-page .study-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--ui-input);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.app-shell .workspace-page .study-option.is-selected {
+  border-color: var(--ui-link);
+  background: var(--ui-selected);
+}
+.app-shell .workspace-page .study-option.is-correct {
+  border-color: var(--ui-success);
+  background: var(--ui-success-bg);
+  color: var(--ui-success);
+}
+.app-shell .workspace-page .study-option.is-wrong {
+  border-color: var(--ui-danger);
+  background: var(--ui-danger-bg);
+  color: var(--ui-danger);
+}
+.app-shell .workspace-page .study-option-label {
+  color: inherit;
+  background: var(--ui-soft);
+  border-color: var(--ui-border);
+}
+.app-shell .workspace-page :is(.study-error, .auth-error, .admin-error) {
+  color: var(--ui-danger);
+  border-color: var(--ui-danger);
+  background: var(--ui-danger-bg);
+  padding: 15px 18px;
+  border-radius: 10px;
+  line-height: 1.75;
+}
+.app-shell
+  .workspace-page
+  :is(.admin-success, .auth-success, .study-result.result-correct) {
+  color: var(--ui-success);
+  border-color: var(--ui-success);
+  background: var(--ui-success-bg);
+  padding: 15px 18px;
+  border-radius: 10px;
+}
+.app-shell .workspace-page .study-result.result-wrong {
+  color: var(--ui-danger);
+  background: var(--ui-danger-bg);
+  border-color: var(--ui-danger);
+}
+.app-shell .workspace-page :is(.study-dot-correct, .correct-volume) {
+  background: var(--ui-link);
+}
+.app-shell .workspace-page .wrong-volume {
+  background: var(--ui-warning);
+}
+.app-shell .workspace-page .study-review-correct {
+  color: var(--ui-success);
+}
+.app-shell .workspace-page .study-review-wrong {
+  color: var(--ui-danger);
+}
+.app-shell .workspace-page .study-exam-timer {
+  background: var(--ui-selected);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+.app-shell .workspace-page .study-exam-timer.is-warning {
+  color: var(--ui-warning);
+  background: var(--ui-warning-bg);
+  border-color: var(--ui-warning);
+}
+.app-shell .workspace-page .exam-question-nav button[aria-current] {
+  outline-color: var(--ui-link);
+  background: var(--ui-selected);
+}
+.app-shell
+  .workspace-page
+  :is(
+    .admin-contest-row,
+    .question-editor-options,
+    .publication-checklist,
+    .admin-subject-list li,
+    .study-history-item
+  ) {
+  border-color: var(--ui-border);
+}
+.app-shell .workspace-page :is(.exam-chart text, .chart-range) {
+  fill: var(--ui-muted);
+  color: var(--ui-muted);
+}
+.app-shell .workspace-page .chart-guide {
+  stroke: var(--ui-border);
+}
+.app-shell .workspace-page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.app-shell .workspace-page :is(th, td) {
+  padding: 12px 10px;
+  border-color: var(--ui-border);
+  line-height: 1.6;
+}
+.app-shell .workspace-page th {
+  color: var(--ui-muted);
+  font-weight: 700;
+}
+.app-shell .workspace-page :is(.hash, pre, code) {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.app-shell .workspace-page :is(summary, legend) {
+  color: var(--ui-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.7;
+}
+.app-shell .workspace-page summary {
+  min-height: 40px;
+  padding-block: 8px;
+  cursor: pointer;
+}
+.app-shell .workspace-page progress,
+.app-shell .workspace-page meter {
+  accent-color: var(--ui-link);
+}
+.app-shell .workspace-page .admin-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+}
+.public-shell {
+  min-height: 100vh;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  display: flex;
+  flex-direction: column;
+}
+.public-topbar {
+  width: min(1200px, calc(100% - 48px));
+  min-height: 88px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--ui-border);
+}
+.public-topbar nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 13px;
+}
+.public-login {
+  font-weight: 600;
+}
+.public-shell > main {
+  flex: 1;
+  outline: none;
+}
+.public-footer {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  min-height: 100px;
+  padding: 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-muted);
+  font-size: 12px;
+}
+.access-layout {
+  width: min(1080px, calc(100% - 48px));
+  margin: 64px auto 84px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+  align-items: center;
+  gap: 90px;
+}
+.access-intro h2 {
+  margin: 20px 0;
+  font: 800 clamp(32px, 4vw, 48px) / 1.18 var(--font-display);
+  letter-spacing: -1.8px;
+}
+.access-intro > p {
+  color: var(--ui-muted);
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 390px;
+}
+.access-intro ul {
+  list-style: none;
+  display: grid;
+  gap: 20px;
+  padding: 0;
+  margin: 34px 0;
+  font-size: 14px;
+}
+.access-intro li {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.access-intro li svg {
+  color: var(--ui-link);
+}
+.access-note {
+  margin-top: 36px;
+  padding: 23px;
+  border: 1px solid var(--ui-border);
+  border-radius: 15px;
+  background: var(--ui-soft);
+}
+.access-note p {
+  margin-bottom: 0;
+  font: 600 19px var(--font-display);
+}
+.access-layout .auth-panel {
+  width: 100%;
+  margin: 0;
+  padding: 34px;
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow);
+}
+.access-layout .auth-panel h1 {
+  color: var(--ui-text);
+  font-size: 32px;
+  line-height: 1.25;
+  letter-spacing: -1px;
+}
+.access-layout .auth-form label {
+  color: var(--ui-muted);
+}
+.access-layout .auth-form input {
+  background: var(--ui-input);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+.access-layout .auth-form button[type='submit'] {
+  min-height: 46px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--ui-accent-text);
+  background: var(--ui-accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+.access-layout .auth-password-toggle {
+  color: var(--ui-muted);
+  background: transparent;
+}
+.access-layout .auth-switch {
+  color: var(--ui-muted);
+}
+.access-layout .auth-switch a {
+  color: var(--ui-link);
+}
+.access-layout .auth-error {
+  color: var(--ui-danger);
+  background: var(--ui-danger-bg);
+  border-radius: 9px;
+  padding: 12px;
+  line-height: 1.7;
+}
+.access-layout .auth-success {
+  color: var(--ui-success);
+  background: var(--ui-success-bg);
+  border-radius: 9px;
+  padding: 12px;
+  line-height: 1.7;
+}
+.public-error {
+  width: min(680px, calc(100% - 40px));
+  margin: 80px auto;
+  padding: 42px;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+}
+.public-error h1 {
+  font: 800 clamp(30px, 4vw, 46px) / 1.2 var(--font-display);
+  letter-spacing: -1.5px;
+}
+.public-error > p {
+  color: var(--ui-muted);
+  line-height: 1.8;
+}
+.app-shell .public-shell .landing {
+  min-height: auto;
+  color: var(--ui-text);
+  background: var(--ui-bg);
+}
+.app-shell
+  .public-shell
+  .landing
+  :is(
+    .hero-description,
+    .hero-footnote,
+    .section-heading > p,
+    .value-card p,
+    .disclaimer,
+    .daily-card > p,
+    .floating-note,
+    .week-labels,
+    .metric-label,
+    .dashboard-kicker,
+    .daily-overline,
+    .section-aside,
+    .value-index,
+    .metric-card strong small
+  ) {
+  color: var(--ui-muted);
+}
+.app-shell
+  .public-shell
+  .landing
+  :is(
+    .hero h1 span,
+    .section-heading h2 span,
+    .closing-cta h2 span,
+    .eyebrow,
+    .card-arrow,
+    .visual-spark,
+    .card-caption
+  ) {
+  color: var(--ui-link);
+}
+.app-shell
+  .public-shell
+  .landing
+  :is(.dashboard-card, .metric-card, .floating-note, .value-card, .disclaimer) {
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 15px;
+  box-shadow: var(--ui-shadow);
+}
+.app-shell
+  .public-shell
+  .landing
+  :is(.daily-card, .metric-card-accent, .closing-cta, .hero-visual::before) {
+  color: var(--ui-text);
+  background: var(--ui-soft);
+}
+.app-shell
+  .public-shell
+  .landing
+  :is(.value-icon, .avatar, .metric-icon, .footnote-check, .note-star) {
+  background: var(--ui-selected);
+  color: var(--ui-link);
+}
+.app-shell .public-shell .landing :is(.visual-orbit, .value-section) {
+  border-color: var(--ui-border);
+}
+.app-shell .public-shell .landing .floating-note strong {
+  color: var(--ui-text);
+}
+.app-shell .public-shell .landing .study-progress span:nth-child(-n + 4) {
+  background: var(--ui-link);
+}
+@media (max-width: 1100px) {
+  .access-layout {
+    gap: 45px;
+  }
+  .workspace-topbar-actions {
+    gap: 12px;
+  }
+}
+@media (min-width: 761px) {
+  .workspace-navigation {
+    display: block;
+  }
+}
+@media (max-width: 760px) {
+  .workspace-shell .contest-sidebar {
+    padding: 18px 20px;
+    gap: 0;
+  }
+  .workspace-brand-row {
+    width: 100%;
+  }
+  .workspace-brand-row .contest-brand {
+    padding: 0;
+  }
+  .workspace-menu-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: var(--ui-surface);
+    color: var(--ui-text);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .workspace-navigation {
+    display: none;
+    overflow: visible;
+  }
+  .workspace-navigation.is-open {
+    display: block;
+  }
+  .workspace-shell .contest-nav-label {
+    display: block;
+    margin: 20px 8px 8px;
+  }
+  .workspace-shell .contest-sidebar nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+    gap: 5px;
+  }
+  .workspace-shell .contest-sidebar nav a {
+    padding: 11px 9px;
+    font-size: 12px;
+  }
+  .workspace-shell .contest-topbar {
+    min-height: 66px;
+    padding: 14px 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .workspace-topbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .app-shell
+    .workspace-page
+    :is(
+      .study-card,
+      .study-question-card,
+      .student-empty,
+      .study-empty,
+      .study-state
+    ) {
+    padding: 20px;
+  }
+  .app-shell .workspace-page h1 {
+    font-size: 31px;
+    letter-spacing: -1.2px;
+  }
+  .app-shell .workspace-page .study-filters {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .app-shell .workspace-page .study-filters label {
+    min-width: 0;
+  }
+  .public-topbar {
+    width: calc(100% - 36px);
+    min-height: 80px;
+    flex-wrap: wrap;
+    padding: 18px 0;
+    gap: 18px;
+  }
+  .public-topbar nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .public-topbar .contest-btn {
+    padding: 10px 12px;
+  }
+  .public-footer {
+    width: calc(100% - 40px);
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    padding: 28px 0;
+  }
+  .access-layout {
+    width: min(460px, calc(100% - 36px));
+    margin: 36px auto 50px;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .access-intro {
+    display: none;
+  }
+  .access-layout .auth-panel {
+    padding: 26px 22px;
+  }
+  .access-layout .auth-panel h1 {
+    font-size: 28px;
+  }
+  .public-error {
+    margin: 40px auto;
+    padding: 25px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .app-shell * {
+    transition: none;
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .app-shell :is(a, button, input, select, textarea, summary):focus-visible {
+    outline-color: Highlight;
+  }
+}
+/* Keep legacy labels, back links and chart marks readable in both themes. */
+.app-shell
+  .workspace-page
+  label:not(.study-option, .consent-choice, .contest-check) {
+  color: var(--ui-muted);
+}
+.app-shell .workspace-page .study-back {
+  color: var(--ui-link);
+}
+.app-shell .workspace-page .study-section ul {
+  color: var(--ui-muted);
+}
+.app-shell .workspace-page .exam-chart polyline {
+  stroke: var(--ui-link);
+}
+.app-shell .workspace-page .exam-chart circle {
+  fill: var(--ui-link);
+}

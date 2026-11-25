@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Defina seu objetivo | Me Aprovaê' })
 
 interface Position { id: string; title: string; education_level: string | null; area: string | null }
@@ -51,11 +51,7 @@ async function saveGoal() {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink></nav>
-    </header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">PRIMEIRO PASSO</p>
       <h1>Qual é o seu objetivo?</h1>
@@ -98,5 +94,5 @@ async function saveGoal() {
         </button>
       </form>
     </section>
-  </main>
+  </div>
 </template>

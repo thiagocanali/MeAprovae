@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { theme } = useAppTheme()
+definePageMeta({ layout: 'public' })
 
 useSeoMeta({
   title: 'Me Aprovaê — sua jornada até a aprovação',
@@ -10,18 +11,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="landing" :data-theme="theme">
-    <header class="topbar">
-      <NuxtLink class="brand" to="/" aria-label="Me Aprovaê, início">
-        <span class="brand-mark">m.</span>
-        <span>me aprovaê</span>
-      </NuxtLink>
-      <nav class="topbar-actions" aria-label="Acesso à plataforma">
-        <ThemeToggle />
-        <NuxtLink class="topbar-login" to="/login">Entrar</NuxtLink>
-        <NuxtLink class="topbar-signup" to="/cadastro">Criar conta <span aria-hidden="true">↗</span></NuxtLink>
-      </nav>
-    </header>
+  <div class="landing" :data-theme="theme">
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
@@ -74,11 +64,5 @@ useSeoMeta({
     </section>
 
     <section class="closing-cta"><div><p class="eyebrow">TODA GRANDE CONQUISTA COMEÇA ASSIM</p><h2>Um passo seu.<br /><span>Um futuro inteiro.</span></h2></div><NuxtLink class="primary-action" to="/cadastro">Dar o primeiro passo <span aria-hidden="true">↗</span></NuxtLink></section>
-
-    <footer class="footer">
-      <NuxtLink class="brand footer-brand" to="/"><span class="brand-mark">m.</span><span>me aprovaê</span></NuxtLink>
-      <span>Feito para quem continua acreditando.</span>
-      <span>© {{ new Date().getFullYear() }} Me Aprovaê</span>
-    </footer>
-  </main>
+  </div>
 </template>

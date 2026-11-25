@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 import { examChartPoints, type PerformanceFilters, type PerformanceOverview } from '~~/shared/domain/questions/performance'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Meu desempenho | Me Aprovaê' })
 const period = ref<PerformanceFilters['days']>(30)
 const timezone = ref<PerformanceFilters['timezone']>('America/Sao_Paulo')
@@ -18,8 +18,7 @@ function examDate(date: string) {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav aria-label="Navegação do estudante"><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/provas">Simulados</NuxtLink><NuxtLink to="/app/comparar">Comparar prática</NuxtLink><NuxtLink to="/app/historico">Histórico</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">SUA EVOLUÇÃO</p><h1>Meu desempenho</h1>
       <p class="auth-description">Acompanhe sua prática e os simulados encerrados no período escolhido. Todos os indicadores abaixo usam o mesmo período.</p>
@@ -79,7 +78,7 @@ function examDate(date: string) {
         </section>
       </template>
     </section>
-  </main>
+  </div>
 </template>
 <style scoped>
 figure.study-card { margin: 0; min-width: 0; }

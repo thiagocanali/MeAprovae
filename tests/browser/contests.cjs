@@ -283,7 +283,7 @@ const contests = Array.from({ length: 14 }, (_, i) => ({
     await p.keyboard.press('Enter')
     assert.equal(
       await p.evaluate(() => document.activeElement?.id),
-      'contest-main',
+      'workspace-main',
       'keyboard skip link must focus main content',
     )
     for (const width of [320, 390, 768, 1440]) {
