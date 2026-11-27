@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 27/11/2026 — C2, pareceres e direitos rastreáveis (draft)
+
+- Base eaff534 da PR #71, main 887c8d5 confirmadas; #75 preservada e #66 sem alteração/merge. Novo ledger append-only com snapshot integral, SHA-256 conferido por constraint, identidade/role obtidas no banco e pareceres independentes de autores/editores conhecidos.
+- Evidência por questão, declarações explícitas versionadas, fingerprint/revisão esperados, replay e proteção contra mudança de conteúdo, revogação de papel e alteração de histórico. Registro não publica nem altera flags legadas; nenhum parecer humano real foi fabricado.
+- Novos endpoints de contexto, registro, histórico e snapshot protegido; contratos anteriores preservados. Testes HTTP/unitários e PostgreSQL descartável cobrem autorrevisão, estudante/metadados forjados, direitos incompletos, imutabilidade e fonte alterada. Concorrência confirma snapshot preservado e parecer desatualizado após nova edição.
+- Validação C2: 263 testes/31 arquivos, suíte PostgreSQL 17 completa e concorrência aprovados. PostgREST 12.2.3 local confirmou contexto/registro/replay e bloqueios RLS/escrita direta, com JWTs sintéticos; Auth hospedado e revisão humana real permanecem pendentes.
+- Migration criada pelo CLI e aplicada somente em banco descartável. Schema/RPCs seguem draft, sem produção ou publicações. Decisões, limites, rollback e continuidade em docs/EXAM_CATALOG_REVIEW_AND_UI.md; resultados finais de CI na mesma PR.
+
 ## Plano mestre de 27/11/2026 — API editorial de rascunhos, em homologação
 
 - Manutenção #75 integrada em 887c8d5, CI #449 aprovada e deploy automático READY; health/login 200 e API protegida 401 sem sessão. Auth #66 e schema #71 não foram integrados por esse deploy.

@@ -98,6 +98,38 @@ beforeAll(async () => {
       )
     ).default,
   )
+  router.get(
+    '/api/admin/exam-models/:id/versions/:version/review-context',
+    (
+      await import(
+        '../../server/api/admin/exam-models/[id]/versions/[version]/review-context.get'
+      )
+    ).default,
+  )
+  router.get(
+    '/api/admin/exam-models/:id/versions/:version/reviews',
+    (
+      await import(
+        '../../server/api/admin/exam-models/[id]/versions/[version]/reviews/index.get'
+      )
+    ).default,
+  )
+  router.post(
+    '/api/admin/exam-models/:id/versions/:version/reviews',
+    (
+      await import(
+        '../../server/api/admin/exam-models/[id]/versions/[version]/reviews/index.post'
+      )
+    ).default,
+  )
+  router.get(
+    '/api/admin/exam-models/:id/versions/:version/reviews/:reviewId',
+    (
+      await import(
+        '../../server/api/admin/exam-models/[id]/versions/[version]/reviews/[reviewId].get'
+      )
+    ).default,
+  )
   server = createServer(
     toNodeListener(createApp({ debug: false, onError: () => {} }).use(router)),
   )
@@ -171,6 +203,10 @@ describe('editorial catalog HTTP', () => {
         ['', 'GET', undefined],
         ['', 'POST', fields],
         [`/${id}/audit`, 'GET', undefined],
+        [`/${id}/versions/1/review-context`, 'GET', undefined],
+        [`/${id}/versions/1/reviews`, 'GET', undefined],
+        [`/${id}/versions/1/reviews`, 'POST', {}],
+        [`/${id}/versions/1/reviews/${id}`, 'GET', undefined],
         [`/${id}`, 'GET', undefined],
         [`/${id}/versions/1`, 'GET', undefined],
         [`/${id}/versions/1/validation`, 'GET', undefined],
@@ -354,5 +390,57 @@ describe('editorial catalog HTTP', () => {
     expect(audit.status).toBe(200)
     expect(fixture.from).toHaveBeenCalledWith('exam_catalog_versions')
     expect(fixture.from).toHaveBeenCalledWith('editorial_audit_log')
+  })
+})
+
+describe('review HTTP binding', () => {
+  it('binds the signed-in identity through RPC and preserves explicit declarations', async () => {
+    const payload = {
+      requestId: id,
+      expectedRevision: 3,
+      expectedFingerprint: 'a'.repeat(64),
+      decision: 'approved',
+      notes: 'Declaração de teste de contrato HTTP.',
+      rights: [
+        {
+          questionId: id,
+          basis: 'original',
+          evidence: 'Evidência sintética de contrato HTTP.',
+          sourceUrl: null,
+        },
+      ],
+      attestations: {
+        content: true,
+        answers: true,
+        explanations: true,
+        rights: true,
+        independent: true,
+      },
+      attestationVersion: 'catalog-human-review-v1',
+    }
+    expect(
+      (
+        await request(`/${id}/versions/1/reviews`, 'POST', {
+          ...payload,
+          reviewerId: 'forged',
+        })
+      ).status,
+    ).toBe(400)
+    expect(
+      (await request(`/${id}/versions/1/reviews`, 'POST', payload)).status,
+    ).toBe(200)
+    expect(fixture.rpc).toHaveBeenCalledWith('record_exam_catalog_review', {
+      p_model_id: id,
+      p_version: 1,
+      p_fields: payload,
+    })
+    expect(
+      (
+        await request(`/${id}/versions/1/reviews`, 'POST', {
+          ...payload,
+          notes: 'x'.repeat(66000),
+        })
+      ).status,
+    ).toBe(413)
   })
 })

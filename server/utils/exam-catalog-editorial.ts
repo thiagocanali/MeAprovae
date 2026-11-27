@@ -25,7 +25,7 @@ export function catalogParams(event: H3Event, versionRequired = false) {
     })
   return { id: id.toLowerCase(), version: version ?? 1 }
 }
-export function catalogBody(event: H3Event) {
+export function catalogBody(event: H3Event, maxBytes = 16 * 1024) {
   if (
     getHeader(event, 'content-type')?.split(';')[0]?.trim().toLowerCase() !==
     'application/json'
@@ -42,7 +42,7 @@ export function catalogBody(event: H3Event) {
       statusMessage: 'Origem de envio inválida.',
     })
   }
-  return readImportBody(event, 16 * 1024)
+  return readImportBody(event, maxBytes)
 }
 export function catalogError(error: { code?: string } | null | undefined) {
   const code = error?.code
@@ -51,7 +51,7 @@ export function catalogError(error: { code?: string } | null | undefined) {
       statusCode: 404,
       statusMessage: 'Modelo ou versão não encontrados.',
     })
-  if (code === '40001' || code === '23505')
+  if (code === '40001' || code === '40P01' || code === '23505')
     return createError({
       statusCode: 409,
       statusMessage: 'O modelo mudou. Atualize os dados antes de continuar.',

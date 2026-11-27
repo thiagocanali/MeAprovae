@@ -2,9 +2,9 @@
 
 ## Estado de liberação
 
-**Implementação de rascunhos na PR #71, em draft; não implantada.** Depende das migrations experimentais de 24/11 e de `20261127100440_exam_catalog_editorial_drafts.sql`, criada pelo CLI Supabase. A produção não recebeu DDL nem modelos. Publicação e arquivamento de versões continuam proibidos. Não há catálogo de modelos para estudantes, interface de administração de modelos ou início de sessão por versão nesta entrega.
+**Implementação de rascunhos na PR #71, em draft; não implantada.** Depende das migrations experimentais de 24/11 e de `20261127100440_exam_catalog_editorial_drafts.sql`, criada pelo CLI Supabase. A produção não recebeu DDL nem modelos. Publicação e arquivamento de versões continuam proibidos. Não há catálogo de modelos para estudantes nem início de sessão por versão nesta entrega. A interface administrativa e os pareceres foram acrescentados na evolução C2/D, ainda em homologação.
 
-O lote C cobre contratos, consulta/validação estrutural, criação/edição/clonagem, solicitação/retorno de revisão e consulta de auditoria. **Registro de parecer humano e avaliação de direitos com identidades/evidências verificáveis ficam para C2**; não confundir solicitação de revisão com aprovação.
+O lote C cobre contratos, consulta/validação estrutural, criação/edição/clonagem, solicitação/retorno de revisão e consulta de auditoria. A evolução **C2/D implementa o registro atribuído à conta, evidências de direitos e interface administrativa**, descritos em [revisão e interface](EXAM_CATALOG_REVIEW_AND_UI.md). Isso não representa revisão humana real do acervo nem publicação.
 
 ## Contratos HTTP
 
@@ -51,6 +51,6 @@ Eventos registram ator real, ação e antes/depois pelo mecanismo existente. Os 
 
 Manter #71 draft até revisão adicional de schema, RPC definer, grants, direitos e auditoria, homologação e aprovação específica. Não executar migrations produtivas nem criar modelos públicos. Para rollback de aplicação, reverter código; para schema, manter inativo e avaliar referências/backup em vez de DROP automático. A remoção de usuários com referências de revisão/versões também requer política de retenção, sem deleções automáticas como teste.
 
-Próximo recorte: C2 (parecer humano/identidade/evidências e transições autorizadas) e D (telas editoriais de rascunho, composição e auditoria usando o design existente), ainda sem publicação. Só depois de homologação e aprovação, desenhar a liberação dos modelos aos estudantes e a fixação de snapshots completos na sessão. As sessões privadas atuais permanecem como estão.
+C2/D já implementados na proposta: registro de pareceres/evidências e telas editoriais, conforme [novo checkpoint](EXAM_CATALOG_REVIEW_AND_UI.md), ainda sem publicação. Só depois de homologação e aprovação, desenhar a liberação dos modelos aos estudantes e a fixação de snapshots completos na sessão. As sessões privadas atuais permanecem como estão.
 
 Resultado local final deste recorte: **236 testes / 30 arquivos**, typecheck e build Vercel aprovados; suíte SQL completa desde bootstrap em PostgreSQL 17 novo aprovada, incluindo os três testes de concorrência (editorial legado, composição/revisão e RPC com revisão obsoleta). Nenhum frontend foi alterado neste lote; a manutenção Nuxt herdada já havia validado as 22 páginas/176 combinações. Não contar esses testes como aprovação humana ou Auth hospedado.
