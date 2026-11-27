@@ -1,5 +1,6 @@
 import { createError, readBody } from 'h3'
 import { createSupabaseServerClient } from '../../utils/supabase'
+import { getAuthRedirectOrigin } from '../../utils/auth-origin'
 import { isValidPassword, normalizeDisplayName, normalizeEmail } from '../../../shared/domain/auth/validation'
 
 interface RegisterBody {
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
     password,
     options: {
       data: { display_name: displayName },
-      emailRedirectTo: new URL('/auth/callback', getRequestURL(event)).toString(),
+      emailRedirectTo: new URL('/auth/callback', getAuthRedirectOrigin(event)).toString(),
     },
   })
 

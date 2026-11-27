@@ -60,6 +60,7 @@ Artefatos locais em `/workspace/work/master-plan-2026-11-26`. Instalação conge
 
 Lote A não autoriza integração: `AUTH_REDIRECT_ORIGIN` ausente causa 503 no código proposto em ambientes hospedados. Homologar configuração e jornadas com e-mails controlados, registrar ambiente/deployment/commit sem tokens e obter aprovação específica antes de remover draft. Avançar para as tarefas independentes da #71 e manutenção de dependências enquanto isso. Não alterar produção Supabase/Neon, permissões ou Vercel manualmente.
 
+
 ## Checkpoint dos lotes A e B
 
 - #66: `0e12e6991769c55dd999ffde847835563934f0fa`, CI #447 (45922649039) verde; **draft, não integrada** pelos gates de Auth acima.

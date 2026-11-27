@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     supabaseUrl: environment.SUPABASE_URL ?? '',
     supabaseAnonKey: environment.SUPABASE_ANON_KEY ?? '',
+    authRedirectOrigin: environment.AUTH_REDIRECT_ORIGIN ?? '',
   },
   typescript: {
     strict: true,
