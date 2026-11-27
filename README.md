@@ -68,6 +68,10 @@ Consulte [PROGRESS.md](PROGRESS.md) para o registro atual, [auditoria técnica](
 
 Dados fictícios devem ser identificados como demonstração. Questões criadas para exemplo nunca devem ser atribuídas a bancas ou concursos reais. Integrações indisponíveis devem ser sinalizadas como pendentes.
 
+## Plano mestre e evidências atuais
+
+A [auditoria de retomada de 26/11](docs/MASTER_PLAN_AUDIT_2026-11-26.md) confere GitHub, configuração sem descriptografar segredos, contagens reais e dependências. Auth (#66) e schema do catálogo (#71) permanecem **em draft**, mesmo com CI verde; não são funcionalidades liberadas. A interface das 22 páginas já está [padronizada](docs/UNIFIED_INTERFACE.md). Os gates de homologação e o ponto de retomada estão no diagnóstico.
+
 ## Próximos passos
 
 1. Corrigir os itens prioritários da triagem por fluxo editorial versionado, sem sobrescrever questões que já tenham tentativas.
