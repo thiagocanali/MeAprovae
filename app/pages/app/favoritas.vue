@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Questões favoritas | Me Aprovaê' })
 
 interface Favorite {
@@ -29,11 +29,7 @@ async function removeFavorite(questionId: string) {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/erros">Revisar erros</NuxtLink><NuxtLink to="/app/historico">Histórico</NuxtLink></nav>
-    </header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">SUA BIBLIOTECA</p>
       <h1>Questões favoritas</h1>
@@ -63,5 +59,5 @@ async function removeFavorite(questionId: string) {
         </article>
       </div>
     </section>
-  </main>
+  </div>
 </template>

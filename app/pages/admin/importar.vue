@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 import { IMPORT_MAX_BYTES, parseQuestionImport } from '~~/shared/domain/questions/import'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Importar questões | Me Aprovaê' })
 const { data: overview, error: accessError } = await useFetch('/api/admin/overview')
 const { data: notices } = await useFetch<{ notices: Array<{ id: string; title: string; status: string }> }>('/api/admin/notices')
@@ -46,8 +46,7 @@ async function submit() {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><NuxtLink to="/admin">Voltar à gestão</NuxtLink></header>
+  <div class="workspace-page">
     <section class="study-content">
       <h1>Importar questões em lote</h1>
       <div v-if="accessError" class="study-error" role="alert">A importação exige acesso editorial. <NuxtLink to="/app">Voltar aos estudos</NuxtLink></div>
@@ -84,7 +83,7 @@ async function submit() {
         </section>
       </template>
     </section>
-  </main>
+  </div>
 </template>
 
 <style scoped>

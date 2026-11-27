@@ -139,6 +139,8 @@ button:disabled { cursor: not-allowed; }
 .app-shell[data-theme='light'] .study-header { border-color: var(--color-line); }
 .app-shell[data-theme='light'] .study-header nav a, .app-shell[data-theme='light'] .study-back { color: #59655c; }
 .app-shell[data-theme='light'] .study-header nav a:hover, .app-shell[data-theme='light'] .study-back:hover { color: #4c6e20; }
+.app-shell[data-theme='light'] .study-header nav a.router-link-active { color: #426b2e; text-decoration: underline; text-underline-offset: 5px; }
+.app-shell[data-theme='light'] .study-link:focus-visible, .app-shell[data-theme='light'] .study-header nav a:focus-visible { outline-color: #426b2e; }
 .app-shell[data-theme='light'] .study-muted, .app-shell[data-theme='light'] .study-progress-line, .app-shell[data-theme='light'] .study-options legend { color: #657066; }
 .app-shell[data-theme='light'] .study-state, .app-shell[data-theme='light'] .study-empty, .app-shell[data-theme='light'] .study-card, .app-shell[data-theme='light'] .study-question-card { border-color: var(--color-line); background: var(--color-surface); color: var(--color-text); }
 .app-shell[data-theme='light'] .study-error, .app-shell[data-theme='light'] .auth-error, .app-shell[data-theme='light'] .admin-error { color: #a23535; }

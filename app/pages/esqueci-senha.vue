@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getAuthErrorMessage } from '~~/shared/domain/auth/error-message'
-definePageMeta({ layout: false })
+definePageMeta({ layout: 'auth' })
 useSeoMeta({ title: 'Recuperar senha | Me Aprovaê' })
 
 const email = ref('')
@@ -24,8 +24,6 @@ async function submit() {
 </script>
 
 <template>
-  <main class="auth-page">
-    <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
     <section class="auth-panel">
       <p class="auth-eyebrow">RECUPERAÇÃO DE ACESSO</p>
       <h1>Vamos recuperar sua conta.</h1>
@@ -35,9 +33,9 @@ async function submit() {
         <input id="email" v-model="email" type="email" autocomplete="email" required maxlength="254">
         <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
         <p v-if="successMessage" class="auth-success" role="status">{{ successMessage }}</p>
-        <button type="submit" :disabled="pending">{{ pending ? 'Enviando…' : 'Enviar instruções' }}</button>
+        <button type="submit" :disabled="pending" :aria-busy="pending">{{ pending ? 'Enviando…' : 'Enviar instruções' }}</button>
       </form>
       <p class="auth-switch"><NuxtLink to="/login">Voltar para entrar</NuxtLink></p>
     </section>
-  </main>
+
 </template>

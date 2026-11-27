@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Revisar questões erradas | Me Aprovaê' })
 
 interface ReviewQuestion {
@@ -17,18 +17,14 @@ const { data, pending, error, refresh } = await useFetch<{ questions: ReviewQues
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/favoritas">Favoritas</NuxtLink><NuxtLink to="/app/historico">Histórico</NuxtLink></nav>
-    </header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">REVISÃO DE ERROS</p>
       <h1>Questões para revisar</h1>
       <p class="auth-description">Aqui aparecem questões cuja tentativa mais recente foi incorreta. Quando você acertar uma questão em uma nova tentativa, ela sai desta fila.</p>
       <p v-if="pending" class="study-state">Carregando questões para revisão…</p>
       <div v-else-if="error" class="study-state study-error" role="alert">
-        Não foi possível carregar a fila de revisão. Confirme se a migração 0005 foi aplicada.
+        Não foi possível carregar a fila de revisão. Verifique sua conexão e tente novamente.
         <button class="study-secondary-button" @click="refresh()">Tentar novamente</button>
       </div>
       <div v-else-if="!data?.questions.length" class="study-empty">
@@ -45,5 +41,5 @@ const { data, pending, error, refresh } = await useFetch<{ questions: ReviewQues
         </article>
       </div>
     </section>
-  </main>
+  </div>
 </template>

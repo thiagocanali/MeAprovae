@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getAuthErrorMessage } from '~~/shared/domain/auth/error-message'
-definePageMeta({ layout: false })
+definePageMeta({ layout: 'auth' })
 useSeoMeta({ title: 'Criar conta | Me Aprovaê' })
 
 const displayName = ref('')
@@ -34,8 +34,6 @@ async function submit() {
 </script>
 
 <template>
-  <main class="auth-page">
-    <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
     <section class="auth-panel">
       <p class="auth-eyebrow">SEU PRÓXIMO PASSO</p>
       <h1>Crie sua conta.</h1>
@@ -54,9 +52,9 @@ async function submit() {
         </div>
         <p v-if="errorMessage" class="auth-error" role="alert">{{ errorMessage }}</p>
         <p v-if="successMessage" class="auth-success" role="status">{{ successMessage }}</p>
-        <button type="submit" :disabled="pending">{{ pending ? 'Criando conta…' : 'Criar minha conta' }}</button>
+        <button type="submit" :disabled="pending" :aria-busy="pending">{{ pending ? 'Criando conta…' : 'Criar minha conta' }}</button>
       </form>
       <p class="auth-switch">Já tem uma conta? <NuxtLink to="/login">Entrar</NuxtLink></p>
     </section>
-  </main>
+
 </template>

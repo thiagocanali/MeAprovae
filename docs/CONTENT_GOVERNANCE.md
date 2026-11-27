@@ -64,3 +64,13 @@ Priorizar documentos e informações de fontes oficiais. Registrar URL, data de 
 ## Denúncias e qualidade
 
 Permitir reportar erro, duplicidade, conteúdo inadequado ou problema de direitos. Definir fila de revisão, prioridade, responsável e resolução.
+
+## Validação de lotes JSONL — pré-publicação
+
+Executar `node scripts/validate-question-bank.mjs caminho/do/lote.jsonl` para verificar arquivos editoriais, **sem acessar bancos nem publicar itens**. O comando retorna código 1 para registros inválidos e imprime uma linha JSON com `accepted`, `invalid`, `lines` e `published: 0`. A suíte automatizada cobre regressões deste contrato.
+
+Cada linha precisa conter um objeto JSON com `externalId`, `statement`, `explanation`, `subject`, `sourceLabel`, `rights`, `difficulty`, `difficultyReviewed`, `options` (2–5 alternativas) e `correctOption` (índice baseado em zero). `rights` aceita `original`, `licensed` ou `public-domain`. Para conteúdo externo, `sourceUrl` é obrigatório. Licença exige `rightsEvidence` descritiva. `difficultyReviewed: true` exige justificativa explícita em `difficultyRationale`, **mas o validador não comprova quem fez a revisão**. A aprovação humana deve ser registrada e auditada no fluxo editorial separado.
+
+Validações adicionais: `externalId` único no lote, enunciados duplicados após normalização de Unicode e espaços, alternativas distintas, gabarito dentro do intervalo, URL HTTP(S) sem credenciais e dificuldade válida. A validação não prova verdade do gabarito, originalidade, titularidade, autorização legal nem qualidade da explicação. Não utilizar `published: 0` como indicador de elegibilidade automática.
+
+**Compatibilidade:** arquivos de lotes antigos que não fornecem `difficultyReviewed` explicitamente passarão a falhar nessa checagem manual; isso não altera os releases imutáveis nem publica/edita qualquer questão existente. Adaptar metadados de propostas futuras após revisão do esquema; não criar evidências ou responsáveis artificiais.

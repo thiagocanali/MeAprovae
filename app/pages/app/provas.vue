@@ -2,26 +2,28 @@
 import authMiddleware from '~/middleware/auth'
 import type { ExamSession } from '~~/shared/domain/questions/exam-session'
 import { isExamQuestionCount, validExamFilters, type ExamAvailability } from '~~/shared/domain/questions/exam-config'
-definePageMeta({ middleware: authMiddleware })
+import { isCurrentExamAvailability, parseExamQueryCount, parseExamQueryId, topicBelongsToSubject } from '~~/shared/domain/questions/exam-filter-ui'
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Simulados | Me Aprovaê' })
 interface Summary { id: string; question_count: number; answered_count: number; correct_count: number; status: string; started_at: string; score: number }
 const { data: contests, error: contestsError } = await useFetch<{ contests: Array<{ id: string; title: string }> }>('/api/study/contests')
 const { data: history, error: historyError, refresh } = await useFetch<{ sessions: Summary[] }>('/api/study/exams')
 const route = useRoute()
 const router = useRouter()
-const queryId = (value: unknown) => value === undefined ? '' : typeof value === 'string' ? value : 'invalid'
+const queryId = parseExamQueryId
 const selectedContestId = ref(queryId(route.query.contestId))
 const selectedSubjectId = ref(queryId(route.query.subjectId))
 const selectedTopicId = ref(queryId(route.query.topicId))
-const questionCount = ref(route.query.questionCount === undefined ? 10 : Number(route.query.questionCount))
+const questionCount = ref(parseExamQueryCount(route.query.questionCount))
 const { data: catalog, error: catalogError } = await useFetch<{ subjects: Array<{ id: string; name: string }>; topics: Array<{ id: string; subject_id: string; name: string }> }>('/api/study/catalog')
 const topics = computed(() => catalog.value?.topics.filter(topic => topic.subject_id === selectedSubjectId.value) ?? [])
 const filters = computed(() => ({ contestId: selectedContestId.value || null, subjectId: selectedSubjectId.value || null, topicId: selectedTopicId.value || null }))
 const availabilityQuery = computed(() => Object.fromEntries(Object.entries(filters.value).filter(([, value]) => value !== null)))
 const { data: availability, status: availabilityStatus, error: availabilityError, refresh: refreshAvailability } = await useFetch<ExamAvailability & { filters: typeof filters.value }>('/api/study/exams/availability', { query: availabilityQuery })
-const currentAvailability = computed(() => availabilityStatus.value === 'success' && availability.value
-  && JSON.stringify(availability.value.filters) === JSON.stringify(filters.value) ? availability.value : null)
-const validConfig = computed(() => validExamFilters(filters.value) && isExamQuestionCount(questionCount.value))
+const currentAvailability = computed(() => availabilityStatus.value === 'success' && isCurrentExamAvailability(availability.value, filters.value)
+  ? availability.value : null)
+const topicMatchesSubject = computed(() => !catalog.value || topicBelongsToSubject(filters.value.subjectId, filters.value.topicId, catalog.value.topics))
+const validConfig = computed(() => validExamFilters(filters.value) && topicMatchesSubject.value && isExamQuestionCount(questionCount.value))
 const canStart = computed(() => validConfig.value && currentAvailability.value && questionCount.value <= currentAvailability.value.maxQuestions)
 const requestId = ref('')
 const pending = ref(false)
@@ -34,7 +36,7 @@ watch([selectedContestId, selectedSubjectId, selectedTopicId, questionCount], ()
 })
 watch(() => route.query, query => {
   selectedContestId.value = queryId(query.contestId); selectedSubjectId.value = queryId(query.subjectId)
-  selectedTopicId.value = queryId(query.topicId); questionCount.value = query.questionCount === undefined ? 10 : Number(query.questionCount)
+  selectedTopicId.value = queryId(query.topicId); questionCount.value = parseExamQueryCount(query.questionCount)
 })
 const active = computed(() => history.value?.sessions.find(session => session.status === 'active'))
 async function startExam() {
@@ -55,8 +57,7 @@ async function startExam() {
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/questoes">Questões</NuxtLink><NuxtLink to="/app/desempenho">Desempenho</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">SIMULADOS</p><h1>Pratique e acompanhe sua evolução</h1>
       <p class="auth-description">Modo estudo: correção após cada resposta. Sua sessão fica salva para retomar em outro momento ou dispositivo, dentro do prazo original.</p>
@@ -67,16 +68,17 @@ async function startExam() {
         <label for="exam-subject">Matéria</label><select id="exam-subject" v-model="selectedSubjectId" :disabled="pending || !!catalogError" @change="selectedTopicId = ''"><option value="">Todas as matérias</option><option v-for="subject in catalog?.subjects" :key="subject.id" :value="subject.id">{{ subject.name }}</option></select>
         <label for="exam-topic">Assunto</label><select id="exam-topic" v-model="selectedTopicId" :disabled="pending || !selectedSubjectId || !!catalogError"><option value="">Todos os assuntos</option><option v-for="topic in topics" :key="topic.id" :value="topic.id">{{ topic.name }}</option></select>
         <p v-if="catalogError" role="alert">Não foi possível carregar matérias e assuntos. Recarregue a página para tentar novamente.</p>
-        <p v-if="availabilityStatus === 'pending'" role="status">Consultando questões disponíveis…</p>
+        <p v-if="availabilityStatus === 'pending'" role="status" aria-live="polite">Consultando questões disponíveis…</p>
         <p v-else-if="availabilityError" role="alert">Não foi possível consultar o acervo. Revise os filtros ou tente novamente. <button type="button" :disabled="pending" @click="refreshAvailability()">Tentar novamente</button> <button type="button" :disabled="pending" @click="selectedContestId = ''; selectedSubjectId = ''; selectedTopicId = ''">Limpar filtros</button></p>
         <p v-else-if="currentAvailability" role="status">{{ currentAvailability.available }} questões disponíveis com estes filtros. Você pode selecionar até {{ currentAvailability.maxQuestions }}.</p>
         <p v-if="currentAvailability?.available === 0" class="study-empty">Nenhuma questão publicada nesta combinação. Escolha outro assunto, matéria ou concurso.</p>
         <label for="exam-count">Quantidade de questões</label><input id="exam-count" v-model.number="questionCount" type="number" min="1" max="20" step="1" :disabled="pending" aria-describedby="exam-duration">
+        <p v-if="!topicMatchesSubject" role="alert">O assunto não pertence à matéria selecionada. Escolha outro assunto.</p>
         <p v-if="!validConfig" role="alert">Revise os filtros e escolha uma quantidade inteira de 1 a 20 questões.</p>
         <p v-else-if="currentAvailability && questionCount > currentAvailability.maxQuestions && currentAvailability.maxQuestions > 0" role="alert">A quantidade escolhida supera o acervo deste filtro. <button type="button" :disabled="pending" @click="questionCount = currentAvailability!.maxQuestions">Usar {{ currentAvailability.maxQuestions }} questões</button></p>
         <p id="exam-duration" class="study-muted">{{ isExamQuestionCount(questionCount) ? `${questionCount * 6} minutos · 6 minutos por questão.` : 'Escolha a quantidade para calcular o prazo.' }}</p>
         <p class="study-muted">O prazo começa ao iniciar e continua contando ao sair da página. O relógio do servidor determina quando o simulado expira.</p>
-        <button type="submit" class="study-primary-button" :disabled="pending || !canStart">{{ pending ? 'Preparando…' : 'Começar simulado' }}</button>
+        <button type="submit" class="study-primary-button" :disabled="pending || !canStart" :aria-busy="pending">{{ pending ? 'Preparando…' : 'Começar simulado' }}</button>
       </form>
       <p v-if="errorMessage" class="study-error" role="alert">{{ errorMessage }}</p>
       <section class="study-section"><h2>Meus últimos 50 simulados</h2>
@@ -90,5 +92,5 @@ async function startExam() {
         </li></ol>
       </section>
     </section>
-  </main>
+  </div>
 </template>

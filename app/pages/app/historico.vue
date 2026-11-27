@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Meu histórico | Me Aprovaê' })
 
 interface Attempt {
@@ -19,11 +19,7 @@ const accuracy = computed(() => total.value ? Math.round((correct.value / total.
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header">
-      <NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink>
-      <nav><NuxtLink to="/app/concursos">Concursos</NuxtLink><NuxtLink to="/app/questoes">Questões</NuxtLink></nav>
-    </header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">SUA EVOLUÇÃO</p>
       <h1>Histórico de questões</h1>
@@ -48,5 +44,5 @@ const accuracy = computed(() => total.value ? Math.round((correct.value / total.
         </ol>
       </template>
     </section>
-  </main>
+  </div>
 </template>
