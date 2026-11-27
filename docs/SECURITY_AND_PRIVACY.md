@@ -75,3 +75,21 @@ Definir processo para:
 ## Antes de produção
 
 Concluir inventário de dados, política de privacidade, termos, contratos com operadores, análise de riscos, plano de resposta a incidentes e revisão de segurança.
+
+## Estado verificado no plano mestre (26/11/2026)
+
+Este documento separa diretrizes acima de implementação e homologação:
+
+| Controle | Evidência e limite |
+| --- | --- |
+| Identidade SSR | O servidor chama `getUser()`; não utiliza `getSession()` nem user_metadata como autorização editorial. Jornada hospedada completa continua na #57. |
+| Papel editorial | Consulta `has_platform_role('editor')` no banco. Migrations protegem as tabelas com RLS e checks nas RPCs; testes descartáveis não são prova de duas contas reais. |
+| Conteúdo e histórico | Gabaritos/explicações têm acesso restrito; RPC de correção deriva o usuário; sessões fixam composição/prazo e preservam histórico. Suítes SQL cobrem ID alheio, grants e concorrência. |
+| Isolamento | Novo teste transacional com identidades sintéticas cobre perfil, tentativas, favoritos, acompanhamento, objetivo, sessões/itens e preferências. Executado somente em PostgreSQL descartável. |
+| Links sensíveis/cache | Correções propostas na PR #66, **draft**. Não considerar origem canônica/no-store uniforme como implantados enquanto essa PR não for homologada e integrada. |
+| Catálogo editorial | Schema evoluído na #71, **draft e ausente na produção**. Publicação bloqueada; não confundir com sessões privadas operacionais. |
+| Senhas vazadas | Advisor continua informando proteção desabilitada; exige avaliação/configuração autorizada. Não alterada neste ciclo. |
+| Dependências | Auditoria de 26/11 detectou alertas no Nuxt 4.6.3 e transitivos; patch e evidências de revalidação documentados no diagnóstico e na PR de manutenção. Zero alertas em uma execução não é certificação de segurança. |
+| Limites operacionais | Homologação com e-mails controlados, rate limiting, inventário LGPD, monitoramento e restauração permanecem pendentes de evidência específica. Não anunciar produto finalizado. |
+
+Diagnóstico, bloqueios por ambiente e sequência: [auditoria do plano mestre](MASTER_PLAN_AUDIT_2026-11-26.md). Valores de ambiente, credenciais, cookies e links com tokens ficam fora de documentação/artefatos. Mudanças sensíveis exigem gates de AGENTS.md e aprovação específica, mesmo com CI verde.

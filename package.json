@@ -10,8 +10,8 @@
     "build": "nuxt prepare && nuxt build",
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "nuxt prepare && vitest run",
+    "test:watch": "nuxt prepare && vitest",
     "content:validate": "node scripts/validate-question-bank.mjs",
     "content:check": "python3 scripts/content/check_math_release.py"
   },
@@ -19,13 +19,21 @@
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
     "h3": "1.15.11",
-    "nuxt": "4.6.3",
+    "nuxt": "4.6.4",
     "vue": "^3.5.22"
   },
   "devDependencies": {
     "@types/node": "22.19.0",
     "typescript": "^5.9.3",
     "vitest": "^5.1.0",
-    "vue-tsc": "^3.1.1"
-  }
+    "vue-tsc": "^3.1.1",
+    "rolldown": "1.2.15"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "8.3.5",
+      "readdir-glob@3.0.0>minimatch": "11.0.9"
+    }
+  },
+  "packageManager": "pnpm@9.15.9"
 }
