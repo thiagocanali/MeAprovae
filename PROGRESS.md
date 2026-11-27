@@ -1,5 +1,13 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 27/11/2026 — D, composição e versões na interface editorial (draft)
+
+- Backend C2 registrado em 0d906f7. Oito tarefas de interface: lista/criação, filtros/paginação, composição ordenável e busca, salvamento com revisão esperada, validação/transições, parecer/direitos explícitos, versões/clonagem/histórico e estados/responsividade.
+- Novas telas /admin/simulados e /admin/simulados/[id]/[version] usam o workspace e os temas existentes. Navegação durante escrita bloqueada; alterações/pareceres não enviados protegidos ao navegar, recarregar ou trocar estado; conflito preserva o formulário e mudança de fingerprint limpa declarações. Clonar não herda aprovação.
+- Validação local: 263 testes/31 arquivos, typecheck, build Vercel e verificadores matemáticos aprovados. PostgreSQL 17 descartável: suíte completa, revisão independente/imutabilidade/direitos/revogação/concorrência aprovadas. PostgREST local confirmou RPCs e isolamento com identidades sintéticas.
+- Chromium: fluxo editorial completo, 24 páginas × 2 temas × 4 larguras = 192 combinações, concursos, provas oficiais e oito cenários de prática aprovados; nenhum pageerror. Capturas desktop/celular conferidas. APIs de navegador são fixtures; não representam Auth hospedado ou revisão humana real.
+- Checkpoint: C2 e D implementados na proposta da #71; preservar draft. Próximo recorte independente: automatizar API Nuxt↔PostgREST↔UI em ambiente isolado, comparar sobreposição e ampliar cobertura multidisciplinar. Publicação, migrations produtivas e merge seguem bloqueados por homologação/autorizações específicas; #66 intocada. Detalhes e reversão: docs/EXAM_CATALOG_REVIEW_AND_UI.md. CI remota será registrada após o push desta branch.
+
 ## Continuação de 27/11/2026 — C2, pareceres e direitos rastreáveis (draft)
 
 - Base eaff534 da PR #71, main 887c8d5 confirmadas; #75 preservada e #66 sem alteração/merge. Novo ledger append-only com snapshot integral, SHA-256 conferido por constraint, identidade/role obtidas no banco e pareceres independentes de autores/editores conhecidos.

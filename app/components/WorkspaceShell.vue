@@ -52,6 +52,12 @@ const studyLinks = [
   { to: '/app/onboarding', label: 'Meu objetivo', icon: 'target', aliases: [] },
 ] as const
 const editorialLinks = [
+  {
+    to: '/admin/simulados',
+    label: 'Modelos de simulados',
+    icon: 'clock',
+    aliases: ['/admin/simulados/'],
+  },
   { to: '/admin', label: 'Gestão editorial', icon: 'home', aliases: [] },
   {
     to: '/admin/revisao',
