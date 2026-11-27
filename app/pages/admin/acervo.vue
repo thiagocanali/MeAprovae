@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Acervo editorial | Me Aprovaê' })
 interface Release { id: string; name: string; questionCount: number; drafts: number; published: number; archived: number; difficultyPending: number; contentHash: string; gitCommit: string; installedAt: string }
 interface Question { id: string; externalId: string; statement: string; rightsEvidence: string; status: string; difficultyReviewed: boolean; topic: string }
@@ -18,8 +18,7 @@ async function openRelease(release: Release) {
 }
 </script>
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/admin">Me Aprovaê · Editorial</NuxtLink><nav><NuxtLink to="/admin/revisao">Fila de revisão</NuxtLink><NuxtLink to="/admin">Gestão</NuxtLink><NuxtLink to="/admin/importar">Importar</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
       <p class="auth-eyebrow">CONTEÚDO ORIGINAL VERSIONADO</p><h1>Acervo em revisão</h1>
       <p class="auth-description">Acompanhe os últimos 50 lotes originais instalados a partir do repositório. Conferência automática de cálculos não substitui revisão editorial de enunciados, explicações, direitos e dificuldade.</p>
@@ -46,7 +45,7 @@ async function openRelease(release: Release) {
         </li></ol>
       </section>
     </section>
-  </main>
+  </div>
 </template>
 <style scoped>
 .hash { overflow-wrap: anywhere; }

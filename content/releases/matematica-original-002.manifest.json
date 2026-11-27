@@ -1,0 +1,891 @@
+{
+  "release": "matematica-original-002",
+  "subject": "Raciocínio Lógico e Matemática",
+  "questionCount": 100,
+  "familyCount": 20,
+  "reviewStatus": "pending_human_review",
+  "reviewer": null,
+  "contentSha256": "c2250d104930e6406957ea4782976b918ff255956699c876d6e0b03ae4b20560",
+  "version": 1,
+  "createdOn": "2026-11-25",
+  "authoring": "Conteúdo original com assistência de IA sob solicitação do proprietário.",
+  "difficultyStatus": "suggested_not_reviewed",
+  "conceptualBasis": "Definições matemáticas explicitadas nas resoluções; nenhum enunciado externo reproduzido.",
+  "checks": [
+    {
+      "externalId": "mat-original-002-mediana-01",
+      "family": "mediana",
+      "parameters": [
+        11,
+        3,
+        7,
+        5,
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-002-moda-01",
+      "family": "moda",
+      "parameters": [
+        3,
+        5,
+        3,
+        7,
+        5,
+        3,
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-002-amplitude-01",
+      "family": "amplitude",
+      "parameters": [
+        12,
+        30,
+        18,
+        9,
+        24
+      ]
+    },
+    {
+      "externalId": "mat-original-002-desconto-inverso-01",
+      "family": "desconto-inverso",
+      "parameters": [
+        160,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-002-juros-compostos-01",
+      "family": "juros-compostos",
+      "parameters": [
+        1000,
+        10,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-trapezio-01",
+      "family": "area-trapezio",
+      "parameters": [
+        4,
+        10,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-triangulo-01",
+      "family": "area-triangulo",
+      "parameters": [
+        8,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-002-pitagoras-01",
+      "family": "pitagoras",
+      "parameters": [
+        3,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-comprimento-circunferencia-01",
+      "family": "comprimento-circunferencia",
+      "parameters": [
+        3,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-volume-cilindro-01",
+      "family": "volume-cilindro",
+      "parameters": [
+        3,
+        5,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-capacidade-litros-01",
+      "family": "capacidade-litros",
+      "parameters": [
+        40,
+        20,
+        30
+      ]
+    },
+    {
+      "externalId": "mat-original-002-escala-mapa-01",
+      "family": "escala-mapa",
+      "parameters": [
+        4,
+        50000
+      ]
+    },
+    {
+      "externalId": "mat-original-002-duracao-horarios-01",
+      "family": "duracao-horarios",
+      "parameters": [
+        515,
+        670
+      ]
+    },
+    {
+      "externalId": "mat-original-002-senhas-repeticao-01",
+      "family": "senhas-repeticao",
+      "parameters": [
+        4,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-cargos-distintos-01",
+      "family": "cargos-distintos",
+      "parameters": [
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-002-probabilidade-complemento-01",
+      "family": "probabilidade-complemento",
+      "parameters": [
+        10,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-002-contagem-multiplos-01",
+      "family": "contagem-multiplos",
+      "parameters": [
+        20,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-lucro-unitario-01",
+      "family": "lucro-unitario",
+      "parameters": [
+        12,
+        16,
+        30
+      ]
+    },
+    {
+      "externalId": "mat-original-002-variacao-absoluta-01",
+      "family": "variacao-absoluta",
+      "parameters": [
+        40,
+        25
+      ]
+    },
+    {
+      "externalId": "mat-original-002-potencias-01",
+      "family": "potencias",
+      "parameters": [
+        3,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-mediana-02",
+      "family": "mediana",
+      "parameters": [
+        12,
+        4,
+        8,
+        6,
+        10
+      ]
+    },
+    {
+      "externalId": "mat-original-002-moda-02",
+      "family": "moda",
+      "parameters": [
+        4,
+        6,
+        4,
+        8,
+        6,
+        4,
+        10
+      ]
+    },
+    {
+      "externalId": "mat-original-002-amplitude-02",
+      "family": "amplitude",
+      "parameters": [
+        13,
+        32,
+        19,
+        10,
+        25
+      ]
+    },
+    {
+      "externalId": "mat-original-002-desconto-inverso-02",
+      "family": "desconto-inverso",
+      "parameters": [
+        200,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-002-juros-compostos-02",
+      "family": "juros-compostos",
+      "parameters": [
+        1200,
+        10,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-trapezio-02",
+      "family": "area-trapezio",
+      "parameters": [
+        5,
+        11,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-triangulo-02",
+      "family": "area-triangulo",
+      "parameters": [
+        10,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-002-pitagoras-02",
+      "family": "pitagoras",
+      "parameters": [
+        6,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-002-comprimento-circunferencia-02",
+      "family": "comprimento-circunferencia",
+      "parameters": [
+        4,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-volume-cilindro-02",
+      "family": "volume-cilindro",
+      "parameters": [
+        4,
+        6,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-capacidade-litros-02",
+      "family": "capacidade-litros",
+      "parameters": [
+        50,
+        20,
+        30
+      ]
+    },
+    {
+      "externalId": "mat-original-002-escala-mapa-02",
+      "family": "escala-mapa",
+      "parameters": [
+        5,
+        50000
+      ]
+    },
+    {
+      "externalId": "mat-original-002-duracao-horarios-02",
+      "family": "duracao-horarios",
+      "parameters": [
+        516,
+        672
+      ]
+    },
+    {
+      "externalId": "mat-original-002-senhas-repeticao-02",
+      "family": "senhas-repeticao",
+      "parameters": [
+        5,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-cargos-distintos-02",
+      "family": "cargos-distintos",
+      "parameters": [
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-002-probabilidade-complemento-02",
+      "family": "probabilidade-complemento",
+      "parameters": [
+        12,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-contagem-multiplos-02",
+      "family": "contagem-multiplos",
+      "parameters": [
+        24,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-lucro-unitario-02",
+      "family": "lucro-unitario",
+      "parameters": [
+        13,
+        17,
+        35
+      ]
+    },
+    {
+      "externalId": "mat-original-002-variacao-absoluta-02",
+      "family": "variacao-absoluta",
+      "parameters": [
+        60,
+        25
+      ]
+    },
+    {
+      "externalId": "mat-original-002-potencias-02",
+      "family": "potencias",
+      "parameters": [
+        4,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-mediana-03",
+      "family": "mediana",
+      "parameters": [
+        13,
+        5,
+        9,
+        7,
+        11
+      ]
+    },
+    {
+      "externalId": "mat-original-002-moda-03",
+      "family": "moda",
+      "parameters": [
+        5,
+        7,
+        5,
+        9,
+        7,
+        5,
+        11
+      ]
+    },
+    {
+      "externalId": "mat-original-002-amplitude-03",
+      "family": "amplitude",
+      "parameters": [
+        14,
+        34,
+        20,
+        11,
+        26
+      ]
+    },
+    {
+      "externalId": "mat-original-002-desconto-inverso-03",
+      "family": "desconto-inverso",
+      "parameters": [
+        240,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-002-juros-compostos-03",
+      "family": "juros-compostos",
+      "parameters": [
+        1400,
+        10,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-trapezio-03",
+      "family": "area-trapezio",
+      "parameters": [
+        6,
+        12,
+        10
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-triangulo-03",
+      "family": "area-triangulo",
+      "parameters": [
+        12,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-002-pitagoras-03",
+      "family": "pitagoras",
+      "parameters": [
+        9,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-002-comprimento-circunferencia-03",
+      "family": "comprimento-circunferencia",
+      "parameters": [
+        5,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-volume-cilindro-03",
+      "family": "volume-cilindro",
+      "parameters": [
+        5,
+        7,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-capacidade-litros-03",
+      "family": "capacidade-litros",
+      "parameters": [
+        60,
+        20,
+        30
+      ]
+    },
+    {
+      "externalId": "mat-original-002-escala-mapa-03",
+      "family": "escala-mapa",
+      "parameters": [
+        6,
+        50000
+      ]
+    },
+    {
+      "externalId": "mat-original-002-duracao-horarios-03",
+      "family": "duracao-horarios",
+      "parameters": [
+        517,
+        674
+      ]
+    },
+    {
+      "externalId": "mat-original-002-senhas-repeticao-03",
+      "family": "senhas-repeticao",
+      "parameters": [
+        6,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-cargos-distintos-03",
+      "family": "cargos-distintos",
+      "parameters": [
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-002-probabilidade-complemento-03",
+      "family": "probabilidade-complemento",
+      "parameters": [
+        14,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-contagem-multiplos-03",
+      "family": "contagem-multiplos",
+      "parameters": [
+        28,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-002-lucro-unitario-03",
+      "family": "lucro-unitario",
+      "parameters": [
+        14,
+        18,
+        40
+      ]
+    },
+    {
+      "externalId": "mat-original-002-variacao-absoluta-03",
+      "family": "variacao-absoluta",
+      "parameters": [
+        80,
+        25
+      ]
+    },
+    {
+      "externalId": "mat-original-002-potencias-03",
+      "family": "potencias",
+      "parameters": [
+        5,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-mediana-04",
+      "family": "mediana",
+      "parameters": [
+        14,
+        6,
+        10,
+        8,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-002-moda-04",
+      "family": "moda",
+      "parameters": [
+        6,
+        8,
+        6,
+        10,
+        8,
+        6,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-002-amplitude-04",
+      "family": "amplitude",
+      "parameters": [
+        15,
+        36,
+        21,
+        12,
+        27
+      ]
+    },
+    {
+      "externalId": "mat-original-002-desconto-inverso-04",
+      "family": "desconto-inverso",
+      "parameters": [
+        280,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-002-juros-compostos-04",
+      "family": "juros-compostos",
+      "parameters": [
+        1600,
+        10,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-trapezio-04",
+      "family": "area-trapezio",
+      "parameters": [
+        7,
+        13,
+        12
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-triangulo-04",
+      "family": "area-triangulo",
+      "parameters": [
+        14,
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-002-pitagoras-04",
+      "family": "pitagoras",
+      "parameters": [
+        12,
+        16
+      ]
+    },
+    {
+      "externalId": "mat-original-002-comprimento-circunferencia-04",
+      "family": "comprimento-circunferencia",
+      "parameters": [
+        6,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-volume-cilindro-04",
+      "family": "volume-cilindro",
+      "parameters": [
+        6,
+        8,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-capacidade-litros-04",
+      "family": "capacidade-litros",
+      "parameters": [
+        70,
+        20,
+        30
+      ]
+    },
+    {
+      "externalId": "mat-original-002-escala-mapa-04",
+      "family": "escala-mapa",
+      "parameters": [
+        7,
+        50000
+      ]
+    },
+    {
+      "externalId": "mat-original-002-duracao-horarios-04",
+      "family": "duracao-horarios",
+      "parameters": [
+        518,
+        676
+      ]
+    },
+    {
+      "externalId": "mat-original-002-senhas-repeticao-04",
+      "family": "senhas-repeticao",
+      "parameters": [
+        7,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-cargos-distintos-04",
+      "family": "cargos-distintos",
+      "parameters": [
+        8
+      ]
+    },
+    {
+      "externalId": "mat-original-002-probabilidade-complemento-04",
+      "family": "probabilidade-complemento",
+      "parameters": [
+        16,
+        5
+      ]
+    },
+    {
+      "externalId": "mat-original-002-contagem-multiplos-04",
+      "family": "contagem-multiplos",
+      "parameters": [
+        32,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-002-lucro-unitario-04",
+      "family": "lucro-unitario",
+      "parameters": [
+        15,
+        19,
+        45
+      ]
+    },
+    {
+      "externalId": "mat-original-002-variacao-absoluta-04",
+      "family": "variacao-absoluta",
+      "parameters": [
+        100,
+        25
+      ]
+    },
+    {
+      "externalId": "mat-original-002-potencias-04",
+      "family": "potencias",
+      "parameters": [
+        6,
+        4
+      ]
+    },
+    {
+      "externalId": "mat-original-002-mediana-05",
+      "family": "mediana",
+      "parameters": [
+        15,
+        7,
+        11,
+        9,
+        13
+      ]
+    },
+    {
+      "externalId": "mat-original-002-moda-05",
+      "family": "moda",
+      "parameters": [
+        7,
+        9,
+        7,
+        11,
+        9,
+        7,
+        13
+      ]
+    },
+    {
+      "externalId": "mat-original-002-amplitude-05",
+      "family": "amplitude",
+      "parameters": [
+        16,
+        38,
+        22,
+        13,
+        28
+      ]
+    },
+    {
+      "externalId": "mat-original-002-desconto-inverso-05",
+      "family": "desconto-inverso",
+      "parameters": [
+        320,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-002-juros-compostos-05",
+      "family": "juros-compostos",
+      "parameters": [
+        1800,
+        10,
+        2
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-trapezio-05",
+      "family": "area-trapezio",
+      "parameters": [
+        8,
+        14,
+        14
+      ]
+    },
+    {
+      "externalId": "mat-original-002-area-triangulo-05",
+      "family": "area-triangulo",
+      "parameters": [
+        16,
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-002-pitagoras-05",
+      "family": "pitagoras",
+      "parameters": [
+        15,
+        20
+      ]
+    },
+    {
+      "externalId": "mat-original-002-comprimento-circunferencia-05",
+      "family": "comprimento-circunferencia",
+      "parameters": [
+        7,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-volume-cilindro-05",
+      "family": "volume-cilindro",
+      "parameters": [
+        7,
+        9,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-capacidade-litros-05",
+      "family": "capacidade-litros",
+      "parameters": [
+        80,
+        20,
+        30
+      ]
+    },
+    {
+      "externalId": "mat-original-002-escala-mapa-05",
+      "family": "escala-mapa",
+      "parameters": [
+        8,
+        50000
+      ]
+    },
+    {
+      "externalId": "mat-original-002-duracao-horarios-05",
+      "family": "duracao-horarios",
+      "parameters": [
+        519,
+        678
+      ]
+    },
+    {
+      "externalId": "mat-original-002-senhas-repeticao-05",
+      "family": "senhas-repeticao",
+      "parameters": [
+        8,
+        3
+      ]
+    },
+    {
+      "externalId": "mat-original-002-cargos-distintos-05",
+      "family": "cargos-distintos",
+      "parameters": [
+        9
+      ]
+    },
+    {
+      "externalId": "mat-original-002-probabilidade-complemento-05",
+      "family": "probabilidade-complemento",
+      "parameters": [
+        18,
+        6
+      ]
+    },
+    {
+      "externalId": "mat-original-002-contagem-multiplos-05",
+      "family": "contagem-multiplos",
+      "parameters": [
+        36,
+        7
+      ]
+    },
+    {
+      "externalId": "mat-original-002-lucro-unitario-05",
+      "family": "lucro-unitario",
+      "parameters": [
+        16,
+        20,
+        50
+      ]
+    },
+    {
+      "externalId": "mat-original-002-variacao-absoluta-05",
+      "family": "variacao-absoluta",
+      "parameters": [
+        120,
+        25
+      ]
+    },
+    {
+      "externalId": "mat-original-002-potencias-05",
+      "family": "potencias",
+      "parameters": [
+        7,
+        4
+      ]
+    }
+  ]
+}

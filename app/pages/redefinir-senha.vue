@@ -2,7 +2,7 @@
 import { getAuthErrorMessage } from '~~/shared/domain/auth/error-message'
 import authMiddleware from '~/middleware/auth'
 
-definePageMeta({ layout: false, middleware: authMiddleware })
+definePageMeta({ layout: 'auth', middleware: authMiddleware })
 useSeoMeta({ title: 'Definir nova senha | Me Aprovaê' })
 
 const password = ref('')
@@ -39,8 +39,6 @@ async function submit() {
 </script>
 
 <template>
-  <main class="auth-page">
-    <NuxtLink class="auth-brand" to="/">Me Aprovaê</NuxtLink>
     <section class="auth-panel">
       <p class="auth-eyebrow">NOVA SENHA</p>
       <h1>Escolha uma nova senha.</h1>
@@ -66,5 +64,5 @@ async function submit() {
       </form>
       <p class="auth-switch"><NuxtLink to="/login">Voltar para entrar</NuxtLink></p>
     </section>
-  </main>
+
 </template>

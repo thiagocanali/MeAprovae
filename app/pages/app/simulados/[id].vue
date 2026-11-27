@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import authMiddleware from '~/middleware/auth'
 import { remainingExamSeconds, type ExamSession } from '~~/shared/domain/questions/exam-session'
-definePageMeta({ middleware: authMiddleware })
+definePageMeta({ layout: 'workspace', middleware: authMiddleware })
 useSeoMeta({ title: 'Meu simulado | Me Aprovaê' })
 const route = useRoute()
 const endpoint = `/api/study/exams/${String(route.params.id)}`
@@ -71,9 +71,9 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
 </script>
 
 <template>
-  <main class="study-page">
-    <header class="study-header"><NuxtLink class="auth-brand" to="/app">Me Aprovaê</NuxtLink><nav><NuxtLink to="/app/provas">Meus simulados</NuxtLink><NuxtLink to="/app/desempenho">Desempenho</NuxtLink></nav></header>
+  <div class="workspace-page">
     <section class="study-content">
+      <h1 v-if="!session">Meu simulado</h1>
       <p v-if="pending && !session" role="status">Carregando simulado…</p>
       <div v-if="error" class="study-error" role="alert">Não foi possível carregar este simulado. Ele deve pertencer à sua conta. <button @click="synchronize()">Tentar novamente</button></div>
       <template v-if="session">
@@ -107,7 +107,7 @@ const reviewed = computed(() => session.value?.questions.map(item => ({ ...item,
       </template>
       <p v-if="errorMessage" class="study-error" role="alert">{{ errorMessage }} <button :disabled="saving" @click="synchronize()">Sincronizar respostas salvas</button></p>
     </section>
-  </main>
+  </div>
 </template>
 
 <style scoped>

@@ -1,5 +1,27 @@
 # PROGRESS.md — execução e entregas
 
+## Padronização de 25/11/2026 — todas as telas
+
+- Aplicada a identidade aprovada em Concursos às 22 páginas existentes e ao erro global: layouts público/acesso/workspace, menu comum e expansível no celular, tema claro/escuro, formulários, cartões, botões, alertas e gráficos.
+- Mantidos endpoints, handlers, middleware, permissões e dados; comparação, histórico, favoritas, revisão e objetivo acessíveis no menu compartilhado. Sem novas dependências ou mudanças de banco.
+- Matriz Chromium cobre o inventário real de rotas, dois temas e quatro larguras; inclui fluxos com APIs sintéticas. Regressões de concursos, biblioteca oficial e oito cenários da prática também exercitadas. Detalhes, limites, comandos e reversão em docs/UNIFIED_INTERFACE.md; resultados finais de CI/deploy na PR.
+
+## Ampliação de 25/11/2026 — fontes oficiais e autorais
+
+- Frente de concursos integrada na #72 após reconciliação com tema claro/escuro, CI #441 aprovada e produção READY.
+- Biblioteca /app/provas-oficiais com 36 referências de CNU 2024/2025, TRF1 2024 e Enem 2021–2025; 21 pares de PDFs distintos conferidos, 15 referências somente pela fonte após falha de download. Não são questões externas importadas ou notas interativas.
+- Instalados três concursos históricos e 100 autorais do release matemática 002, transacionalmente e sem modificar as existentes. Supabase: 60 publicadas, 200 rascunhos e quatro concursos publicados. Human review continua pendente.
+- Vinte modelos temáticos em rascunho com cinco UUIDs reais cada, composição fixa, 30 minutos e sem sobreposição entre modelos. Não publicados; schema da #71 permanece isolado.
+- Homologação PostgreSQL 17 confirmou contagens, replay sem duplicação e preservação em colisões. Detalhes, direitos, fontes, recibo e reversão em docs/CONTENT_EXPANSION_2026-11-25.md. CI/deploy do lote registrados no PR.
+
+## Prioridade de 21/11/2026 — frontend de concursos
+
+- Por orientação do usuário, frontend passa à frente das demais expansões, começando por catálogo/detalhe de concursos. As demais telas ainda precisam de revisão de experiência; não considerar todo o frontend concluído.
+- Catálogo com busca/filtros/paginação na URL, objetivo atual, concursos acompanhados e estados completos. Detalhe com editais, cargos, fontes, disciplinas e ações reais de acompanhamento e objetivo, além de links de estudo contextualizados.
+- Corrigido contrato ausente de cargos no detalhe; APIs pessoais no-store e filtros explícitos de filhos publicados, sem migration ou publicação de conteúdo.
+- 147 testes unitários, typecheck, build Vercel, fluxo Chromium simulado de concursos e oito regressões da prática aprovados. Layout sem overflow em 320/390/768/1440; teclado e capturas conferidos.
+- Escopo, limites de dados/validação e próximos passos em docs/CONTEST_FRONTEND.md; CI e deploy registrados no PR.
+
 ## Retomada de 21/11/2026 — estado real e filtros da prática
 
 - Revisão do histórico disponível, código e Git remoto identificou a base local em #45 e a main atual em #61. Entregas intermediárias foram incorporadas sem refazer funcionalidades.
