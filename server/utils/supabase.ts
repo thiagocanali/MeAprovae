@@ -1,8 +1,10 @@
 import { createServerClient } from '@supabase/ssr'
 import type { User } from '@supabase/supabase-js'
-import { createError, parseCookies, setCookie, type H3Event } from 'h3'
+import { createError, parseCookies, setCookie, setHeader, type H3Event } from 'h3'
 
 export function createSupabaseServerClient(event: H3Event) {
+  // Includes SSR responses and failures, even when no token refresh occurs.
+  setHeader(event, 'Cache-Control', 'private, no-store')
   const config = useRuntimeConfig(event)
   const environment = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
   const url = config.supabaseUrl || environment.SUPABASE_URL
@@ -20,7 +22,10 @@ export function createSupabaseServerClient(event: H3Event) {
       getAll() {
         return Object.entries(parseCookies(event)).map(([name, value]) => ({ name, value }))
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet, headers) {
+        for (const [name, value] of Object.entries(headers ?? {})) {
+          setHeader(event, name, value)
+        }
         for (const { name, value, options } of cookiesToSet) {
           setCookie(event, name, value, options)
         }

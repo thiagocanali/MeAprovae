@@ -26,3 +26,17 @@ describe('trusted authentication redirect origin', () => {
     expect(() => resolveAuthRedirectOrigin('', 'https://attacker.example/', true)).toThrow()
   })
 })
+
+// Local HTTP is a development exception, never a hosted-runtime fallback.
+describe('runtime boundary', () => {
+  it.each(['http://localhost:3000', 'http://127.0.0.1:3012'])('rejects %s outside development', origin => {
+    expect(() => resolveAuthRedirectOrigin(origin, 'https://ignored.test/')).toThrow()
+    expect(resolveAuthRedirectOrigin(origin, 'https://ignored.test/', true)).toBe(origin)
+  })
+  it.each(['not a URL', '//attacker.test', 'https://example.test/path', 'ftp://localhost'])('rejects malformed origins: %s', origin => {
+    expect(() => resolveAuthRedirectOrigin(origin, 'http://localhost:3000/', true)).toThrow()
+  })
+  it('ignores request URL completely when canonical configuration exists', () => {
+    expect(resolveAuthRedirectOrigin('  https://meaprovae.vercel.app  ', 'not a URL')).toBe('https://meaprovae.vercel.app')
+  })
+})

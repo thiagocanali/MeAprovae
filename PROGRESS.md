@@ -1,5 +1,12 @@
 # PROGRESS.md — execução e entregas
 
+## Plano mestre de 26/11/2026 — lote A, segurança em homologação
+
+- Retomada da main 1751c05; PR #66 reconciliada sem reescrever histórico e preservando #72–#74. Mantida draft: AUTH_REDIRECT_ORIGIN ausente nos três ambientes Vercel, allowlist não verificada e duas contas/caixas controladas indisponíveis.
+- Corrigida exceção HTTP local fora de desenvolvimento, aplicado no-store a respostas pessoais/Auth/SSR e headers do bridge Supabase; novos contratos HTTP e testes SSR/isolamento descartável. Guardas libpq impedem redirecionar o executor SQL para outro host.
+- Consultas somente leitura: 60 publicadas, 200 rascunhos, quatro concursos, todas as tabelas públicas com RLS; catálogo experimental ausente. Advisor de senhas vazadas continua pendente; grants privilegiados revisados por função, sem alteração em produção.
+- Diagnóstico, backlog, dependências e gates em docs/MASTER_PLAN_AUDIT_2026-11-26.md. Testes sintéticos não encerram #57; CI e commits registrados na PR. Prosseguir nas frentes independentes de catálogo e patches de dependências.
+
 ## Padronização de 25/11/2026 — todas as telas
 
 - Aplicada a identidade aprovada em Concursos às 22 páginas existentes e ao erro global: layouts público/acesso/workspace, menu comum e expansível no celular, tema claro/escuro, formulários, cartões, botões, alertas e gráficos.
