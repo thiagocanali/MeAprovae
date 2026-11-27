@@ -1,5 +1,11 @@
 # PROGRESS.md — execução e entregas
 
+## Plano mestre de 26/11/2026 — lote B, catálogo isolado
+
+- PR #71 reconciliada com main 1751c05; mantida draft sem aplicação remota. Adicionados metadados por versão, matéria explícita nos itens, composição completa/contígua para solicitar revisão e proteção contra alterações/cascade durante in_review.
+- Mutações de itens serializam com revisão; auditoria reutiliza o mecanismo existente sem inventar ator humano. Matriz de grants ampliada para anon, estudante, editor e owner; nenhuma escrita de navegador nem publicação liberada.
+- Testes de schema/RLS/integridade e concorrência em PostgreSQL 17 descartável. Limites de snapshots, próximas RPCs, rollout e reversão em docs/EXAM_CATALOG_POSTGRES_STAGING.md; CI/SHAs na PR #71. Não equivale a catálogo disponível para estudantes.
+
 ## Padronização de 25/11/2026 — todas as telas
 
 - Aplicada a identidade aprovada em Concursos às 22 páginas existentes e ao erro global: layouts público/acesso/workspace, menu comum e expansível no celular, tema claro/escuro, formulários, cartões, botões, alertas e gráficos.

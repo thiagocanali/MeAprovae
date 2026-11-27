@@ -23,3 +23,4 @@ psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-drafts.sql
 bash tests/integration/editorial-concurrency.sh
 bash tests/integration/math-release-002.sh
 bash tests/integration/historical-catalog.sh
+bash tests/integration/exam-catalog-concurrency.sh
