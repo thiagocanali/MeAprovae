@@ -1,57 +1,39 @@
 # Deploy e ambientes
 
-## Endereços
+## Implementação e produção atuais
 
-- Produção informada pelo mantenedor: https://meaprovae.vercel.app
-- Repositório: https://github.com/thiagocanali/MeAprovae
+Nuxt 4, Vue 3, TypeScript e Supabase SSR/PostgreSQL. Produção: https://meaprovae.vercel.app; repositório: https://github.com/thiagocanali/MeAprovae. O vínculo Git/Vercel foi confirmado por metadados do deployment. A `main` em `1751c05` estava READY na auditoria de 26/11/2026; consultar [diagnóstico atual](MASTER_PLAN_AUDIT_2026-11-26.md) e PRs para resultados posteriores.
 
-O vínculo entre o projeto da Vercel e este repositório ainda precisa ser confirmado. A URL existir não comprova, por si só, que os commits desta branch sejam publicados nela.
+Cadastro, login, questões, histórico, desempenho, simulados persistidos e editorial já têm implementação. A homologação integral de Auth com e-mail e duas contas permanece na #57. O antigo spike Drizzle/Neon não descreve o runtime atual e não autoriza migração.
 
-## Configuração esperada na Vercel
+## Build e CI
 
-Para o projeto que receber esta aplicação:
+CI usa Node 22, pnpm 9.15.9 com `pnpm install --frozen-lockfile`, typecheck, Vitest, verificadores editoriais, dois builds com `NITRO_PRESET=vercel` e PostgreSQL 17 descartável. O preset gera `.vercel/output`; não substituir por `.output/public`. Preservar a configuração existente do projeto na Vercel; não disparar deploy manual nem alterar install/build settings neste ciclo.
 
-- Framework Preset: Nuxt
-- Root Directory: `./`
-- Build Command: padrão do Nuxt / `npm run build`
-- Install Command: `npm install`
-- Node.js: 22.x ou versão compatível com Nuxt 4
-- Output Directory: deixar o padrão detectado pela Vercel; não configurar manualmente `.output/public`
+O Git dispara o deploy após integração autorizada. CI verde não libera Auth, grants ou migrations sem homologação. Confirmar estado READY e SHA correto; verificar health 200, acesso público e 401 sem sessão em API protegida, sem imprimir headers/tokens ou interpretar isso como teste autenticado.
 
-A branch `main` deve continuar sendo a produção. A branch `spike/nuxt-foundation` foi criada para validar a fundação e, se a integração estiver configurada, gerar um Preview Deployment sem substituir a versão principal.
+## Configuração privada
 
-## Variáveis de ambiente
+| Nome | Uso real |
+| --- | --- |
+| `SUPABASE_URL` | URL do projeto Supabase, configuração do servidor |
+| `SUPABASE_ANON_KEY` | Cliente SSR em nome do usuário; RLS continua obrigatória |
+| `AUTH_REDIRECT_ORIGIN` | **Proposta da PR #66**, origem canônica para links; gate abaixo |
+| `NODE_ENV` | Gerenciado pela plataforma |
 
-Arquivo de referência: [../.env.example](../.env.example) e [../ENVIRONMENT.md](../ENVIRONMENT.md).
+Referências: [template sem valores](../.env.example) e [ambiente](../ENVIRONMENT.md). O app não usa DATABASE_URL/Drizzle nem service_role nas APIs pessoais. Credenciais provisionadas pela integração não são autorização para usá-las. Nunca versionar segredos ou URLs com tokens. A consulta de presença/escopo deve usar metadados sem descriptografar valores.
 
-| Variável | Ambiente | Segredo |
-|---|---|---|
-| `DATABASE_URL` | Preview e Production quando o banco for conectado | Sim |
-| `NODE_ENV` | Gerenciada pela plataforma | Não configurar manualmente sem necessidade |
+## Gate obrigatório da PR #66 — manter draft
 
-Nunca commitar valores reais de conexão, tokens, senhas ou chaves privadas. Configurar segredos diretamente nas configurações de Environment Variables da Vercel, separados por ambiente.
+- `AUTH_REDIRECT_ORIGIN` estava ausente em production/preview/development na auditoria. Não integrar esta PR nessa condição: cadastro/recuperação falham com 503 no código proposto.
+- Definir a origem HTTPS controlada de cada ambiente autorizado e conferir callbacks exatos na allowlist Supabase. Não inferir origem de Host/x-forwarded-host; não compartilhar credenciais produtivas para testar previews.
+- Apenas no desenvolvimento local, HTTP localhost/127.0.0.1 é permitido. Configurações com credenciais, caminhos, query ou fragmento são rejeitadas.
+- Validar cadastro/confirmação e recuperação/redefinição com duas contas e caixas de e-mail controladas em homologação apropriada. Incluir links expirados/reutilizados, atualização de página, logout, expiração, API/IDs alheios e estudante/editor. Não criar contas de terceiros nem fixtures em produção.
+- Identificar commit e deployment nos resultados, conservar tokens/cookies/links e dados pessoais fora de logs/capturas. Testes H3 com Auth sintético e banco descartável não substituem esse gate.
+- Mudanças sensíveis requerem revisão, homologação e aprovação específica de integração. PR #71 tem seu próprio gate de schema/RLS e não é liberada por esta validação.
 
-## Verificação inicial
+## Cache, sessão e reversão proposta
 
-Depois que o Preview Deployment estiver pronto:
+Respostas pessoais/Auth/SSR recebem private/no-store; o bridge aplica headers de cache junto aos cookies emitidos pelo SDK. Não habilitar ISR/cache compartilhado nessas rotas. `getUser()` valida identidade no servidor, autorização editorial consulta atribuições no banco. Logout pede scope local; a revogação efetiva de tokens deve ser comprovada na homologação, não presumida pelo retorno 200.
 
-1. Abrir a URL de preview e confirmar o carregamento da landing page.
-2. Acessar `/api/health` e verificar uma resposta JSON com `status: "ok"`.
-3. Conferir logs de build e runtime.
-4. Testar em desktop e celular.
-5. Confirmar que a produção atual não foi substituída antes de aprovar e mesclar a branch.
-
-## Estado do spike
-
-- [x] Criar branch isolada para a fundação.
-- [x] Criar configuração inicial do Nuxt e TypeScript.
-- [x] Criar landing page de apresentação com aviso de produto em construção.
-- [x] Criar endpoint de saúde da aplicação.
-- [x] Confirmar vínculo Vercel ↔ GitHub pelos metadados do deployment de produção.
-- [x] Confirmar build de produção READY no commit `8167a400`.
-- [ ] Validar resposta HTTP da landing page e `/api/health` (a integração Vercel não liberou o fetch nesta auditoria).
-- [ ] Conectar PostgreSQL e executar migração Drizzle.
-- [ ] Validar autenticação SSR e isolamento entre duas contas.
-- [ ] Aprovar ou revisar a ADR-0002.
-
-A landing page é apenas uma apresentação inicial. Cadastro, login, banco de questões, edital, progresso e demais recursos do produto ainda não estão implementados.
+Para reverter o código, reverter o commit de aplicação e aguardar deploy Git normal. Não fazer DROP nem revogar grants em lote. Se a versão anterior à origem canônica for usada, reabre o risco de Host: tratar rollback como contingência, registrar impacto e restringir envios de e-mail até correção. Não remover ou trocar secrets automaticamente.

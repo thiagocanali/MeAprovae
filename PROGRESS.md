@@ -6,6 +6,13 @@
 - Mutações de itens serializam com revisão; auditoria reutiliza o mecanismo existente sem inventar ator humano. Matriz de grants ampliada para anon, estudante, editor e owner; nenhuma escrita de navegador nem publicação liberada.
 - Testes de schema/RLS/integridade e concorrência em PostgreSQL 17 descartável. Limites de snapshots, próximas RPCs, rollout e reversão em docs/EXAM_CATALOG_POSTGRES_STAGING.md; CI/SHAs na PR #71. Não equivale a catálogo disponível para estudantes.
 
+## Plano mestre de 26/11/2026 — auditoria, lotes protegidos e manutenção
+
+- Estado inicial main 1751c05, produção READY. Lote A na #66 (0e12e69/CI #447) e lote B na #71 (3516dd4/CI #448) validados e mantidos draft. Não integrar sem homologação e aprovação específicas; não houve alteração de secrets, grants ou dados de produção.
+- Frente independente atualiza Nuxt 4.6.4, fixa pnpm 9.15.9/toolchain compatível e aplica correção transitiva restrita de minimatch. Audit passou de nove moderados/dois baixos para zero alertas. Scripts de testes preparam tipos Nuxt antes de Vitest.
+- Guardas libpq e teste SQL de isolamento promovidos separadamente, sem incorporar lógica Auth ou schema experimental. Matriz Chromium de 176 combinações pós-patch aprovada; resultados finais de unitários/build/SQL/CI/deploy na PR de manutenção.
+- Diagnóstico e checkpoint em docs/MASTER_PLAN_AUDIT_2026-11-26.md; documentação de deploy/segurança atualizada para distinguir implementação, proposta e homologação. Próximo: API editorial transacional de rascunhos na frente #71, preservando bloqueio de publicação; Auth hospedado depende de ambiente/contas/caixas controladas.
+
 ## Padronização de 25/11/2026 — todas as telas
 
 - Aplicada a identidade aprovada em Concursos às 22 páginas existentes e ao erro global: layouts público/acesso/workspace, menu comum e expansível no celular, tema claro/escuro, formulários, cartões, botões, alertas e gráficos.
