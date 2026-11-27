@@ -59,3 +59,25 @@ Varredura limitada de arquivos versionados para marcadores de chave privada e to
 Artefatos locais em `/workspace/work/master-plan-2026-11-26`. Instalação congelada, typecheck, testes, build Vercel e suíte SQL descartável executados; resultados finais de CI e SHAs registrados na PR. Banco local usa postgres:17, isolado de redes de produção; identidades sintéticas e transações de teste revertidas.
 
 Lote A não autoriza integração: `AUTH_REDIRECT_ORIGIN` ausente causa 503 no código proposto em ambientes hospedados. Homologar configuração e jornadas com e-mails controlados, registrar ambiente/deployment/commit sem tokens e obter aprovação específica antes de remover draft. Avançar para as tarefas independentes da #71 e manutenção de dependências enquanto isso. Não alterar produção Supabase/Neon, permissões ou Vercel manualmente.
+
+
+## Checkpoint dos lotes A e B
+
+- #66: `0e12e6991769c55dd999ffde847835563934f0fa`, CI #447 (45922649039) verde; **draft, não integrada** pelos gates de Auth acima.
+- #71: `3516dd4604f0c2024c61f616483f83b70fb9804c`, CI #448 (45923198074) verde; **draft, não integrada**, schema somente descartável. Integridade, snapshots editoriais, auditoria e concorrência reforçados. Ver documentação na branch/PR #71.
+- A proteção do executor libpq e o teste SQL de isolamento são independentes da mudança de Auth e podem seguir com manutenção de segurança. Essa promoção não integra o restante da #66 nem aplica DDL da #71.
+- Continuidade: concluir patch de dependências; depois lote C de API de rascunhos auditada na frente #71. Publicação, revisão humana e Auth hospedado permanecem condicionados às suas evidências/aprovações, sem atalhos.
+
+## Manutenção independente — segurança de dependências e testes
+
+Nuxt passa a **4.6.4**, com lock regenerado por pnpm **9.15.9**, agora declarado em packageManager. Vite permanece na versão previamente testada **8.3.5** por override e o peer opcional Rolldown fica explicitamente em **1.2.15** no desenvolvimento, compatível com a faixa do Nuxt. A resolução automática inicial escolheu Rolldown 1.3.4 fora da faixa; a pinagem elimina o aviso de peer sem ignorá-lo. Supabase SSR e supabase-js conservam as mesmas versões.
+
+O único override de segurança adicional é `readdir-glob@3.0.0>minimatch: 11.0.9`, limitado à cadeia archiver/Nitro. O major corrigido tem engine compatível com Node 22. Smoke de ZIP via archive.glob confirmou inclusão de arquivos aninhados, exclusão por padrão ignore e saída ZIP válida. Reavaliar a remoção desse override quando readdir-glob adotar a versão corrigida; não substituir todos os consumidores indiscriminadamente.
+
+Após atualização: `pnpm audit --prod --json` retornou **zero alertas em todas as severidades**, contra nove moderados/dois baixos anteriores. Esse resultado depende do feed consultado e não cobre configuração Auth, RLS ou segurança editorial.
+
+A primeira tentativa local de testes simultânea à preparação do Nuxt falhou em dois arquivos por `.nuxt/tsconfig.json` ausente; nenhum teste de negócio indicou regressão. Corrigidos os scripts `test` e `test:watch` para executar `nuxt prepare` antes de Vitest. Reexecução final: 185 testes/28 arquivos aprovados; o resultado parcial inicial não foi contado como aprovação.
+
+A manutenção inclui apenas as proteções independentes de executor SQL e testes de isolamento antes propostas na #66. **Não inclui** auth-origin, runtimeConfig novo, alterações em handlers Auth/cookies/cache, migrations de catálogo, publicações ou dados. O design e as 22 rotas permanecem preservados. Matriz Chromium pós-patch: 176 combinações, sem overflow/erros JavaScript, incluindo 404, formulários simulados, menus, resposta, resultado e comparação; não é homologação do Auth hospedado.
+
+Validação final da manutenção: instalação congelada com pnpm 9.15.9, typecheck, 185 testes, suíte SQL completa com novo isolamento, dois builds Vercel consecutivos, quatro suites Chromium (matriz de 176 combinações, concursos, provas oficiais e oito cenários de prática) aprovados. Audit completo e de produção retornaram zero alertas. Evidências locais sob master-plan-2026-11-26 e resultados remotos na PR de manutenção.
