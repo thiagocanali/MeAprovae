@@ -125,7 +125,7 @@ do $$ declare m uuid:='cccc9999-cccc-4999-8999-cccccccc9999'; t text; r text; p 
    end loop;
    if has_table_privilege('anon','public.'||t,'SELECT') then raise exception 'Anon SELECT on %',t; end if;
  end loop;
- if exists(select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='exam_catalog_private' and p.prosecdef) then raise exception 'Unexpected definer helper'; end if;
+ if exists(select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='exam_catalog_private' and p.prosecdef and p.proname<>'write_draft') then raise exception 'Unexpected definer helper'; end if;
  begin update public.exam_catalog_versions set status='in_review' where model_id=m; raise exception 'Incomplete composition accepted'; exception when check_violation then null; end;
  begin insert into public.exam_catalog_items(model_id,version,position,question_id) values(m,1,3,'11009999-0000-4000-8000-000000000005'); raise exception 'Position beyond count'; exception when check_violation then null; end;
  begin insert into public.exam_catalog_items(model_id,version,position,question_id,subject_id) values(m,1,1,'11009999-0000-4000-8000-000000000005','11009999-0000-4000-8000-000000000004'); raise exception 'False distribution accepted'; exception when check_violation then null; end;

@@ -55,3 +55,7 @@ Anon sem SELECT; estudantes sem linhas; editor e owner podem ler rascunhos. Nenh
 Executados testes de integridade/RLS e concorrência em postgres:17 descartável; suíte completa/CI e SHAs finais registrados na PR #71. Nenhum registro real ou migration remota alterado. Rollout depende de revisão de schema/RLS, aprovação específica e avaliação das futuras RPCs auditadas. Rollback preferencial mantém tabelas inativas; não executar DROP automático. O build atual não aplica migrations na Vercel; o runner SQL pertence ao job descartável da CI.
 
 Próximo passo do lote C: contratos e RPC transacional de rascunho/revisão com editor validado no banco, distribuição e consulta de auditoria por chave composta; validar concorrência, autoria e rollback antes da interface. Não abrir writes diretos ao navegador nem disponibilizar publicação como atalho.
+
+## Evolução C de 27/11/2026 — operações de rascunho
+
+A proposta agora inclui uma segunda migration, gerada pelo CLI, e uma [API editorial](EXAM_CATALOG_EDITORIAL_API.md). Ao contrário do estágio B somente leitura, C propõe RPC transacional de rascunhos para editores/owners, com identidade/papel checados novamente no banco, CAS de revisão, replay de criação/clonagem e auditoria. **Não concede escrita direta nas tabelas** nem publicação. O novo writer definer é privado, explícito e testado; helpers de integridade continuam invoker. Schema e RPCs permanecem na mesma PR #71 draft, sem aplicação remota.

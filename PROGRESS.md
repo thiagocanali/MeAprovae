@@ -1,5 +1,12 @@
 # PROGRESS.md — execução e entregas
 
+## Plano mestre de 27/11/2026 — API editorial de rascunhos, em homologação
+
+- Manutenção #75 integrada em 887c8d5, CI #449 aprovada e deploy automático READY; health/login 200 e API protegida 401 sem sessão. Auth #66 e schema #71 não foram integrados por esse deploy.
+- Frente #71 reconciliada com a manutenção; API editorial para consulta, validação estrutural, criação/edição/clonagem de rascunhos, transições draft/in_review e auditoria paginada. RPC valida editor no banco, impede campos de aprovação enviados pelo cliente e usa revisão esperada/locks/replay/rollback.
+- Testes HTTP/contratos e PostgreSQL descartável cobrem permissões, corpo/origem, concorrência, auditoria e preservação da versão anterior. PostgREST local conferiu filtros JSON/projeções e isolamento com JWTs sintéticos. Nenhum teste substitui Auth hospedado ou revisão humana.
+- Migrations/RPCs continuam draft e não instaladas. Parecer humano, direitos, UI editorial e publicação permanecem pendentes. Contratos, evidências, limites e ponto de retomada C2/D em docs/EXAM_CATALOG_EDITORIAL_API.md; resultados finais/SHAs na PR #71.
+
 ## Plano mestre de 26/11/2026 — lote B, catálogo isolado
 
 - PR #71 reconciliada com main 1751c05; mantida draft sem aplicação remota. Adicionados metadados por versão, matéria explícita nos itens, composição completa/contígua para solicitar revisão e proteção contra alterações/cascade durante in_review.
