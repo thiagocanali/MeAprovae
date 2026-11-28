@@ -164,10 +164,39 @@ export async function runFlow({
     expectedRevision: 1,
     questionIds: [q(101), q(102)],
   })
+  const familyPeer = q(903),
+    familyRoot = '/api/admin/exam-models/' + familyPeer
+  await expect(author, '/api/admin/exam-models', 'POST', 200, {
+    modelId: familyPeer,
+    title: 'Outro modelo com família de origem',
+    description: 'Fixture sem IDs compartilhados.',
+    kind: 'subject-foundations',
+    questionCount: 2,
+  })
+  await expect(author, familyRoot + '/versions/1', 'PUT', 200, {
+    title: 'Outro modelo com família de origem',
+    description: 'Fixture sem IDs compartilhados.',
+    kind: 'subject-foundations',
+    questionCount: 2,
+    expectedRevision: 1,
+    questionIds: [q(105), q(102)],
+  })
   const quality = await expect(author, endpoint + '/quality', 'GET', 200)
   assert.equal(quality.overlaps[0].sharedCount, 1)
   assert.equal(quality.overlaps[0].currentCoveragePercent, 50)
   assert.equal(quality.diversity.length, 2)
+  assert.equal(quality.totalMatches, 1)
+  assert.equal(quality.totalFamilyMatches, 2)
+  assert(
+    quality.familyOverlaps.some(
+      (o) => o.modelId === familyPeer && o.coveragePercent === 50,
+    ),
+  )
+  assert(!quality.overlaps.some((o) => o.modelId === familyPeer))
+  assert.equal(quality.knownFamilyQuestions, 1)
+  assert.equal(quality.unknownFamilyQuestions, 1)
+  assert.equal(quality.learningObjectivesAvailable, false)
+
   assert(
     (
       await expect(author, peerRoot + '/versions/1/quality', 'GET', 200)
@@ -354,7 +383,17 @@ export async function runFlow({
   )
   await p.reload()
   await hydrated(p)
-
+  await p
+    .getByRole('heading', {
+      name: 'Famílias declaradas e estimativas',
+      exact: true,
+    })
+    .waitFor()
+  assert(
+    (
+      await expect(author, root + '/versions/2/quality', 'GET', 200)
+    ).overlaps.some((o) => o.modelId === peer && o.nearDuplicate),
+  )
   assert.deepEqual(
     (await expect(reviewer, endpoint + '/reviews/' + record.id, 'GET', 200))
       .review.content_snapshot,
@@ -486,6 +525,8 @@ export async function runFlow({
     explicitSubjectTargets: true,
     overlapPercent: 50,
     numericVariantAlert: true,
+    declaredFamilyOverlapWithoutSharedIds: true,
+    nearDuplicateWarning: true,
     pageErrors: errors,
     hostedAuth: false,
     realHumanReview: false,

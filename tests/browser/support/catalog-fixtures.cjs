@@ -74,6 +74,12 @@ function fingerprint(version, state) {
 function read(path, url, state) {
   if (path.endsWith('/quality'))
     return {
+      declaredFamilies: [],
+      knownFamilyQuestions: 0,
+      unknownFamilyQuestions: 1,
+      learningObjectivesAvailable: false,
+      familyOverlaps: [],
+      totalFamilyMatches: 0,
       editRevision: 1,
       questionCount: 1,
       diversity: [],

@@ -1,5 +1,7 @@
 # Catálogo versionado — persistência PostgreSQL em rascunho
 
+Atualização de 28/11/2026: esta página preserva o histórico da fundação. API, interface, ledger de revisão e análise de qualidade já foram implementados na proposta draft, conforme [integração/qualidade](EXAM_CATALOG_INTEGRATION_QUALITY.md) e [famílias](EXAM_CATALOG_FAMILY_QUALITY.md); não foram aplicados em produção. As referências abaixo a trabalhos futuros pertencem aos recortes históricos.
+
 ## Escopo de homologação
 
 A migration `20261124121500_exam_catalog_drafts.sql` prepara três tabelas aditivas:

@@ -8,7 +8,7 @@ O manifesto agora contém 20 cadernos temáticos autorais em rascunho, com cinco
 
 Esta etapa introduz **tipos, regras de validação, testes e um manifesto editorial vazio** para modelos de simulados. **Não cria tabelas nem rotas públicas, não altera a geração de simulados atual e não publica modelos.** As sessões reais dos estudantes continuam nas tabelas `exam_sessions` e `exam_session_items`, sujeitas às políticas de isolamento existentes.
 
-A estrutura inicial fica em `shared/domain/questions/exam-model.ts`, testada em `tests/unit/versioned-exam-model.test.ts`, e o manifesto `content/exam-models/catalog.json` começa com `models: []`. Nenhum modelo editorial foi declarado pronto sem questões aprovadas.
+A estrutura inicial fica em `shared/domain/questions/exam-model.ts`, testada em `tests/unit/versioned-exam-model.test.ts`, e o manifesto `content/exam-models/catalog.json` contém atualmente 20 modelos temáticos em rascunho (conferência local de 28/11/2026). Isso não representa versões instaladas ou publicadas por este lote. Nenhum modelo editorial foi declarado pronto sem questões aprovadas.
 
 ## Contrato da versão editorial
 
@@ -31,3 +31,7 @@ A função `calculateModelOverlap` mede repetição de IDs entre modelos. A apro
 5. Elaborar e testar os 20 primeiros modelos planejados com cobertura real suficiente. A meta de 50 depende da expansão do acervo, sem simular diversidade por simples sorteio.
 
 Mudanças de schema, RLS e autenticação exigem homologação adicional e autorização específica de integração. Não aplicar migrations ou cutover em produção neste lote.
+
+## Atualização da Fase 11 — 28/11/2026
+
+A PR #71 já propõe persistência de rascunhos, API editorial, interface, pareceres/snapshots e integração real descartável. Metas por matéria, sobreposição por IDs e famílias de origem e alertas de estimativa estão implementados na proposta; publicação continua proibida no banco. O contrato de domínio para estados futuros não habilita esses estados em produção. Evidências, limites e próximos gates em [integração e qualidade](EXAM_CATALOG_INTEGRATION_QUALITY.md), [famílias e procedência](EXAM_CATALOG_FAMILY_QUALITY.md) e [contrato de publicação](EXAM_CATALOG_PUBLICATION_CONTRACT.md).

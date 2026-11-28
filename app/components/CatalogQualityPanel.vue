@@ -12,6 +12,8 @@ watch(
   () => refresh(),
 )
 const labels: Record<string, string> = {
+  'declared-family-repetition':
+    'Mais de uma questão pertence à mesma família declarada no lote de origem. Confira a variedade de habilidades.',
   'numeric-variants':
     'Há enunciados com estrutura semelhante e variações numéricas. Confira se treinam habilidades diferentes.',
   'missing-topics': 'Há questões sem assunto informado.',
@@ -63,6 +65,30 @@ const labels: Record<string, string> = {
             </ul>
           </li>
         </ul>
+        <h3>Famílias declaradas e estimativas</h3>
+        <p class="study-muted">
+          {{ data.knownFamilyQuestions }} questão(ões) com família identificada
+          no manifesto de origem; {{ data.unknownFamilyQuestions }} sem
+          classificação atual utilizável. Famílias ambíguas ou de questões
+          editadas não são aproveitadas. A origem declara a classificação; isso
+          não comprova equivalência pedagógica.
+        </p>
+        <ul v-if="data.declaredFamilies.length">
+          <li v-for="group in data.declaredFamilies" :key="group.source.key">
+            <strong>{{ group.source.family }}</strong> ·
+            {{ group.questionIds.length }} questão(ões)
+            <details>
+              <summary>Procedência da família</summary>
+              <p>{{ group.source.releaseName }}</p>
+              <code class="catalog-hash">{{ group.source.contentSha256 }}</code>
+            </details>
+          </li>
+        </ul>
+        <p v-if="!data.learningObjectivesAvailable" class="study-muted">
+          Objetivos de aprendizagem não estão cadastrados com evidência
+          suficiente. Não são inferidos do texto ou da família. O alerta de
+          variantes numéricas é apenas uma estimativa textual.
+        </p>
         <h3>Sobreposição com outros modelos</h3>
         <p class="study-muted">
           Comparação por UUID de questão com a versão mais recente de cada outro
@@ -75,19 +101,58 @@ const labels: Record<string, string> = {
           repetição de habilidades.
         </p>
         <ul v-else class="catalog-versions">
+          <li v-if="!data.overlaps.length">
+            Não há sobreposições por ID nesta página.
+          </li>
           <li v-for="overlap in data.overlaps" :key="overlap.modelId">
             <NuxtLink
               :to="`/admin/simulados/${overlap.modelId}/${overlap.version}`"
               >{{ overlap.title }} · versão {{ overlap.version }}</NuxtLink
             >
+            <p v-if="overlap.nearDuplicate" class="catalog-issues">
+              Coincidência de pelo menos 80% das questões de ambas as
+              composições. Confira a necessidade de manter modelos quase iguais;
+              a reutilização não é bloqueada automaticamente.
+            </p>
             <p>
               {{ overlap.sharedCount }} questão(ões) em comum ·
               {{ overlap.currentCoveragePercent }}% desta composição.
             </p>
           </li>
         </ul>
+        <h3>Sobreposição por família de origem</h3>
+        <p class="study-muted">
+          Independe da igualdade dos IDs. Considera somente famílias do mesmo
+          lote e matéria, com procedência identificada; não une taxonomias de
+          lotes diferentes.
+        </p>
+        <p v-if="!data.totalFamilyMatches">
+          Nenhuma família declarada compartilhada foi encontrada entre as
+          classificações disponíveis. Dados ausentes não provam diversidade.
+        </p>
+        <ul v-else class="catalog-versions">
+          <li v-for="overlap in data.familyOverlaps" :key="overlap.modelId">
+            <NuxtLink
+              :to="`/admin/simulados/${overlap.modelId}/${overlap.version}`"
+              >{{ overlap.title }} · versão {{ overlap.version }}</NuxtLink
+            >
+            <p>
+              {{ overlap.sharedFamilyCount }} família(s) compartilhada(s) ·
+              cobre(m) {{ overlap.coveragePercent }}% das questões desta
+              composição.
+            </p>
+            <ul>
+              <li
+                v-for="family in overlap.families"
+                :key="family.releaseName + ':' + family.family"
+              >
+                {{ family.releaseName }} / {{ family.family }}
+              </li>
+            </ul>
+          </li>
+        </ul>
         <nav
-          v-if="data.totalMatches"
+          v-if="data.totalMatches || data.totalFamilyMatches"
           class="study-actions"
           aria-label="Paginação de sobreposição"
         >
@@ -98,7 +163,10 @@ const labels: Record<string, string> = {
             @click="page--"
           >
             Sobreposições anteriores</button
-          ><span>Página {{ page }} · {{ data.totalMatches }} modelo(s)</span
+          ><span
+            >Página {{ page }} · {{ data.totalMatches }} por IDs /
+            {{ data.totalFamilyMatches }} por famílias. As duas listas usam a
+            mesma página.</span
           ><button
             type="button"
             class="study-secondary-button"

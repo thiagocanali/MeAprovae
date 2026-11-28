@@ -3,7 +3,15 @@ export interface SubjectTarget {
   subjectId: string
   questionCount: number
 }
+export interface DeclaredFamily {
+  key: string
+  releaseName: string
+  contentSha256: string
+  family: string
+  pedagogicalValidation: 'not-inferred'
+}
 export interface QualityQuestion {
+  declaredFamily?: DeclaredFamily | null
   id: string
   statement: string
   subjectId: string
@@ -114,17 +122,41 @@ export function analyzeCatalogQuality(
         (a.topicId ?? '').localeCompare(b.topicId ?? ''),
       ),
     }))
+  const declared = new Map<
+    string,
+    { source: DeclaredFamily; questionIds: string[] }
+  >()
+  for (const q of questions)
+    if (q.declaredFamily) {
+      const source = q.declaredFamily
+      const group = declared.get(source.key) ?? { source, questionIds: [] }
+      group.questionIds.push(q.id)
+      declared.set(source.key, group)
+    }
+  const declaredFamilies = [...declared.values()].sort((a, b) =>
+    a.source.key.localeCompare(b.source.key),
+  )
+  const knownFamilyQuestions = declaredFamilies.reduce(
+    (sum, f) => sum + f.questionIds.length,
+    0,
+  )
   const repeatedFamilies = [...families.values()].filter(
       (ids) => ids.length > 1,
     ),
     missingTopics = questions.filter((q) => !q.topicId).length
   return {
     diversity,
+    declaredFamilies,
+    knownFamilyQuestions,
+    unknownFamilyQuestions: questions.length - knownFamilyQuestions,
     repeatedFamilies,
     missingTopics,
     targetsMatch: inspectSubjectTargets(diversity, targets),
     hasExplicitTargets: targets.length > 0,
     alerts: [
+      ...(declaredFamilies.some((f) => f.questionIds.length > 1)
+        ? ['declared-family-repetition']
+        : []),
       ...(repeatedFamilies.length ? ['numeric-variants'] : []),
       ...(missingTopics ? ['missing-topics'] : []),
       ...(questions.length >= 4 &&
@@ -147,10 +179,26 @@ export function analyzeCatalogQuality(
 export interface CatalogQualityResponse
   extends ReturnType<typeof analyzeCatalogQuality> {
   editRevision: number
+  familyOverlaps: Array<{
+    modelId: string
+    version: number
+    title: string
+    sharedFamilyCount: number
+    coveredCurrentQuestions: number
+    coveragePercent: number
+    families: Array<{
+      releaseName: string
+      family: string
+      contentSha256: string
+    }>
+  }>
+  totalFamilyMatches: number
+  learningObjectivesAvailable: false
   overlaps: Array<{
     modelId: string
     version: number
     title: string
+    nearDuplicate: boolean
     sharedCount: number
     questionIds: string[]
     currentCoveragePercent: number

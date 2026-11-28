@@ -54,3 +54,7 @@ Matriz Chromium de regressão: 24 páginas × 2 temas × 4 larguras = **192 comb
 Reverter UI/API por commit; preservar snapshots e ledger. Schema permanece proposto e não deve ser aplicado automaticamente. Antes de integração: revisão de RPC/RLS/FKs, retenção de identidades/evidências e homologação controlada com duas pessoas autorizadas. Não apagar metas de versões em revisão como rollback. Publicação e uso de modelos por estudantes continuam indisponíveis.
 
 Próximo ponto: ampliar a homologação com revisores reais em ambiente autorizado, revisar relevância dos alertas e medir a análise com volume representativo. Qualquer liberação ao estudante exige gates de direitos/publicação e snapshots completos na sessão, com autorização separada.
+
+## Complemento da Fase 11
+
+[Famílias de origem e estimativas](EXAM_CATALOG_FAMILY_QUALITY.md) acrescentam comparações separadas por famílias declaradas, cobertura desconhecida, proteção contra fonte editada/ambígua e aviso simétrico de quase duplicação por IDs. O domínio não infere objetivos de aprendizagem. A publicação permanece bloqueada.

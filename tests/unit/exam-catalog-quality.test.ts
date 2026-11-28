@@ -139,3 +139,63 @@ describe('catalog quality and explicit subject targets', () => {
     ).toBe(true)
   })
 })
+
+describe('declared origin families are separate from estimates', () => {
+  const family = {
+    key: 'release:subject:percent',
+    releaseName: 'synthetic-origin',
+    contentSha256: 'a'.repeat(64),
+    family: 'percent',
+    pedagogicalValidation: 'not-inferred' as const,
+  }
+  it('counts declared classifications and unknown coverage without inferring objectives', () => {
+    const result = analyzeCatalogQuality(
+      [{ ...question(1), declaredFamily: family }, question(2)],
+      [],
+    )
+    expect(result.knownFamilyQuestions).toBe(1)
+    expect(result.unknownFamilyQuestions).toBe(1)
+    expect(result.declaredFamilies[0]?.source.pedagogicalValidation).toBe(
+      'not-inferred',
+    )
+    expect(result.repeatedFamilies).toHaveLength(1)
+    expect(result.alerts).not.toContain('declared-family-repetition')
+  })
+  it('warns about a declared family independently from textual similarity', () => {
+    const result = analyzeCatalogQuality(
+      [
+        {
+          ...question(1),
+          statement: 'Primeiro enunciado completamente diferente.',
+          declaredFamily: family,
+        },
+        {
+          ...question(2),
+          statement: 'Outro tipo de enunciado sem repetir a estrutura.',
+          declaredFamily: family,
+        },
+      ],
+      [],
+    )
+    expect(result.repeatedFamilies).toHaveLength(0)
+    expect(result.alerts).toContain('declared-family-repetition')
+  })
+  it('does not merge different origin namespaces with the same label', () => {
+    const result = analyzeCatalogQuality(
+      [
+        { ...question(1), declaredFamily: family },
+        {
+          ...question(2),
+          declaredFamily: {
+            ...family,
+            key: 'other-release:subject:percent',
+            releaseName: 'other-release',
+          },
+        },
+      ],
+      [],
+    )
+    expect(result.declaredFamilies).toHaveLength(2)
+    expect(result.alerts).not.toContain('declared-family-repetition')
+  })
+})
