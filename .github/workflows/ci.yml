@@ -72,3 +72,31 @@ jobs:
           PGUSER: postgres
           PGDATABASE: postgres
           PGPASSWORD: disposable-ci-password
+
+  catalog-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright-core install --with-deps chromium
+      - name: Prepare types
+        run: pnpm exec nuxt prepare
+      - name: Test editorial API, PostgREST, disposable database and UI
+        run: node tests/integration/catalog/run.mjs
+      - name: Upload synthetic catalog evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-integration-evidence
+          if-no-files-found: ignore
+          path: |
+            /tmp/meaprovae-catalog-integration-*/result.json
+            /tmp/meaprovae-catalog-integration-*/*.png

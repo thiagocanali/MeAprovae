@@ -1,5 +1,7 @@
 // Synthetic UI-only fixtures. No identities, grades or writes from a real service.
 const fs = require('node:fs')
+const editorialCatalog = require('./catalog-fixtures.cjs')
+const catalogState = editorialCatalog.createState()
 const id = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
 const subject = { id: id(2), name: 'Raciocínio Lógico e Matemática' }
 const question = {
@@ -89,6 +91,8 @@ const catalog = JSON.parse(
   fs.readFileSync('content/sources/official-exams.json', 'utf8'),
 )
 function payload(path, url, state) {
+  const catalogResult = editorialCatalog.read(path, url, catalogState)
+  if (catalogResult !== undefined) return catalogResult
   if (path === '/api/auth/me')
     return { user: { id: id(50), email: 'student@example.test' } }
   if (path === '/api/study/dashboard')

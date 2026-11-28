@@ -31,7 +31,16 @@ psql -X -v ON_ERROR_STOP=1 -f tests/integration/performance-overview.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/study-comparison.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/editorial-atomic.sql
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-filters.sql
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-drafts.sql
 bash tests/integration/editorial-concurrency.sh
 bash tests/integration/math-release-002.sh
 bash tests/integration/historical-catalog.sh
+bash tests/integration/exam-catalog-concurrency.sh
+
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/account-isolation.sql
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-editorial.sql
+bash tests/integration/exam-catalog-editorial-concurrency.sh
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-review.sql
+bash tests/integration/exam-catalog-review-concurrency.sh
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-quality.sql
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-families.sql

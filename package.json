@@ -13,7 +13,8 @@
     "test": "nuxt prepare && vitest run",
     "test:watch": "nuxt prepare && vitest",
     "content:validate": "node scripts/validate-question-bank.mjs",
-    "content:check": "python3 scripts/content/check_math_release.py"
+    "content:check": "python3 scripts/content/check_math_release.py",
+    "test:catalog-integration": "node tests/integration/catalog/run.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "22.19.0",
+    "playwright-core": "1.62.1",
     "typescript": "^5.9.3",
     "vitest": "^5.1.0",
     "vue-tsc": "^3.1.1",

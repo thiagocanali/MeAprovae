@@ -27,6 +27,8 @@ const routes = [
   '/admin/revisao',
   '/admin/acervo',
   '/admin/importar',
+  '/admin/simulados',
+  `/admin/simulados/${id(60)}/1`,
 ]
 const routeFiles = fs
   .readdirSync('app/pages', { recursive: true })
@@ -39,7 +41,8 @@ const routeFiles = fs
         .replace(/\.vue$/, '')
         .replace(/(^|\/)index$/, '')
         .replace('[slug]', 'concurso-teste')
-        .replace('[id]', id(60)),
+        .replace('[id]', id(60))
+        .replace('[version]', '1'),
   )
 assert.deepEqual(
   [...routes].sort(),
