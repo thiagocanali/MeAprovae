@@ -51,7 +51,12 @@ export function catalogError(error: { code?: string } | null | undefined) {
       statusCode: 404,
       statusMessage: 'Modelo ou versão não encontrados.',
     })
-  if (code === '40001' || code === '40P01' || code === '23505')
+  if (
+    code === 'PT409' ||
+    code === '40001' ||
+    code === '40P01' ||
+    code === '23505'
+  )
     return createError({
       statusCode: 409,
       statusMessage: 'O modelo mudou. Atualize os dados antes de continuar.',

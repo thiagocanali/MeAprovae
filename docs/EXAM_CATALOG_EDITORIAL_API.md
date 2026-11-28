@@ -6,6 +6,8 @@
 
 O lote C cobre contratos, consulta/validação estrutural, criação/edição/clonagem, solicitação/retorno de revisão e consulta de auditoria. A evolução **C2/D implementa o registro atribuído à conta, evidências de direitos e interface administrativa**, descritos em [revisão e interface](EXAM_CATALOG_REVIEW_AND_UI.md). Isso não representa revisão humana real do acervo nem publicação.
 
+A continuação [integração e qualidade](EXAM_CATALOG_INTEGRATION_QUALITY.md) acrescenta metas opcionais `subjectDistribution`, análise editorial somente leitura em GET `/api/admin/exam-models/[id]/versions/[version]/quality` e corrige conflitos permanentes para SQLSTATE `PT409` (contrato HTTP 409 preservado). Schema continua proposto, sem produção.
+
 ## Contratos HTTP
 
 Todas as rotas exigem usuário validado e `has_platform_role('editor')` no banco; owner também atende a esse papel. Metadados editáveis de usuário não são autorização. Respostas usam private/no-store, inclusive erros. Mutações aceitam somente JSON, no máximo 16 KiB, e rejeitam Origin diferente do origin da requisição quando o header existe. SSR/ferramentas autenticadas sem Origin continuam possíveis; a autorização não depende desse header.

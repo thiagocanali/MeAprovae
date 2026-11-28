@@ -42,3 +42,4 @@ psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-editorial.sql
 bash tests/integration/exam-catalog-editorial-concurrency.sh
 psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-review.sql
 bash tests/integration/exam-catalog-review-concurrency.sh
+psql -X -v ON_ERROR_STOP=1 -f tests/integration/exam-catalog-quality.sql

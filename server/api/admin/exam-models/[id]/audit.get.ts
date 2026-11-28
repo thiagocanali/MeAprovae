@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
       'exam_catalog_models',
       'exam_catalog_versions',
       'exam_catalog_items',
+      'exam_catalog_subject_targets',
     ])
     .or(
       `record_id.eq.${id},new_data->>model_id.eq.${id},old_data->>model_id.eq.${id}`,

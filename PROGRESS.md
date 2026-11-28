@@ -1,5 +1,16 @@
 # PROGRESS.md — execução e entregas
 
+## Continuação de 27/11/2026 — integração real e qualidade do catálogo (draft)
+
+- Retomada exata em 9475112, CI #454 aprovada, main 887c8d5. Oito tarefas: runner descartável, fluxo completo, permissões/RLS, concorrência/integridade, sobreposição, diversidade/alertas, metas multidisciplinares e CI/documentação. Mesma PR #71; #66 intocada.
+- Nuxt/API reais ↔ PostgREST 12.2.3 ↔ PostgreSQL 17 ↔ Chromium, sem APIs editoriais interceptadas. Provedor de identidade é fixture local; cookies usam SSR real, roles/RLS vêm do banco. Declaração sintética changes_requested com direitos unverified: nenhuma revisão humana real ou aprovação de conteúdo foi criada.
+- Correção encontrada pelo teste real: 40001 em conflitos permanentes fazia o PostgREST repetir transações. Conflitos de negócio agora usam PT409, mantendo HTTP 409 e o tratamento de serialização/deadlock reais. Regressões SQL/HTTP atualizadas, sem reescrever os testes anteriores.
+- Endpoint quality readonly/no-store/editorial: sobreposição por UUID com a última versão de cada outro modelo, excluindo a própria linhagem, paginação e porcentagem sobre itens salvos. Diversidade por matéria/assunto, lacunas, concentração e alerta heurístico de variantes numéricas, sem inferir equivalência pedagógica ou direitos.
+- Metas subjectDistribution opcionais e compatíveis com payloads anteriores; FKs, RLS, auditoria, bloqueio em revisão, validação exata antes da transição, cópia sem aprovação e inclusão no snapshot/fingerprint. UI existente ampliada com metas e painel de qualidade; recarga corrigida e histórico preservado.
+- Validação local: 273 testes/32 arquivos (dez novos), typecheck, build Vercel, suíte PostgreSQL completa e fluxo integrado aprovados. Concorrência 200/409, rollback de FK, replay canônico, revogação com mesmo JWT, anônimo/estudante, escrita direta negada, clone editável sem modificar versão/snapshot anteriores. Claro/escuro, 320/1440 px, sem overflow ou pageerrors; capturas conferidas. Matriz de regressão com 24 páginas/192 combinações também aprovada; instalação frozen-lockfile conferida. Artefatos: /workspace/work/catalog-quality-2026-11-27.
+- Novo job catalog-integration na CI. Commits e CI remota serão registrados após o push. Documentação, limites e reversão em docs/EXAM_CATALOG_INTEGRATION_QUALITY.md. Sem migrations produtivas, merge, publicação ou deploy manual.
+- Próximo checkpoint: homologação controlada com pessoas autorizadas (incluindo revisão humana real e Auth hospedado), avaliação editorial dos alertas e medição com catálogo de volume representativo. Não liberar publicação ou estudantes antes dos gates específicos; #71 permanece draft e #66 bloqueada.
+
 ## Continuação de 27/11/2026 — D, composição e versões na interface editorial (draft)
 
 - Backend C2 registrado em 0d906f7. Oito tarefas de interface: lista/criação, filtros/paginação, composição ordenável e busca, salvamento com revisão esperada, validação/transições, parecer/direitos explícitos, versões/clonagem/histórico e estados/responsividade.

@@ -36,13 +36,13 @@ begin
  select count(*) into before_audit from public.editorial_audit_log;
  result:=public.write_exam_catalog_draft('create',m,1,null,pg_temp.catalog_fields());
  if not (result->>'replayed')::boolean or (select count(*) from public.editorial_audit_log)<>before_audit then raise exception 'Create replay wrote data'; end if;
- begin perform public.write_exam_catalog_draft('create',m,1,null,pg_temp.catalog_fields()||'{"title":"Collision title"}'); raise exception 'Create collision overwritten'; exception when serialization_failure then null; end;
+ begin perform public.write_exam_catalog_draft('create',m,1,null,pg_temp.catalog_fields()||'{"title":"Collision title"}'); raise exception 'Create collision overwritten'; exception when sqlstate 'PT409' then null; end;
  begin perform public.write_exam_catalog_draft('save',m,1,1,pg_temp.catalog_fields('[]')||'{"rightsChecked":true}'); raise exception 'Forged review marker'; exception when invalid_parameter_value then null; end;
  payload:=pg_temp.catalog_fields('["c0220000-0000-4000-8000-000000000004","c0220000-0000-4000-8000-000000000005"]');
  result:=public.write_exam_catalog_draft('save',m,1,1,payload);
  if result#>>'{version,edit_revision}'<>'2' or jsonb_array_length(result#>'{version,items}')<>2 then raise exception 'Save contract'; end if;
  select count(*) into before_audit from public.editorial_audit_log;
- begin perform public.write_exam_catalog_draft('save',m,1,1,payload||'{"title":"Stale edit"}'); raise exception 'Stale update accepted'; exception when serialization_failure then null; end;
+ begin perform public.write_exam_catalog_draft('save',m,1,1,payload||'{"title":"Stale edit"}'); raise exception 'Stale update accepted'; exception when sqlstate 'PT409' then null; end;
  begin perform public.write_exam_catalog_draft('save',m,1,2,pg_temp.catalog_fields('["c0220000-0000-4000-8000-000000000099"]')); raise exception 'Missing question accepted'; exception when foreign_key_violation then null; end;
  if (select edit_revision from public.exam_catalog_versions where model_id=m and version=1)<>2
  or (select count(*) from public.exam_catalog_items where model_id=m and version=1)<>2
@@ -55,7 +55,7 @@ begin
  select count(*) into before_audit from public.editorial_audit_log;
  result:=public.write_exam_catalog_draft('clone',m,2,3,'{"sourceVersion":1}');
  if not (result->>'replayed')::boolean or (select count(*) from public.editorial_audit_log)<>before_audit then raise exception 'Clone replay changed audit'; end if;
- begin perform public.write_exam_catalog_draft('clone',m,4,3,'{"sourceVersion":1}'); raise exception 'Version numbering skipped'; exception when serialization_failure then null; end;
+ begin perform public.write_exam_catalog_draft('clone',m,4,3,'{"sourceVersion":1}'); raise exception 'Version numbering skipped'; exception when sqlstate 'PT409' then null; end;
  result:=public.write_exam_catalog_draft('save',m,2,1,pg_temp.catalog_fields('["c0220000-0000-4000-8000-000000000004"]')||'{"title":"Second version","questionCount":1}');
  if (select title from public.exam_catalog_versions where model_id=m and version=1)<>'First version'
  or (select count(*) from public.exam_catalog_items where model_id=m and version=1)<>2 then raise exception 'New version changed previous snapshot'; end if;

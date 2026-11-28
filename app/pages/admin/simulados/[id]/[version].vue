@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { SubjectTarget } from '~~/shared/domain/questions/exam-catalog-quality'
 import authMiddleware from '~/middleware/auth'
 import {
   catalogKinds,
@@ -31,6 +32,7 @@ const id = String(route.params.id),
   version = String(route.params.version),
   base = `/api/admin/exam-models/${id}`,
   endpoint = `${base}/versions/${version}`
+const qualityRefresh = ref(0)
 const auditPage = ref(1),
   reviewsPage = ref(1)
 const [detail, model, validation, context, audit, reviews] = await Promise.all([
@@ -53,6 +55,7 @@ const form = reactive({
   kind: 'subject-foundations' as CatalogVersionRecord['kind'],
   questionCount: 1,
   questionIds: [] as string[],
+  subjectDistribution: [] as SubjectTarget[],
 })
 const original = ref(''),
   dirty = computed(
@@ -74,6 +77,9 @@ function hydrate() {
     kind: v.kind,
     questionCount: v.question_count,
     questionIds: (v.items ?? []).map((item) => item.question_id),
+    subjectDistribution: (v.subjectDistribution ?? []).map((item) => ({
+      ...item,
+    })),
   })
   original.value = JSON.stringify(form)
 }
@@ -114,6 +120,21 @@ const subjects = await useFetch<{
   subjects: Array<{ id: string; name: string }>
 }>('/api/admin/subjects')
 const names = reactive<Record<string, string>>({})
+const targetSubject = ref('')
+function addTarget() {
+  if (
+    !canEdit.value ||
+    !targetSubject.value ||
+    form.subjectDistribution.some((t) => t.subjectId === targetSubject.value)
+  )
+    return
+  form.subjectDistribution.push({
+    subjectId: targetSubject.value,
+    questionCount: 1,
+  })
+  targetSubject.value = ''
+}
+
 watch(
   () => context.data.value,
   (ctx) => {
@@ -166,6 +187,7 @@ const canSubmitReview = computed(
     validation.data.value.editRevision === serverVersion.value?.edit_revision,
 )
 async function refreshSupport() {
+  qualityRefresh.value++
   await Promise.all([
     model.refresh(),
     validation.refresh(),
@@ -432,6 +454,79 @@ async function openSnapshot(reviewId: string) {
                 max="20"
                 :disabled="!canEdit"
             /></label>
+            <fieldset :disabled="!canEdit">
+              <legend>Distribuição planejada por matéria</legend>
+              <p class="study-muted">
+                Opcional para preservar modelos anteriores. Quando definida, a
+                composição salva deve corresponder exatamente às metas antes da
+                revisão. Total planejado:
+                {{
+                  form.subjectDistribution.reduce(
+                    (sum, t) => sum + t.questionCount,
+                    0,
+                  )
+                }}
+                / {{ form.questionCount }}.
+              </p>
+              <label for="target-subject"
+                >Matéria<select id="target-subject" v-model="targetSubject">
+                  <option value="">Selecione uma matéria</option>
+                  <option
+                    v-for="subject in subjects.data.value?.subjects ?? []"
+                    :key="subject.id"
+                    :value="subject.id"
+                  >
+                    {{ subject.name }}
+                  </option>
+                </select></label
+              >
+              <button
+                type="button"
+                class="study-secondary-button"
+                :disabled="
+                  !targetSubject ||
+                  form.subjectDistribution.some(
+                    (t) => t.subjectId === targetSubject,
+                  )
+                "
+                @click="addTarget"
+              >
+                Adicionar meta por matéria
+              </button>
+              <p v-if="subjects.error.value" role="alert">
+                Não foi possível carregar as matérias.
+                <button type="button" @click="subjects.refresh()">
+                  Tentar novamente
+                </button>
+              </p>
+              <div
+                v-for="(target, index) in form.subjectDistribution"
+                :key="target.subjectId"
+                class="study-card"
+              >
+                <label :for="`target-count-${target.subjectId}`"
+                  >{{
+                    subjects.data.value?.subjects.find(
+                      (s) => s.id === target.subjectId,
+                    )?.name || target.subjectId
+                  }}<input
+                    :id="`target-count-${target.subjectId}`"
+                    v-model.number="target.questionCount"
+                    type="number"
+                    min="1"
+                    max="20"
+                    required
+                /></label>
+                <button
+                  type="button"
+                  class="study-secondary-button"
+                  :aria-label="`Remover meta ${index + 1}`"
+                  @click="form.subjectDistribution.splice(index, 1)"
+                >
+                  Remover meta
+                </button>
+              </div>
+            </fieldset>
             <p class="study-muted">
               {{ form.questionIds.length }} de {{ form.questionCount }} questões
               selecionadas. A ordem abaixo será preservada.
@@ -582,6 +677,10 @@ async function openSnapshot(reviewId: string) {
               </button>
             </nav>
           </section>
+          <CatalogQualityPanel
+            :refresh-key="qualityRefresh"
+            :endpoint="`${endpoint}/quality`"
+          />
           <section class="study-card">
             <h2>Validação da composição salva</h2>
             <p v-if="dirty" class="study-muted">
@@ -764,6 +863,26 @@ async function openSnapshot(reviewId: string) {
               Revisão {{ historical.review.edit_revision }}. Este registro
               histórico não declara a aprovação da composição atual.
             </p>
+            <div
+              v-if="
+                historical.review.content_snapshot.subjectDistribution?.length
+              "
+            >
+              <h4>Metas registradas no parecer</h4>
+              <ul>
+                <li
+                  v-for="target in historical.review.content_snapshot
+                    .subjectDistribution"
+                  :key="target.subjectId"
+                >
+                  {{
+                    historical.review.content_snapshot.questions.find(
+                      (q) => q.subjectId === target.subjectId,
+                    )?.subjectName || target.subjectId
+                  }}: {{ target.questionCount }}
+                </li>
+              </ul>
+            </div>
             <CatalogQuestionPreview
               :questions="historical.review.content_snapshot.questions"
             /><button class="study-secondary-button" @click="historical = null">

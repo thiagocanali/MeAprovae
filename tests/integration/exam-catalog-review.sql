@@ -52,7 +52,7 @@ do $$ declare context jsonb;payload jsonb;r jsonb;before_count bigint;begin
  begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{rights}','[]'));raise exception 'Missing rights accepted';exception when invalid_parameter_value then null;end;
  begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{rights,0,basis}','"licensed"'));raise exception 'Missing license URL accepted';exception when invalid_parameter_value then null;end;
  begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{attestations,answers}','false'));raise exception 'Incomplete approval accepted';exception when check_violation then null;end;
- begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{expectedFingerprint}',to_jsonb(repeat('0',64))));raise exception 'Wrong fingerprint accepted';exception when serialization_failure then null;end;
+ begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{expectedFingerprint}',to_jsonb(repeat('0',64))));raise exception 'Wrong fingerprint accepted';exception when sqlstate 'PT409' then null;end;
  begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{rights}',jsonb_build_array(payload#>'{rights,0}')));raise exception 'Incomplete per-question coverage accepted';exception when invalid_parameter_value then null;end;
  begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,jsonb_set(payload,'{rights,0,basis}','"unverified"'));raise exception 'Unverified rights approved';exception when check_violation then null;end;
  r:=public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,payload);
@@ -60,7 +60,7 @@ do $$ declare context jsonb;payload jsonb;r jsonb;before_count bigint;begin
  select count(*) into before_count from public.exam_catalog_reviews;
  r:=public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,payload);
  if not (r->>'replayed')::boolean or (select count(*) from public.exam_catalog_reviews)<>before_count then raise exception 'Replay duplicated evidence';end if;
- begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,payload||'{"notes":"Attempt to overwrite immutable evidence with a reused request ID."}');raise exception 'Replay overwritten';exception when serialization_failure then null;end;
+ begin perform public.record_exam_catalog_review('c0220000-0000-4000-8000-000000000010',1,payload||'{"notes":"Attempt to overwrite immutable evidence with a reused request ID."}');raise exception 'Replay overwritten';exception when sqlstate 'PT409' then null;end;
  context:=public.get_exam_catalog_review_context('c0220000-0000-4000-8000-000000000010',1);
  if not (context#>>'{latestReview,isCurrent}')::boolean then raise exception 'New review not current';end if;
  if exists(select 1 from public.exam_catalog_versions where rights_checked or reviewed_by is not null or published_at is not null) then raise exception 'Legacy approval flags changed';end if;

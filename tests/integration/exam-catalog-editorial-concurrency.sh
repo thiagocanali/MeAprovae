@@ -45,7 +45,7 @@ begin;
 set local role authenticated;
 select set_config('request.jwt.claim.sub','c0330000-0000-4000-8000-000000000001',true);
 do $$ begin
- begin perform public.write_exam_catalog_draft('save','c0330000-0000-4000-8000-000000000002',1,1,'{"title":"Stale writer","description":"Draft fixture only","kind":"subject-foundations","questionCount":1,"questionIds":[]}'); raise exception 'Stale writer overwrote committed revision'; exception when serialization_failure then null; end;
+ begin perform public.write_exam_catalog_draft('save','c0330000-0000-4000-8000-000000000002',1,1,'{"title":"Stale writer","description":"Draft fixture only","kind":"subject-foundations","questionCount":1,"questionIds":[]}'); raise exception 'Stale writer overwrote committed revision'; exception when sqlstate 'PT409' then null; end;
  if not exists(select 1 from public.exam_catalog_versions where model_id='c0330000-0000-4000-8000-000000000002' and title='Committed writer' and edit_revision=2) then raise exception 'Committed writer lost'; end if;
 end $$;
 reset role;

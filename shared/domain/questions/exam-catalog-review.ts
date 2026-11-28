@@ -50,6 +50,7 @@ export interface ReviewQuestion {
   }>
 }
 export interface ReviewSnapshot {
+  subjectDistribution?: import('./exam-catalog-quality').SubjectTarget[]
   modelId: string
   version: number
   editRevision: number

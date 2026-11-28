@@ -72,6 +72,20 @@ function fingerprint(version, state) {
     .digest('hex')
 }
 function read(path, url, state) {
+  if (path.endsWith('/quality'))
+    return {
+      editRevision: 1,
+      questionCount: 1,
+      diversity: [],
+      alerts: [],
+      hasExplicitTargets: false,
+      overlaps: [],
+      comparedModels: 0,
+      totalMatches: 0,
+      page: 1,
+      hasMore: false,
+    }
+
   if (!path.startsWith('/api/admin/exam-models')) return undefined
   if (path === '/api/admin/exam-models') {
     let versions = state.versions

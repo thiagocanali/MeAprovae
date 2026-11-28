@@ -1,5 +1,9 @@
 import { isUuid } from '../common/uuid'
 import { parseQuestionPagination } from './pagination'
+import {
+  parseSubjectDistribution,
+  type SubjectTarget,
+} from './exam-catalog-quality'
 import type { ExamModelKind } from './exam-model'
 
 const kinds = [
@@ -26,6 +30,7 @@ export interface CatalogDraftFields {
   description: string
   kind: ExamModelKind
   questionCount: number
+  subjectDistribution?: SubjectTarget[]
 }
 function fields(value: Record<string, unknown>): CatalogDraftFields | null {
   if (
@@ -36,6 +41,11 @@ function fields(value: Record<string, unknown>): CatalogDraftFields | null {
     value.questionCount > 20
   )
     return null
+  const targets =
+    value.subjectDistribution === undefined
+      ? undefined
+      : parseSubjectDistribution(value.subjectDistribution)
+  if (value.subjectDistribution !== undefined && targets === null) return null
   const title = value.title.trim(),
     description = value.description.trim()
   return title.length >= 3 &&
@@ -47,6 +57,9 @@ function fields(value: Record<string, unknown>): CatalogDraftFields | null {
         description,
         kind: value.kind as ExamModelKind,
         questionCount: value.questionCount,
+        ...(targets !== undefined && targets !== null
+          ? { subjectDistribution: targets }
+          : {}),
       }
     : null
 }
@@ -61,6 +74,7 @@ export function parseCatalogCreate(
       'description',
       'kind',
       'questionCount',
+      'subjectDistribution',
     ]) ||
     !isUuid(value.modelId)
   )
@@ -80,6 +94,7 @@ export function parseCatalogSave(
       'description',
       'kind',
       'questionCount',
+      'subjectDistribution',
       'expectedRevision',
       'questionIds',
     ]) ||

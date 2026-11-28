@@ -10,6 +10,7 @@ export interface CatalogVersionRecord {
   duration_minutes: number
   edit_revision: number
   created_at: string
+  subjectDistribution?: import('./exam-catalog-quality').SubjectTarget[]
   items?: Array<{ position: number; question_id: string; subject_id: string }>
 }
 export interface CatalogListResponse {
@@ -65,6 +66,7 @@ export const catalogIssueLabels: Record<string, string> = {
   incomplete: 'A quantidade de questões não corresponde à declarada.',
   duplicate: 'Há questões repetidas.',
   positions: 'A ordem das questões está incompleta.',
+  targets: 'A composição não corresponde à distribuição planejada.',
   distribution: 'A distribuição não corresponde ao tipo de modelo.',
   source: 'Uma fonte está arquivada ou a matéria foi alterada.',
   answers: 'Há gabaritos ou alternativas incompletos.',

@@ -130,6 +130,14 @@ beforeAll(async () => {
       )
     ).default,
   )
+  router.get(
+    '/api/admin/exam-models/:id/versions/:version/quality',
+    (
+      await import(
+        '../../server/api/admin/exam-models/[id]/versions/[version]/quality.get'
+      )
+    ).default,
+  )
   server = createServer(
     toNodeListener(createApp({ debug: false, onError: () => {} }).use(router)),
   )
@@ -230,6 +238,35 @@ describe('editorial catalog HTTP', () => {
       expect(fixture.from).not.toHaveBeenCalled()
     },
   )
+  it('protects quality metadata and applies pagination before invoking PostgREST', async () => {
+    fixture.user = null
+    expect((await request(`/${id}/versions/1/quality`)).status).toBe(401)
+    fixture.user = { id: 'student' }
+    fixture.editor = false
+    expect((await request(`/${id}/versions/1/quality`)).status).toBe(403)
+    fixture.editor = true
+    expect(
+      (await request(`/${id}/versions/1/quality?pageSize=21`)).status,
+    ).toBe(400)
+    fixture.rpcResult = {
+      data: {
+        questions: [],
+        subjectDistribution: [],
+        overlaps: [],
+        totalMatches: 0,
+      },
+      error: null,
+    }
+    expect(
+      (await request(`/${id}/versions/1/quality?page=1&pageSize=10`)).status,
+    ).toBe(200)
+    expect(fixture.rpc).toHaveBeenCalledWith('get_exam_catalog_quality', {
+      p_model_id: id,
+      p_version: 1,
+      p_page: 1,
+      p_page_size: 10,
+    })
+  })
   it('normalizes create input and routes only safe fields to the atomic writer', async () => {
     const response = await request('', 'POST', {
       ...fields,
@@ -350,6 +387,7 @@ describe('editorial catalog HTTP', () => {
   })
   it.each([
     ['40001', 409],
+    ['PT409', 409],
     ['23514', 409],
     ['23503', 400],
     ['P0002', 404],
